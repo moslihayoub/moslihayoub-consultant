@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Backoffice — Ayoub Moslih</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg: #111210;
+      --surface: #1c1d1a;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0ee;
+      --muted: #a0a09d;
+      --green: #9fe870;
+      --gdk: #163300;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Login Screen */
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .login-box {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .login-box h2 { margin-bottom: 24px; }
+    .input-group { margin-bottom: 16px; text-align: left; }
+    .input-group label { display: block; font-size: 13px; margin-bottom: 8px; color: var(--muted); }
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: white;
+      font-family: inherit;
+    }
+    .input-group input:focus { outline: none; border-color: var(--green); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      color: var(--gdk);
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .error-msg { color: #ef4444; font-size: 13px; margin-top: 12px; display: none; }
+
+    /* Dashboard Layout */
+    .sidebar {
+      width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 24px;
+      font-weight: 800;
+      font-size: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-items { flex: 1; padding: 24px 12px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: rgba(159,232,112,0.1);
+      color: var(--green);
+    }
+    .logout-btn {
+      margin: 24px;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .logout-btn:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .btn-add {
+      background: var(--green);
+      color: var(--gdk);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Content Table */
+    .content-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .content-table th, .content-table td {
+      padding: 16px 24px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-table th { color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; }
+    .content-table tr:last-child td { border-bottom: none; }
+    .action-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; }
+    .action-btn:hover { color: var(--green); }
+    .action-btn.del:hover { color: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>Connexion</h2>
+      <div class="input-group">
+        <label>Identifiant</label>
+        <input type="text" id="username" placeholder="Saisir votre ID">
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()">
+      </div>
+      <button class="login-btn" onclick="login()">Se connecter</button>
+      <div class="error-msg" id="errorMsg">Identifiants incorrects.</div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span style="color: var(--green)">Wise</span> Backoffice
+    </div>
+    <div class="nav-items">
+      <div class="nav-item active"><i data-lucide="folder-open"></i> Portfolio</div>
+      <div class="nav-item"><i data-lucide="briefcase"></i> Missions</div>
+      <div class="nav-item"><i data-lucide="settings"></i> Paramètres</div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <div class="main-content">
+    <div class="header-row">
+      <h1>Gestion du Portfolio</h1>
+      <button class="btn-add" onclick="alert('Fonctionnalité en cours de développement avec Firebase Firestore')"><i data-lucide="plus"></i> Ajouter un projet</button>
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Catégorie</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="portfolioList">
+        <!-- Dynamically populated from Firestore -->
+        <tr>
+          <td>Match2Campus</td>
+          <td>Video Motion</td>
+          <td>2026</td>
+          <td>
+            <button class="action-btn"><i data-lucide="edit"></i></button>
+            <button class="action-btn del"><i data-lucide="trash-2"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
