@@ -43,7 +43,7 @@ function App() {
           </main>
           <Footer />
           <ScrollSpy />
-          {import.meta.env.DEV && <ChatWidget />}
+          <ChatWidget />
           <CookieBanner />
         </div>
       </Router>
