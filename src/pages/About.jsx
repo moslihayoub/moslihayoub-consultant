@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Calendar, Download, Mail, MapPin, Phone, ExternalLink, Award, Play, ChevronRight, MessageCircle, Briefcase, UserCheck, CheckCircle2, Brain, ChevronDown, ChevronUp, Globe } from 'lucide-react';
+import { Calendar, Download, Mail, MapPin, Phone, ExternalLink, Award, Play, ChevronRight, MessageCircle, Briefcase, UserCheck, CheckCircle2, Brain, ChevronDown, ChevronUp, Globe, Layout, Search } from 'lucide-react';
 import TiltWrapper from '../components/TiltWrapper';
 import AnimatedPage from '../components/AnimatedPage';
 import { useLanguage } from '../contexts/LanguageContext';
