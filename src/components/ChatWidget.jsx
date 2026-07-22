@@ -5,9 +5,23 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'model', text: "Bonjour ! Je suis Moslih84 Assistant AI. Comment puis-je vous aider à découvrir le portfolio d'Ayoub ?" }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('chat_session');
+    if (saved) {
+      try {
+        const { messages: savedMessages, timestamp } = JSON.parse(saved);
+        // Expiration après 1 heure (60 * 60 * 1000 ms)
+        if (new Date().getTime() - timestamp < 3600000) {
+          return savedMessages;
+        }
+      } catch (e) {
+        console.error("Erreur lecture session", e);
+      }
+    }
+    return [
+      { role: 'model', text: "Bonjour ! Je suis Moslih84 Assistant AI. Comment puis-je vous aider à découvrir le portfolio d'Ayoub ?" }
+    ];
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -18,6 +32,11 @@ const ChatWidget = () => {
   };
 
   useEffect(() => {
+    // Sauvegarder la session à chaque modification
+    localStorage.setItem('chat_session', JSON.stringify({
+      messages,
+      timestamp: new Date().getTime()
+    }));
     scrollToBottom();
   }, [messages, isLoading]);
 
@@ -49,14 +68,19 @@ const ChatWidget = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur de connexion au serveur');
+        let errorMsg = 'Erreur de connexion au serveur';
+        try {
+          const errData = await response.json();
+          if (errData.error) errorMsg = errData.error;
+        } catch(e) {}
+        throw new Error(errorMsg);
       }
 
       const data = await response.json();
       setMessages(prev => [...prev, { role: 'model', text: data.text }]);
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages(prev => [...prev, { role: 'model', text: 'Désolé, je rencontre un problème de connexion. Veuillez réessayer plus tard.' }]);
+      setMessages(prev => [...prev, { role: 'model', text: `Désolé, problème rencontré : ${error.message}` }]);
     } finally {
       setIsLoading(false);
     }

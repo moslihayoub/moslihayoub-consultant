@@ -11,7 +11,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, history } = req.body;
+    let body = req.body;
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e){}
+    }
+    const { message, history } = body;
     
     // La clé API est maintenant sécurisée côté serveur
     const apiKey = process.env.GEMINI_API_KEY;
@@ -34,6 +38,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ text: responseText });
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }
