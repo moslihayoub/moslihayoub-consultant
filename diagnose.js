@@ -1,0 +1,25 @@
+import { chromium } from 'playwright';
+
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  page.on('console', msg => console.log('BROWSER CONSOLE:', msg.type(), msg.text()));
+  page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
+
+  console.log('Navigating to http://localhost:5173...');
+  try {
+    await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+    console.log('Page loaded successfully.');
+    const content = await page.content();
+    if (!content.includes('id="root"></div>') || content.includes('<div id="root"></div></body>')) {
+        console.log("Empty root div detected. It's a white page!");
+    } else {
+        console.log("Root div has content.");
+    }
+  } catch (err) {
+    console.error('Navigation error:', err);
+  }
+
+  await browser.close();
+})();

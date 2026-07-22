@@ -1,0 +1,17 @@
+{
+  "name": "Ayoub MOSLIH — Portfolio",
+  "short_name": "MOSLIH",
+  "description": "Portfolio de Ayoub MOSLIH, Lead Product Designer & AI Strategy Manager",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAFA",
+  "theme_color": "#39A169",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
