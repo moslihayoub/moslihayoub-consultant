@@ -37,7 +37,7 @@ const TwitterIcon = ({ size = 20 }) => (
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   
   const vcard = `BEGIN:VCARD
 VERSION:3.0
@@ -53,12 +53,13 @@ END:VCARD`;
   return (
     <footer style={styles.footer}>
       <div className="container" style={styles.container}>
-        <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <img src={qrCodeUrl} alt="QR Code vCard Ayoub MOSLIH" style={{ width: '100px', height: '100px', borderRadius: '8px', padding: '4px', backgroundColor: '#fff', border: '1px solid var(--color-border)' }} />
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('footer_rights') ? "Ajouter aux contacts" : "Add to contacts"}</span>
-        </div>
         <div style={styles.brand}>
           <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} /> Ayoub MOSLIH
+        </div>
+        <div style={{ margin: '8px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1rem', color: 'var(--color-electric-green)', fontWeight: 800 }}>↓</span>
+          <img src={qrCodeUrl} alt="QR Code vCard Ayoub MOSLIH" style={{ width: '100px', height: '100px', borderRadius: '8px', padding: '4px', backgroundColor: '#fff', border: '1px solid var(--color-border)' }} />
+          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{lang === 'fr' ? "Ajouter Contact" : "Add Contact"}</span>
         </div>
         <div style={styles.links}>
           <a href="https://www.linkedin.com/in/moslih84/" target="_blank" rel="noreferrer" style={styles.iconLink} aria-label="LinkedIn" className="hover-trigger">
