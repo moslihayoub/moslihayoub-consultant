@@ -4,6 +4,7 @@ import { Award, CheckCircle2, Clock, FolderOpen, Search, Brain, Layout, Compass,
 import AnimatedPage from '../components/AnimatedPage';
 import ProjectCard from '../components/ProjectCard';
 import ProtectedProjectModal from '../components/ProtectedProjectModal';
+import TiltWrapper from '../components/TiltWrapper';
 import { useLanguage } from '../contexts/LanguageContext';
 
 import { projectsData } from '../data/projects';
@@ -228,7 +229,11 @@ const Work = () => {
               <p style={styles.sectionDesc}>{t('work_cert_desc')}</p>
             </motion.div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
-              {certifications.map((cert, i) => (<CertCard key={i} cert={cert} index={i} />))}
+              {certifications.map((cert, i) => (
+                <TiltWrapper key={i} style={{ height: '100%', display: 'block' }}>
+                  <CertCard cert={cert} index={i} />
+                </TiltWrapper>
+              ))}
             </div>
             
             <div style={{ marginTop: '48px', display: 'flex', justifyContent: 'center' }}>

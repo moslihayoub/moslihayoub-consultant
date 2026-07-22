@@ -3,8 +3,8 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 const TiltWrapper = ({ children, style, className, onClick }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-60, 60], [6, -6]);
-  const rotateY = useTransform(x, [-60, 60], [-6, 6]);
+  const rotateX = useTransform(y, [-60, 60], [3, -3]);
+  const rotateY = useTransform(x, [-60, 60], [-3, 3]);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -31,7 +31,7 @@ const TiltWrapper = ({ children, style, className, onClick }) => {
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ y: -4, scale: 1.02 }}
+      whileHover={{ y: -2, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
