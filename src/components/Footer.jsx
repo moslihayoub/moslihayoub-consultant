@@ -38,9 +38,25 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer = () => {
   const { t } = useLanguage();
+  
+  const vcard = `BEGIN:VCARD
+VERSION:3.0
+N:MOSLIH;Ayoub;;;
+FN:Ayoub MOSLIH
+ORG:Consultant UX/UI & Stratégie Digitale
+TEL;TYPE=CELL:+212663585065
+EMAIL:moslihayoub@gmail.com
+URL:https://www.linkedin.com/in/moslih84/
+END:VCARD`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(vcard)}&color=000000&bgcolor=ffffff`;
+
   return (
     <footer style={styles.footer}>
       <div className="container" style={styles.container}>
+        <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <img src={qrCodeUrl} alt="QR Code vCard Ayoub MOSLIH" style={{ width: '100px', height: '100px', borderRadius: '8px', padding: '4px', backgroundColor: '#fff', border: '1px solid var(--color-border)' }} />
+          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('footer_rights') ? "Ajouter aux contacts" : "Add to contacts"}</span>
+        </div>
         <div style={styles.brand}>
           <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} /> Ayoub MOSLIH
         </div>

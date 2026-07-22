@@ -408,7 +408,7 @@ export default function About() {
             <span className="section-label">{t('about_contact_label')}</span>
             <h2>{t('about_contact_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_contact_desc')}</p>
-            <div className="page-hero-grid" style={{ marginTop: '40px', gap: '40px' }}>
+            <div className="page-hero-grid" style={{ marginTop: '40px', gap: '40px', alignItems: 'flex-start' }}>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {contactLinks.map((link, i) => (
