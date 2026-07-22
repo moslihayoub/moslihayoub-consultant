@@ -48,18 +48,16 @@ TEL;TYPE=CELL:+212663585065
 EMAIL:moslihayoub@gmail.com
 URL:https://www.linkedin.com/in/moslih84/
 END:VCARD`;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(vcard)}&color=000000&bgcolor=ffffff`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(vcard)}&color=000000&bgcolor=ffffff`;
 
   return (
     <footer style={styles.footer}>
       <div className="container" style={styles.container}>
-        <div style={styles.brand}>
-          <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} /> Ayoub MOSLIH
-        </div>
-        <div style={{ margin: '8px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1rem', color: 'var(--color-electric-green)', fontWeight: 800 }}>↓</span>
-          <img src={qrCodeUrl} alt="QR Code vCard Ayoub MOSLIH" style={{ width: '100px', height: '100px', borderRadius: '8px', padding: '4px', backgroundColor: '#fff', border: '1px solid var(--color-border)' }} />
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{lang === 'fr' ? "Ajouter Contact" : "Add Contact"}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+          <div style={styles.brand}>
+            <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} /> Ayoub MOSLIH
+          </div>
+          <img src={qrCodeUrl} alt="QR Code vCard Ayoub MOSLIH" style={{ width: '120px', height: '120px', borderRadius: '8px', padding: '6px', backgroundColor: '#fff', border: '1px solid var(--color-border)' }} />
         </div>
         <div style={styles.links}>
           <a href="https://www.linkedin.com/in/moslih84/" target="_blank" rel="noreferrer" style={styles.iconLink} aria-label="LinkedIn" className="hover-trigger">
