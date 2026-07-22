@@ -9,7 +9,7 @@ test.describe('Portfolio E2E', () => {
     await expect(page.locator('h1').first()).toContainText('Catalyser');
 
     // Click "Work" in navbar
-    await page.getByRole('link', { name: 'Projets' }).click();
+    await page.locator('nav').getByRole('link', { name: 'Projets', exact: true }).click();
 
     // Verify Work page URL and content
     await expect(page).toHaveURL('/work');

@@ -208,6 +208,26 @@ export default function About() {
                   <Briefcase size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Consulting' : 'Consulting'}</h3>
                 </motion.div>
+
+                {/* Floating element 3 (Top left) */}
+                <motion.div 
+                  animate={{ y: [0, -12, 0] }} 
+                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+                  style={{ position: 'absolute', top: '25%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <Layout size={18} color="var(--color-electric-green)" />
+                  <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Design System</h3>
+                </motion.div>
+
+                {/* Floating element 4 (Bottom right) */}
+                <motion.div 
+                  animate={{ y: [0, 12, 0] }} 
+                  transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                  style={{ position: 'absolute', bottom: '25%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <Search size={18} color="var(--color-electric-green)" />
+                  <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>UX Research</h3>
+                </motion.div>
               </div>
             </motion.div>
           </section>
@@ -254,9 +274,9 @@ export default function About() {
                 
                 return (
                   <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                    <TiltWrapper 
+                    <div 
                       onClick={() => toggleTimeline(i)}
-                      className="glass-panel hover-trigger"
+                      className="glass-panel hover-trigger hover-lift"
                       style={{ padding: '24px', borderRadius: 'var(--radius-lg)', cursor: 'pointer', border: isExpanded ? '1px solid var(--color-electric-green)' : '1px solid var(--color-border)', transition: 'all 0.3s ease', display: 'block', width: '100%' }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
@@ -305,7 +325,7 @@ export default function About() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </TiltWrapper>
+                    </div>
                   </motion.div>
                 );
               })}
