@@ -1,17 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useLanguage } from '../contexts/LanguageContext';
-
-// API Key (Note: In production, this should be an environment variable!)
-const API_KEY = "AIzaSyCJ4x4FEe_KPnsqsULXGXrNkQgxP9HwZhw";
-const genAI = new GoogleGenerativeAI(API_KEY);
-
-const SYSTEM_INSTRUCTION = `Tu es Moslih84 Assistant AI, un assistant IA exclusif pour le portfolio d'Ayoub MOSLIH. 
-Ton rôle est de répondre poliment aux questions des visiteurs concernant les expériences, les projets, et les compétences d'Ayoub.
-Ayoub est un Lead Product Designer & AI Product Strategy Manager. Ses meilleurs clients/projets incluent: autocash.ma, CGI, OCP, CDM Bank.
-Sois concis, professionnel et poli. Ne réponds à aucune question hors sujet.`;
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,22 +31,29 @@ const ChatWidget = () => {
     setIsLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
-        systemInstruction: SYSTEM_INSTRUCTION
-      });
-
       // Prepare history for chat
       const history = messages.slice(1).map(msg => ({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.text }]
       }));
 
-      const chat = model.startChat({ history });
-      const result = await chat.sendMessage(userMsg);
-      const responseText = result.response.text();
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMsg,
+          history: history
+        })
+      });
 
-      setMessages(prev => [...prev, { role: 'model', text: responseText }]);
+      if (!response.ok) {
+        throw new Error('Erreur de connexion au serveur');
+      }
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'model', text: data.text }]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { role: 'model', text: 'Désolé, je rencontre un problème de connexion. Veuillez réessayer plus tard.' }]);
