@@ -429,15 +429,6 @@ export default function About() {
 
               <div className="glass-panel" style={{ padding: '32px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)' }}>
                 <h3 style={{ marginBottom: '24px' }}>{lang === 'fr' ? 'Réserver une consultation' : 'Book a consultation'}</h3>
-                <select 
-                  value={calType}
-                  onChange={(e) => setCalType(e.target.value)}
-                  style={{ width: '100%', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', marginBottom: '24px', fontFamily: 'var(--font-family)', fontSize: '1rem', backgroundColor: 'var(--color-surface)', cursor: 'pointer', outline: 'none' }}
-                >
-                  <option value="30min">{lang === 'fr' ? 'Consultation Initiale (30 min)' : 'Initial Consultation (30 min)'}</option>
-                  <option value="audit">{lang === 'fr' ? 'Audit UX Rapide (45 min)' : 'Quick UX Audit (45 min)'}</option>
-                  <option value="strategy">{lang === 'fr' ? 'Stratégie IA & Produit (60 min)' : 'AI & Product Strategy (60 min)'}</option>
-                </select>
                 
                 <div style={{ width: '100%', height: '500px', borderRadius: 'var(--radius-md)', overflow: 'hidden', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
                   <iframe 
