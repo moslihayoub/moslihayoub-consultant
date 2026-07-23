@@ -96,7 +96,7 @@ const Work = () => {
   return (
     <AnimatedPage>
       <div className="page-wrapper">
-        <section id="work-hero" data-scrollspy={t('work_hero_label')}>
+        <section id="work-hero" data-scrollspy={t('work_hero_label')} className="section-padding">
           <div className="container">
             <div style={styles.heroGrid}>
               <motion.div style={styles.heroLeft} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
@@ -175,7 +175,7 @@ const Work = () => {
           </div>
         </section>
 
-        <section style={styles.marqueeSection}>
+        <section className="section-padding" style={styles.marqueeSection}>
           <div style={styles.marqueeContainer}>
             <div style={styles.marqueeTrack}>
               {[...clients, ...clients].map((client, i) => (<div key={i} style={styles.clientChip}>{client}</div>))}
@@ -272,7 +272,7 @@ const styles = {
   heroImage: { width: '100%', height: 'auto', borderRadius: '32px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', display: 'block', objectFit: 'cover' },
   availBadge: { position: 'absolute', bottom: '-18px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '999px', padding: '8px 20px', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary)', whiteSpace: 'nowrap', boxShadow: '0 8px 24px rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)', zIndex: 2 },
   availDot: { width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-electric-green)', boxShadow: '0 0 8px var(--color-electric-green)', display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' },
-  marqueeSection: { padding: '56px 0', overflow: 'hidden' },
+  marqueeSection: { overflow: 'hidden' },
   marqueeContainer: { overflow: 'hidden', maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' },
   marqueeTrack: { display: 'flex', gap: '0', width: 'max-content', animation: 'marquee 28s linear infinite' },
   clientChip: { color: 'var(--color-text-secondary)', fontSize: '1.25rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', opacity: 0.28, whiteSpace: 'nowrap', padding: '0 44px', transition: 'opacity 0.3s' },

@@ -143,7 +143,7 @@ export default function About() {
       <div className="page-wrapper" style={{ fontFamily: 'var(--font-family)' }}>
           
           {/* HERO SECTION */}
-          <section id="about-hero" data-scrollspy={t('nav_about')} style={{ marginBottom: '80px' }}>
+          <section id="about-hero" data-scrollspy={t('nav_about')} className="section-padding">
             <div className="container page-hero-grid">
             <motion.div className="hero-text-container" style={{ minWidth: 0, width: '100%', maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
@@ -237,7 +237,7 @@ export default function About() {
           </section>
 
           {/* CLIENT MARQUEE */}
-          <section style={{ marginBottom: '100px', overflow: 'hidden', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+          <section className="section-padding" style={{ overflow: 'hidden', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
             <div style={{ display: 'flex', gap: '64px', width: 'max-content', animation: 'marquee 30s linear infinite' }}>
               {[...clients, ...clients].map((client, i) => (
                 <div key={i} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-secondary)', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -339,7 +339,7 @@ export default function About() {
           </section>
 
           {/* CERTIFICATIONS */}
-          <section id="certifications" data-scrollspy={t('about_cert_label')} style={{ marginBottom: '100px' }}>
+          <section id="certifications" data-scrollspy={t('about_cert_label')} className="section-padding">
             <div className="container">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <div style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px' }}>
@@ -414,7 +414,7 @@ export default function About() {
           </section>
 
           {/* RESERVER UN APPEL CTA */}
-          <section id="booking" data-scrollspy={t('about_contact_label')} style={{ marginBottom: '60px' }}>
+          <section id="booking" data-scrollspy={t('about_contact_label')} className="section-padding">
             <div className="container">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <span className="section-label">{t('about_contact_label')}</span>

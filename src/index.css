@@ -164,11 +164,9 @@ button {
   align-items: center;
   overflow: hidden;
 }
-
 .section-padding {
   padding: 120px 0;
 }
-
 @media (max-width: 768px) {
   .app-wrapper {
     padding-bottom: 100px; /* Espace pour la bottom navbar à la fin de la page */
@@ -179,11 +177,11 @@ button {
   }
   .home-hero-section {
     padding-top: 48px;
-    padding-bottom: 60px;
+    padding-bottom: 24px;
     min-height: auto;
   }
   .section-padding {
-    padding: 60px 0;
+    padding: 40px 0;
   }
 }
 
