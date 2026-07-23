@@ -613,7 +613,7 @@ const styles = {
     height: '36px',
     borderRadius: '50%',
     overflow: 'hidden',
-    border: '2px solid var(--color-electric-green, #006253)',
+    border: 'none',
   },
   avatarImg: {
     width: '100%',

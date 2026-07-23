@@ -123,12 +123,12 @@
         "Avec quels clients avez-vous travaillé ?"
       ],
       "answer": {
-        "fr": "Ayoub a réalisé des projets majeurs pour Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, Nexastay, etc.",
-        "en": "Ayoub has delivered key projects for Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, Nexastay, etc."
+        "fr": "Ayoub a réalisé des projets majeurs pour Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, eDrive, etc.",
+        "en": "Ayoub has delivered key projects for Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, eDrive, etc."
       },
       "quickReplies": [
-        "Autocash MVP",
-        "Nexastay MVP"
+        "Autocash.ma",
+        "Projet eDrive"
       ],
       "cta": {
         "text": { "fr": "Tous les projets", "en": "All projects" },
@@ -140,50 +140,50 @@
       "id": "project_autocash",
       "category": "projects",
       "keywords": [
-        "autocash", "auto", "cash", "sourcing", "vehicule", "voiture", "mvp", "sayarat"
+        "autocash", "auto", "cash", "vehicule", "voiture", "marketplace", "sayarat"
       ],
       "questions": [
         "Parle-moi du projet Autocash",
-        "C'est quoi Autocash Sourcing ?",
+        "C'est quoi Autocash.ma ?",
         "Projet Autocash"
       ],
       "answer": {
-        "fr": "Autocash Sourcing (2026) : SaaS mobile-first d'achat/vente de véhicules avec MVP accéléré par IA.",
-        "en": "Autocash Sourcing (2026): Mobile-first SaaS for buying/selling vehicles with AI-accelerated MVP."
+        "fr": "Autocash.ma (2024) : Création de la marketplace couvrant l'achat, la vente et le financement de véhicules d'occasion.",
+        "en": "Autocash.ma (2024): Creation of the marketplace covering the purchase, sale, and financing of used vehicles."
       },
       "quickReplies": [
-        "Nexastay MVP",
+        "Projet eDrive",
         "Voir tous les projets"
       ],
       "cta": {
-        "text": { "fr": "Voir la démo", "en": "View demo" },
+        "text": { "fr": "Voir le site", "en": "View website" },
         "action": "external",
-        "target": "https://autocash-sourcing.vercel.app/"
+        "target": "https://autocash.ma"
       }
     },
     {
-      "id": "project_nexastay",
+      "id": "project_edrive",
       "category": "projects",
       "keywords": [
-        "nexastay", "proptech", "booking", "airbnb", "reservation", "hebergement", "krra", "kra"
+        "edrive", "fleet", "management", "flotte", "automobile", "voiture", "b2b"
       ],
       "questions": [
-        "Présente le projet Nexastay",
-        "C'est quoi Nexastay ?",
-        "Projet Nexastay MVP"
+        "Présente le projet eDrive",
+        "C'est quoi eDrive ?",
+        "Projet eDrive"
       ],
       "answer": {
-        "fr": "Nexastay (2026) : Proptech de réservation de logements (style Airbnb) enrichie par l'IA et conçue sur Figma.",
-        "en": "Nexastay (2026): AI-enhanced property rental platform (Airbnb style) designed on Figma."
+        "fr": "eDrive.ma (2024) : Plateforme B2B de gestion, d'optimisation des coûts et de financement de flottes automobiles.",
+        "en": "eDrive.ma (2024): B2B platform for automotive fleet management, cost optimization, and financing."
       },
       "quickReplies": [
-        "Autocash MVP",
+        "Autocash.ma",
         "Voir tous les projets"
       ],
       "cta": {
-        "text": { "fr": "Ouvrir Figma", "en": "Open Figma" },
+        "text": { "fr": "Ouvrir eDrive", "en": "Open eDrive" },
         "action": "external",
-        "target": "https://www.figma.com/design/TGjrdYNkeGePCJtO7CPcWp/Nexa-UI--MVP-?m=auto&t=uVDJRvhRmGeplPnd-1"
+        "target": "https://edrive.ma/fr/"
       }
     },
     {
