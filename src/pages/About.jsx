@@ -233,6 +233,7 @@ export default function About() {
                 </motion.div>
               </div>
             </motion.div>
+            </div>
           </section>
 
           {/* CLIENT MARQUEE */}
