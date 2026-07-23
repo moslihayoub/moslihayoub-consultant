@@ -185,6 +185,64 @@ button {
   .section-padding {
     padding: 60px 0;
   }
+  
+  /* Hero Mobile Overrides */
+  .hero-cta-container {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-bottom: 8px; /* For touch target/scrolling */
+  }
+  .hero-cta-container::-webkit-scrollbar { display: none; }
+  .hero-cta-container .btn-primary, .hero-cta-container .btn-secondary {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .hero-tags-container {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    margin-right: -24px; /* bleed to edge if container has padding */
+    padding-right: 24px;
+  }
+  .hero-tags-container::-webkit-scrollbar { display: none; }
+  .hero-tags-container > div {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Marquee horizontal override */
+  .hero-marquee-container {
+    flex-direction: row !important;
+    overflow-x: hidden;
+    overflow-y: visible !important;
+    height: 140px !important;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent) !important;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent) !important;
+    width: 100vw;
+    margin-left: -24px;
+  }
+  
+  .marquee-column {
+    flex-direction: row !important;
+    animation: marquee-horizontal 25s linear infinite !important;
+    width: max-content !important;
+    gap: 16px !important;
+  }
+  
+  .marquee-column img {
+    width: auto !important;
+    height: 120px !important;
+  }
+}
+
+@keyframes marquee-horizontal {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 main {

@@ -279,14 +279,35 @@ export default function Home() {
           .mobile-only-hero { display: block !important; margin-top: 32px; }
           .hero-text-container {
             min-width: 100% !important;
-            text-align: center;
+            text-align: left;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
           }
-          .hero-text-container p { text-align: center; margin-left: auto; margin-right: auto; }
-          .hero-cta-container { justify-content: center; }
-          .hero-tags-container { justify-content: center; }
+          .hero-text-container p { text-align: left; margin-left: 0; margin-right: 0; }
+          .hero-cta-container {
+            justify-content: flex-start;
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-bottom: 8px;
+          }
+          .hero-cta-container::-webkit-scrollbar { display: none; }
+          .hero-cta-container > * { flex-shrink: 0; }
+          
+          .hero-tags-container {
+            justify-content: flex-start;
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-bottom: 8px;
+            margin-right: -24px;
+            padding-right: 24px;
+          }
+          .hero-tags-container::-webkit-scrollbar { display: none; }
+          .hero-tags-container > div { flex-shrink: 0; }
           
           /* Horizontal Marquee on mobile */
           .hero-marquee-container {
