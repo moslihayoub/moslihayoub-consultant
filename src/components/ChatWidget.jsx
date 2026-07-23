@@ -265,7 +265,7 @@ const ChatWidget = () => {
                 <div>
                   <h4 style={styles.botName}>M84</h4>
                   <span style={styles.botStatus}>
-                    {lang === 'en' ? 'Portfolio Assistant' : 'Assistant Portfolio'} • {t('chat_online')}
+                    {lang === 'en' ? 'Consultant Assistant' : 'Assistant Consultant'} • {t('chat_online')}
                   </span>
                 </div>
               </div>
@@ -623,7 +623,7 @@ const styles = {
     color: 'var(--color-text-primary, #111111)',
   },
   botStatus: {
-    fontSize: '0.72rem',
+    fontSize: '0.85rem',
     color: 'var(--color-electric-green, #006253)',
     fontWeight: 500,
   },
@@ -663,7 +663,7 @@ const styles = {
   },
   messageBubble: {
     padding: '8px 12px',
-    fontSize: '0.74rem',
+    fontSize: '0.65rem',
     maxWidth: '84%',
     lineHeight: 1.4,
     boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
@@ -679,7 +679,7 @@ const styles = {
     backgroundColor: 'var(--color-green-light, #e6efee)',
     border: '1px solid var(--color-electric-green, #006253)',
     color: 'var(--color-electric-green, #006253)',
-    fontSize: '0.8rem',
+    fontSize: '0.76rem',
     fontWeight: 600,
     cursor: 'pointer',
     boxShadow: '0 2px 8px rgba(0, 98, 83, 0.1)',
@@ -696,8 +696,8 @@ const styles = {
     backgroundColor: 'var(--color-surface, #FFFFFF)',
     border: '1px solid var(--color-electric-green, #006253)',
     color: 'var(--color-electric-green, #006253)',
-    borderRadius: '14px',
-    padding: '4px 10px',
+    borderRadius: '20px',
+    padding: '6px 12px',
     fontSize: '0.76rem',
     fontWeight: 600,
     cursor: 'pointer',
