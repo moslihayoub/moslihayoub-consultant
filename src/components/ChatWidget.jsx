@@ -672,7 +672,7 @@ const styles = {
     borderRadius: '50%',
     objectFit: 'cover',
     marginTop: '2px',
-    border: '1px solid var(--color-electric-green, #006253)',
+    border: 'none',
     flexShrink: 0,
   },
   messageBubble: {
