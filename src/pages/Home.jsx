@@ -162,7 +162,7 @@ export default function Home() {
         <div className="container">
           <div className="hero-grid">
             
-            <motion.div className="hero-text-container" style={{ flex: '0 0 auto', minWidth: '480px', maxWidth: '560px' }} initial={{ opacity: 0, y: 36 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
+            <motion.div className="hero-text-container" style={{ flex: '1 1 540px', display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
               <motion.div className="hero-role-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--color-electric-green)', backgroundColor: 'oklch(51.1% 0.096 186.391 / 0.1)', border: '1px solid oklch(51.1% 0.096 186.391 / 0.25)', borderRadius: '999px', padding: '6px 14px', marginBottom: '28px', width: 'fit-content' }} initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--color-electric-green)', display: 'inline-block', flexShrink: 0, animation: 'pulse-green 2s ease-in-out infinite' }} />
                 {t('hero_role')}

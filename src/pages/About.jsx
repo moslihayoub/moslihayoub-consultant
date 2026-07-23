@@ -145,11 +145,11 @@ export default function About() {
           {/* HERO SECTION */}
           <section id="about-hero" data-scrollspy={t('nav_about')} style={{ marginBottom: '80px' }}>
             <div className="container page-hero-grid">
-            <motion.div className="hero-text-container" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div className="hero-text-container" style={{ minWidth: 0, width: '100%', maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
               <h1 style={{ marginBottom: '8px' }}>Ayoub MOSLIH.</h1>
               <h3 style={{ color: 'var(--color-electric-green)', marginBottom: '24px', fontWeight: 600 }}>{t('hero_role')}</h3>
-              <div className="hero-tags-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '32px' }}>
+              <div className="hero-tags-container" style={{ display: 'flex', gap: '10px', marginBottom: '32px', width: '100%' }}>
                 {[t('work_hero_tag1'), t('work_hero_tag2'), t('work_hero_tag3')].map((s, i) => (
                   <div key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#ffffff', backgroundColor: '#333333', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '999px', padding: '6px 16px', letterSpacing: '0.01em' }}>
                     {s}
@@ -175,7 +175,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative', minWidth: 0, width: '100%' }}>
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative', minWidth: 0, width: '100%', maxWidth: '100%' }}>
               <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <video 
                   ref={videoRef}

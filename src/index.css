@@ -329,6 +329,8 @@ p {
     width: 100%; 
     justify-content: center; 
     padding: 14px 16px !important;
+    white-space: normal !important;
+    text-align: center;
   }
   .hero-text-container h1, .hero-text-container h2, .hero-text-container h3, .hero-text-container p {
     text-align: center !important;
@@ -341,17 +343,19 @@ p {
     align-items: center;
   }
   .floating-tag-left {
-    left: 8px !important;
-    max-width: calc(100vw - 48px) !important;
+    left: 4px !important;
+    max-width: calc(100vw - 32px) !important;
     white-space: normal !important;
     word-wrap: break-word !important;
+    transform: none !important;
   }
   .floating-tag-right {
-    right: 8px !important;
+    right: 4px !important;
     left: auto !important;
-    max-width: calc(100vw - 48px) !important;
+    max-width: calc(100vw - 32px) !important;
     white-space: normal !important;
     word-wrap: break-word !important;
+    transform: none !important;
   }
   
   /* Global tags container (scrollable on mobile) */

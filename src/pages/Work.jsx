@@ -267,7 +267,7 @@ const styles = {
   statIcon: { color: 'var(--color-electric-green)', marginBottom: '2px' },
   statNumber: { fontSize: '1.8rem', fontWeight: 800, color: 'var(--color-electric-green)', letterSpacing: '-0.03em', lineHeight: 1 },
   statLabel: { fontSize: '0.72rem', color: 'var(--color-text-secondary)', fontWeight: 600, lineHeight: 1.35, maxWidth: '90px' },
-  heroRight: { flex: '1 1 420px', display: 'flex', justifyContent: 'center', minWidth: 0 },
+  heroRight: { flex: '1 1 420px', display: 'flex', justifyContent: 'center', minWidth: 0, maxWidth: '100%' },
   tiltWrapper: { position: 'relative', width: '100%', maxWidth: '420px', borderRadius: '32px', overflow: 'visible', cursor: 'none' },
   heroImage: { width: '100%', height: 'auto', borderRadius: '32px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', display: 'block', objectFit: 'cover' },
   availBadge: { position: 'absolute', bottom: '-18px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '999px', padding: '8px 20px', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary)', whiteSpace: 'nowrap', boxShadow: '0 8px 24px rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)', zIndex: 2 },
