@@ -143,7 +143,7 @@ export default function About() {
       <div className="page-wrapper" style={{ fontFamily: 'var(--font-family)' }}>
           
           {/* HERO SECTION */}
-          <section id="about-hero" data-scrollspy={t('nav_about')} className="section-padding">
+          <section id="about-hero" data-scrollspy={t('nav_about')} className="section-margin">
             <div className="container page-hero-grid">
             <motion.div className="hero-text-container" style={{ minWidth: 0, width: '100%', maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
@@ -237,7 +237,7 @@ export default function About() {
           </section>
 
           {/* CLIENT MARQUEE */}
-          <section className="section-padding" style={{ overflow: 'hidden', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+          <section className="section-margin" style={{ overflow: 'hidden', maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
             <div style={{ display: 'flex', gap: '64px', width: 'max-content', animation: 'marquee 30s linear infinite' }}>
               {[...clients, ...clients].map((client, i) => (
                 <div key={i} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-secondary)', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -248,7 +248,7 @@ export default function About() {
           </section>
 
           {/* EXPERTISE GRID */}
-          <section id="services" data-scrollspy={t('about_section1_label')} className="section-padding">
+          <section id="services" data-scrollspy={t('about_expert_label')} className="section-padding">
             <div className="container">
             <span className="section-label">{t('about_expert_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_expert_title')}</h2>
@@ -269,7 +269,7 @@ export default function About() {
           </section>
 
           {/* EXPERIENCE TIMELINE */}
-          <section id="parcours" data-scrollspy={t('about_section2_label')} className="section-padding" style={{ backgroundColor: 'var(--color-surface)' }}>
+          <section id="parcours" data-scrollspy={t('about_timeline_label')} className="section-padding" style={{ backgroundColor: 'var(--color-surface)' }}>
             <div className="container">
             <span className="section-label">{t('about_timeline_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_timeline_title')}</h2>

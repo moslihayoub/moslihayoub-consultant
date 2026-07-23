@@ -96,7 +96,7 @@ const Work = () => {
   return (
     <AnimatedPage>
       <div className="page-wrapper">
-        <section id="work-hero" data-scrollspy={t('work_hero_label')} className="section-padding">
+        <section id="work-hero" data-scrollspy={t('work_hero_label')} className="section-margin">
           <div className="container">
             <div style={styles.heroGrid}>
               <motion.div style={styles.heroLeft} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
@@ -175,7 +175,7 @@ const Work = () => {
           </div>
         </section>
 
-        <section className="section-padding" style={styles.marqueeSection}>
+        <section className="section-margin" style={styles.marqueeSection}>
           <div style={styles.marqueeContainer}>
             <div style={styles.marqueeTrack}>
               {[...clients, ...clients].map((client, i) => (<div key={i} style={styles.clientChip}>{client}</div>))}
@@ -183,7 +183,7 @@ const Work = () => {
           </div>
         </section>
 
-        <section id="ux-case-studies" data-scrollspy={t('work_section1_label')} className="section-padding">
+        <section id="ux-case-studies" data-scrollspy={t('work_grid_label')} className="section-padding">
           <div className="container">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '48px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px' }}>
               <div>
@@ -225,7 +225,7 @@ const Work = () => {
           </div>
         </section>
 
-        <section id="certifications" data-scrollspy="Certifications" className="section-padding">
+        <section id="certifications" data-scrollspy={t('work_cert_label')} className="section-padding">
           <div className="container">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '48px' }}>
               <span style={styles.sectionLabel}>{t('work_cert_label')}</span>
