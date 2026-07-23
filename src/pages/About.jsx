@@ -279,17 +279,15 @@ export default function About() {
                       className="glass-panel hover-trigger hover-lift"
                       style={{ padding: '24px', borderRadius: 'var(--radius-lg)', cursor: 'pointer', border: isExpanded ? '1px solid var(--color-electric-green)' : '1px solid var(--color-border)', transition: 'all 0.3s ease', display: 'block', width: '100%' }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-electric-green)', backgroundColor: 'rgba(57,255,20,0.1)', padding: '4px 10px', borderRadius: '999px' }}>{item.year}</span>
-                            <h3 style={{ margin: 0, fontSize: '1.15rem' }}>{item.title[lang]}</h3>
-                          </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ margin: 0, fontSize: '1.15rem', marginBottom: '8px' }}>{item.title[lang]}</h3>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-electric-green)', backgroundColor: 'rgba(57,255,20,0.1)', padding: '4px 10px', borderRadius: '999px' }}>{item.year}</span>
                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', backgroundColor: typeStyle.bg, color: typeStyle.color, padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>{item.type}</span>
                           </div>
                         </div>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: isExpanded ? 'var(--color-electric-green)' : 'var(--color-surface)', color: isExpanded ? '#fff' : 'var(--color-text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease', border: '1px solid var(--color-border)' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: isExpanded ? 'var(--color-electric-green)' : 'var(--color-surface)', color: isExpanded ? '#fff' : 'var(--color-text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease', border: '1px solid var(--color-border)', flexShrink: 0 }}>
                           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                         </div>
                       </div>

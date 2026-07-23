@@ -107,7 +107,7 @@ END:VCARD`;
                 {navLinks.map((link) => {
                   const isActive = location.pathname === link.path;
                   return (
-                    <li key={link.name}>
+                    <li key={link.name} style={{ width: '100%' }}>
                       <Link 
                         to={link.path} 
                         style={{ ...styles.mobileNavLink, color: isActive ? 'var(--color-electric-green)' : 'var(--color-text-primary)' }}
@@ -121,6 +121,11 @@ END:VCARD`;
                 })}
               </ul>
 
+              <button onClick={toggleLanguage} style={styles.mobileLangBtn} className="hover-trigger">
+                <Globe size={24} color="var(--color-text-primary)" />
+                <span style={{ fontWeight: 600 }}>{lang === 'fr' ? 'Switch to English' : 'Passer en Français'}</span>
+              </button>
+
               <div style={styles.mobileQrContainer}>
                 <span style={{ fontSize: '1rem', color: 'var(--color-electric-green)', fontWeight: 800 }}>↓</span>
                 <img src={qrCodeUrl} alt="QR Code" style={styles.mobileQr} />
@@ -128,11 +133,6 @@ END:VCARD`;
                   {lang === 'fr' ? "Scanner Contact" : "Scan Contact"}
                 </span>
               </div>
-
-              <button onClick={toggleLanguage} style={styles.mobileLangBtn}>
-                <Globe size={24} color="var(--color-text-primary)" />
-                <span style={{ fontWeight: 600 }}>{lang === 'fr' ? 'Switch to English' : 'Passer en Français'}</span>
-              </button>
             </div>
           </motion.div>
         )}
@@ -257,7 +257,8 @@ const styles = {
     margin: 0,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    width: '100%',
     gap: '32px',
   },
   mobileNavLink: {
@@ -278,8 +279,8 @@ const styles = {
     marginBottom: '24px',
   },
   mobileQr: {
-    width: '160px',
-    height: '160px',
+    width: '140px',
+    height: '140px',
     borderRadius: '16px',
     padding: '8px',
     backgroundColor: '#fff',
@@ -288,13 +289,15 @@ const styles = {
   mobileLangBtn: {
     background: 'rgba(0, 0, 0, 0.05)',
     border: 'none',
-    padding: '16px 32px',
+    padding: '16px 24px',
     borderRadius: 'var(--radius-full)',
     cursor: 'none',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     gap: '12px',
     fontSize: '1.1rem',
+    width: '100%',
   }
 };
 

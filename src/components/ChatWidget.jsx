@@ -5,6 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('chat_session');
     if (saved) {
@@ -39,6 +40,12 @@ const ChatWidget = () => {
     }));
     scrollToBottom();
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -95,7 +102,7 @@ const ChatWidget = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            style={styles.chatWindow}
+            style={isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow}
             className="glass-panel"
           >
             <div style={styles.chatHeader}>
@@ -169,6 +176,9 @@ const ChatWidget = () => {
       </AnimatePresence>
 
       <motion.button
+        drag
+        dragConstraints={{ left: typeof window !== 'undefined' ? -window.innerWidth + 80 : 0, right: 0, top: typeof window !== 'undefined' ? -window.innerHeight + 80 : 0, bottom: 0 }}
+        dragElastic={0.1}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
@@ -212,6 +222,15 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+  },
+  chatWindowMobile: {
+    bottom: '0',
+    right: '0',
+    width: '100vw',
+    height: '100vh',
+    maxHeight: '100vh',
+    maxWidth: '100vw',
+    borderRadius: '0',
   },
   chatHeader: {
     padding: '16px',

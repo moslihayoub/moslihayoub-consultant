@@ -162,8 +162,8 @@ export default function Home() {
         <div className="container">
           <div className="hero-grid">
             
-            <motion.div style={{ flex: '0 0 auto', minWidth: '480px', maxWidth: '560px' }} initial={{ opacity: 0, y: 36 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
-              <motion.div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--color-electric-green)', backgroundColor: 'oklch(51.1% 0.096 186.391 / 0.1)', border: '1px solid oklch(51.1% 0.096 186.391 / 0.25)', borderRadius: '999px', padding: '6px 14px', marginBottom: '28px', width: 'fit-content' }} initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
+            <motion.div className="hero-text-container" style={{ flex: '0 0 auto', minWidth: '480px', maxWidth: '560px' }} initial={{ opacity: 0, y: 36 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
+              <motion.div className="hero-role-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--color-electric-green)', backgroundColor: 'oklch(51.1% 0.096 186.391 / 0.1)', border: '1px solid oklch(51.1% 0.096 186.391 / 0.25)', borderRadius: '999px', padding: '6px 14px', marginBottom: '28px', width: 'fit-content' }} initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--color-electric-green)', display: 'inline-block', flexShrink: 0, animation: 'pulse-green 2s ease-in-out infinite' }} />
                 {t('hero_role')}
               </motion.div>
@@ -177,7 +177,7 @@ export default function Home() {
                 {t('hero_desc')}
               </p>
               
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
+              <div className="hero-cta-container" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
                 <TiltWrapper>
                   <Link to="/work" className="btn-primary hover-trigger" style={{ margin: 0, height: '100%' }}>{t('btn_work')} <ArrowRight size={17} /></Link>
                 </TiltWrapper>
@@ -186,7 +186,7 @@ export default function Home() {
                 </TiltWrapper>
               </div>
               
-              <motion.div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.45 }}>
+              <motion.div className="hero-tags-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.45 }}>
                 {["Digital Experience", "Delivery expert", "Product Thinking"].map((s, i) => (
                   <div key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#ffffff', backgroundColor: '#333333', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '999px', padding: '6px 16px', letterSpacing: '0.01em' }}>
                     {s}
@@ -196,7 +196,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 0, width: '100%' }} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, delay: 0.2, ease: 'easeOut' }}>
-              <div className="hero-marquee-container hide-on-mobile">
+              <div className="hero-marquee-container">
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
@@ -207,7 +207,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <div className="marquee-column" style={{ animationDuration: '35s', animationDirection: 'normal', animationDelay: '-10s' }}>
+                <div className="marquee-column marquee-column-reverse" style={{ animationDuration: '35s', animationDelay: '-10s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
                       <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.png" alt="Gallery image" loading="lazy" />
@@ -276,7 +276,40 @@ export default function Home() {
       
       <style>{`
         @media(max-width: 768px) {
-          .mobile-only-hero { display: block !important; }
+          .mobile-only-hero { display: block !important; margin-top: 32px; }
+          .hero-text-container {
+            min-width: 100% !important;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .hero-text-container p { text-align: center; margin-left: auto; margin-right: auto; }
+          .hero-cta-container { justify-content: center; }
+          .hero-tags-container { justify-content: center; }
+          
+          /* Horizontal Marquee on mobile */
+          .hero-marquee-container {
+            height: 180px !important;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: 1fr 1fr;
+            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+          }
+          .marquee-column {
+            flex-direction: row !important;
+            animation: marquee-horizontal linear infinite !important;
+          }
+          .marquee-column-reverse {
+            animation: marquee-horizontal-reverse linear infinite !important;
+          }
+          .marquee-content {
+            flex-direction: row !important;
+          }
+          .marquee-content img {
+            width: 140px !important;
+            height: 80px !important;
+          }
         }
         .hero-marquee-container {
           width: 100%;
@@ -317,6 +350,14 @@ export default function Home() {
         @keyframes marquee-vertical {
           0% { transform: translateY(0); }
           100% { transform: translateY(-50%); }
+        }
+        @keyframes marquee-horizontal {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-horizontal-reverse {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
         }
       `}</style>
       <ProtectedProjectModal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} onProceed={handleProceed} project={selectedProject || {}} />

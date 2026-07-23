@@ -24,6 +24,17 @@ const CustomCursor = () => {
   const [pos, setPos] = useState({ x: -200, y: -200 });
   const [cursorState, setCursorState] = useState('default');
   const [icon, setIcon] = useState(null);
+  const [isPointerFine, setIsPointerFine] = useState(true);
+
+  useEffect(() => {
+    // Check if the device has a fine pointer (like a mouse)
+    const mediaQuery = window.matchMedia('(pointer: fine)');
+    setIsPointerFine(mediaQuery.matches);
+
+    const handler = (e) => setIsPointerFine(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const onMove = (e) => setPos({ x: e.clientX, y: e.clientY });
@@ -84,6 +95,8 @@ const CustomCursor = () => {
 
   const iconColor =
     cursorState === 'hover' ? 'var(--color-electric-green)' : '#FFF';
+
+  if (!isPointerFine) return null;
 
   return (
     <>
