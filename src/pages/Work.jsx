@@ -103,7 +103,7 @@ const Work = () => {
                 <span style={styles.sectionLabel}>{t('work_hero_label')}</span>
                 <h1 style={styles.heroTitle}>{t('work_hero_title')}</h1>
                 <p style={styles.heroDesc}>{t('work_hero_desc')}</p>
-                <motion.div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.25 }}>
+                <motion.div className="hero-tags-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.25 }}>
                   {[t('work_hero_tag1'), t('work_hero_tag2'), t('work_hero_tag3')].map((s, i) => (
                     <div key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#ffffff', backgroundColor: '#333333', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '999px', padding: '6px 16px', letterSpacing: '0.01em' }}>
                       {s}
@@ -130,7 +130,8 @@ const Work = () => {
                   <motion.div 
                     animate={{ y: [0, -10, 0] }} 
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ position: 'absolute', top: '5%', left: '-10%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    className="floating-tag-left"
+                    style={{ position: 'absolute', top: '5%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Compass size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'UX stratégique' : 'Strategic UX'}</h3>
@@ -140,7 +141,8 @@ const Work = () => {
                   <motion.div 
                     animate={{ y: [0, 15, 0] }} 
                     transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                    style={{ position: 'absolute', bottom: '15%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    className="floating-tag-right"
+                    style={{ position: 'absolute', bottom: '15%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Smartphone size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Mobile-first</h3>
@@ -150,7 +152,8 @@ const Work = () => {
                   <motion.div 
                     animate={{ y: [0, -12, 0] }} 
                     transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-                    style={{ position: 'absolute', top: '25%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    className="floating-tag-right"
+                    style={{ position: 'absolute', top: '25%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Target size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Product strategy</h3>
@@ -160,7 +163,8 @@ const Work = () => {
                   <motion.div 
                     animate={{ y: [0, 10, 0] }} 
                     transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                    style={{ position: 'absolute', bottom: '10%', left: '-10%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    className="floating-tag-left"
+                    style={{ position: 'absolute', bottom: '10%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Bot size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Automatisation' : 'Automation'}</h3>
@@ -211,7 +215,7 @@ const Work = () => {
               </div>
             </motion.div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
               {filteredProjects.map((project, index) => (
                 <motion.div key={project.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.4 }} style={{ height: '100%' }}>
                   <ProjectCard project={project} onClick={handleProjectClick} />
@@ -228,7 +232,7 @@ const Work = () => {
               <h2 style={styles.sectionTitle}>{t('work_cert_title')}</h2>
               <p style={styles.sectionDesc}>{t('work_cert_desc')}</p>
             </motion.div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
               {certifications.map((cert, i) => (
                 <TiltWrapper key={i} style={{ height: '100%', display: 'block' }}>
                   <CertCard cert={cert} index={i} />

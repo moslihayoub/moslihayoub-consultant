@@ -149,7 +149,7 @@ export default function About() {
               <span className="section-label">{t('nav_about')}</span>
               <h1 style={{ marginBottom: '8px' }}>Ayoub MOSLIH.</h1>
               <h3 style={{ color: 'var(--color-electric-green)', marginBottom: '24px', fontWeight: 600 }}>{t('hero_role')}</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '32px' }}>
+              <div className="hero-tags-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '32px' }}>
                 {[t('work_hero_tag1'), t('work_hero_tag2'), t('work_hero_tag3')].map((s, i) => (
                   <div key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#ffffff', backgroundColor: '#333333', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '999px', padding: '6px 16px', letterSpacing: '0.01em' }}>
                     {s}
@@ -192,7 +192,6 @@ export default function About() {
                 {/* Floating element 1 (Top right) */}
                 <motion.div 
                   animate={{ y: [0, -15, 0] }} 
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                   style={{ position: 'absolute', top: '10%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Brain size={18} color="var(--color-electric-green)" />
@@ -203,7 +202,8 @@ export default function About() {
                 <motion.div 
                   animate={{ y: [0, 15, 0] }} 
                   transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  style={{ position: 'absolute', bottom: '15%', left: '-10%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  className="floating-tag-left"
+                  style={{ position: 'absolute', bottom: '15%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Briefcase size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Consulting' : 'Consulting'}</h3>
@@ -222,8 +222,9 @@ export default function About() {
                 {/* Floating element 4 (Bottom right) */}
                 <motion.div 
                   animate={{ y: [0, 12, 0] }} 
-                  transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                  style={{ position: 'absolute', bottom: '25%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+                  className="floating-tag-right"
+                  style={{ position: 'absolute', bottom: '5%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Search size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>UX Research</h3>
@@ -248,7 +249,7 @@ export default function About() {
             <span className="section-label">{t('about_expert_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_expert_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_expert_desc')}</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', marginTop: '40px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '24px', marginTop: '40px' }}>
               {expertiseData.map((exp, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="perspective-container">
                   <TiltWrapper style={{ height: '100%', display: 'block' }}>
@@ -362,7 +363,7 @@ export default function About() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px', alignItems: 'stretch' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
               {filteredCerts.map((cert, i) => (
                 <TiltWrapper key={`${activeCertTab}-${i}`} style={{ display: 'block', height: '100%' }}>
                   <a

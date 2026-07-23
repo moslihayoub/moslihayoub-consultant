@@ -285,6 +285,33 @@ p {
   .hide-on-mobile {
     display: none !important;
   }
+  
+  /* Global floating tags fix for mobile */
+  .floating-tag-left {
+    left: 8px !important;
+  }
+  .floating-tag-right {
+    right: 8px !important;
+    left: auto !important;
+  }
+  
+  /* Global tags container (scrollable on mobile) */
+  .hero-tags-container {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    padding-bottom: 8px;
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+  .hero-tags-container::-webkit-scrollbar {
+    display: none;
+  }
+  .hero-tags-container > div {
+    flex-shrink: 0;
+  }
 }
 @media (min-width: 769px) {
   .hide-on-desktop {
