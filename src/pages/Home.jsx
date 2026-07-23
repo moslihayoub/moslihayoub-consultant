@@ -226,7 +226,6 @@ export default function Home() {
               </div>
               
               {/* Mobile hero image fallback removed as requested */}
-              </div>
             </motion.div>
             
           </div>
