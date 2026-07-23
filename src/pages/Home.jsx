@@ -242,7 +242,7 @@ export default function Home() {
             </p>
           </motion.div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '28px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '28px' }}>
             {featuredProjects.map((project, index) => (
               <motion.div key={project.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, delay: index * 0.12 }} style={{ height: '100%' }}>
                 <ProjectCard project={project} onClick={handleProjectClick} />
@@ -283,17 +283,18 @@ export default function Home() {
             width: 100% !important;
             max-width: 100% !important;
             min-width: 0 !important;
-            text-align: left;
+            text-align: center;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
           }
-          .hero-text-container p { text-align: left; margin-left: 0; margin-right: 0; }
+          .hero-text-container p { text-align: center; margin-left: 0; margin-right: 0; }
           .hero-cta-container {
             width: 100%;
             display: flex;
             flex-direction: column !important;
-            align-items: stretch !important;
+            align-items: center !important;
+            justify-content: center !important;
             gap: 16px !important;
             overflow: visible;
           }
@@ -329,8 +330,8 @@ export default function Home() {
             overflow-y: visible !important;
             width: 100vw !important;
             margin-left: -24px !important;
-            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%) !important;
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%) !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
             margin-bottom: 24px;
             align-items: center;
           }

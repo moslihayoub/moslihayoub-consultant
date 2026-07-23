@@ -141,10 +141,10 @@ export default function About() {
   return (
     <AnimatedPage>
       <div className="page-wrapper" style={{ fontFamily: 'var(--font-family)' }}>
-        <div className="container">
           
           {/* HERO SECTION */}
           <section id="about-hero" data-scrollspy={t('nav_about')} className="page-hero-grid" style={{ marginBottom: '80px' }}>
+            <div className="container">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
               <h1 style={{ marginBottom: '8px' }}>Ayoub MOSLIH.</h1>
@@ -192,7 +192,8 @@ export default function About() {
                 {/* Floating element 1 (Top right) */}
                 <motion.div 
                   animate={{ y: [0, -15, 0] }} 
-                  style={{ position: 'absolute', top: '10%', right: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  className="floating-tag-right"
+                  style={{ position: 'absolute', top: '10%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Brain size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Stratégie IA' : 'AI Strategy'}</h3>
@@ -203,7 +204,7 @@ export default function About() {
                   animate={{ y: [0, 15, 0] }} 
                   transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
                   className="floating-tag-left"
-                  style={{ position: 'absolute', bottom: '15%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  style={{ position: 'absolute', bottom: '15%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Briefcase size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Consulting' : 'Consulting'}</h3>
@@ -213,7 +214,8 @@ export default function About() {
                 <motion.div 
                   animate={{ y: [0, -12, 0] }} 
                   transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-                  style={{ position: 'absolute', top: '25%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  className="floating-tag-left"
+                  style={{ position: 'absolute', top: '35%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Layout size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Design System</h3>
@@ -224,7 +226,7 @@ export default function About() {
                   animate={{ y: [0, 12, 0] }} 
                   transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
                   className="floating-tag-right"
-                  style={{ position: 'absolute', bottom: '5%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  style={{ position: 'absolute', bottom: '5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   <Search size={18} color="var(--color-electric-green)" />
                   <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>UX Research</h3>
@@ -246,6 +248,7 @@ export default function About() {
 
           {/* EXPERTISE GRID */}
           <section id="services" data-scrollspy={t('about_section1_label')} className="section-padding">
+            <div className="container">
             <span className="section-label">{t('about_expert_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_expert_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_expert_desc')}</p>
@@ -261,10 +264,12 @@ export default function About() {
                 </motion.div>
               ))}
             </div>
+            </div>
           </section>
 
           {/* EXPERIENCE TIMELINE */}
           <section id="parcours" data-scrollspy={t('about_section2_label')} className="section-padding" style={{ backgroundColor: 'var(--color-surface)' }}>
+            <div className="container">
             <span className="section-label">{t('about_timeline_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_timeline_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_timeline_desc')}</p>
@@ -329,10 +334,13 @@ export default function About() {
                 );
               })}
             </div>
+            </div>
           </section>
 
-          {/* CERTIFICATIONS (Tabs) */}
+          {/* CERTIFICATIONS */}
           <section id="certifications" data-scrollspy={t('about_cert_label')} style={{ marginBottom: '100px' }}>
+            <div className="container">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <div style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px' }}>
               <div>
                 <span className="section-label">{t('about_cert_label')}</span>
@@ -400,10 +408,14 @@ export default function About() {
                 </TiltWrapper>
               ))}
             </div>
+            </motion.div>
+            </div>
           </section>
 
-          {/* CONTACT & CAL EMBED */}
+          {/* RESERVER UN APPEL CTA */}
           <section id="booking" data-scrollspy={t('about_contact_label')} style={{ marginBottom: '60px' }}>
+            <div className="container">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <span className="section-label">{t('about_contact_label')}</span>
             <h2>{t('about_contact_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_contact_desc')}</p>
@@ -436,12 +448,12 @@ export default function About() {
                   />
                 </div>
               </div>
-
+            </div>
+            </motion.div>
             </div>
           </section>
 
         </div>
-      </div>
     </AnimatedPage>
   );
 }

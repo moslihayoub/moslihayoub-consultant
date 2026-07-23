@@ -131,7 +131,7 @@ const Work = () => {
                     animate={{ y: [0, -10, 0] }} 
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                     className="floating-tag-left"
-                    style={{ position: 'absolute', top: '5%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    style={{ position: 'absolute', top: '5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Compass size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'UX stratégique' : 'Strategic UX'}</h3>
@@ -142,7 +142,7 @@ const Work = () => {
                     animate={{ y: [0, 15, 0] }} 
                     transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
                     className="floating-tag-right"
-                    style={{ position: 'absolute', bottom: '15%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    style={{ position: 'absolute', bottom: '15%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Smartphone size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Mobile-first</h3>
@@ -153,7 +153,7 @@ const Work = () => {
                     animate={{ y: [0, -12, 0] }} 
                     transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
                     className="floating-tag-right"
-                    style={{ position: 'absolute', top: '25%', right: '-2%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    style={{ position: 'absolute', top: '25%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Target size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>Product strategy</h3>
@@ -164,7 +164,7 @@ const Work = () => {
                     animate={{ y: [0, 10, 0] }} 
                     transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
                     className="floating-tag-left"
-                    style={{ position: 'absolute', bottom: '10%', left: '-5%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    style={{ position: 'absolute', bottom: '10%', backgroundColor: 'var(--color-surface)', padding: '12px 20px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px' }}
                   >
                     <Bot size={18} color="var(--color-electric-green)" />
                     <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>{lang === 'fr' ? 'Automatisation' : 'Automation'}</h3>
@@ -192,7 +192,7 @@ const Work = () => {
                 <p style={styles.sectionDesc}>{t('work_grid_desc')}</p>
               </div>
               
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <div className="hero-tags-container" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 {['Tous', 'UX/UI', 'MVP Ai', 'Motion Graphics'].map(tab => (
                   <button
                     key={tab}

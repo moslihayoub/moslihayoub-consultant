@@ -281,12 +281,19 @@ p {
 }
 
 /* ── Responsive Utilities ── */
+/* Global floating tags fix for mobile */
+.floating-tag-left {
+  left: -5%;
+}
+.floating-tag-right {
+  right: -5%;
+}
+
 @media (max-width: 768px) {
   .hide-on-mobile {
     display: none !important;
   }
   
-  /* Global floating tags fix for mobile */
   .floating-tag-left {
     left: 8px !important;
   }
