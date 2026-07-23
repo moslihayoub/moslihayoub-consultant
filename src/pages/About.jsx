@@ -143,8 +143,8 @@ export default function About() {
       <div className="page-wrapper" style={{ fontFamily: 'var(--font-family)' }}>
           
           {/* HERO SECTION */}
-          <section id="about-hero" data-scrollspy={t('nav_about')} className="page-hero-grid" style={{ marginBottom: '80px' }}>
-            <div className="container">
+          <section id="about-hero" data-scrollspy={t('nav_about')} style={{ marginBottom: '80px' }}>
+            <div className="container page-hero-grid">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
               <h1 style={{ marginBottom: '8px' }}>Ayoub MOSLIH.</h1>
@@ -349,7 +349,7 @@ export default function About() {
                 <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_cert_desc')}</p>
               </div>
               
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <div className="hero-tags-container" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 {certCategories.map(cat => (
                   <button
                     key={cat}
