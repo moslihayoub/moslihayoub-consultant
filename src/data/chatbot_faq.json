@@ -1,0 +1,305 @@
+{
+  "entries": [
+    {
+      "id": "intro",
+      "category": "faq_general",
+      "keywords": [
+        "bonjour", "salut", "hello", "coucou", "salam", "slm", "ssalam", "ahlan", "marhaba",
+        "qui", "es", "tu", "m84", "presentation", "assistant", "aide", "chkon", "chkun"
+      ],
+      "questions": [
+        "Bonjour",
+        "Salam",
+        "Qui es-tu ?",
+        "Chkon enta ?",
+        "Comment peux-tu m'aider ?"
+      ],
+      "answer": {
+        "fr": "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Je répondrai à vos questions sur ses services, projets et compétences.",
+        "en": "Hello! I am M84, Ayoub MOSLIH's assistant. I can help you explore his services, projects, and skills."
+      },
+      "quickReplies": [
+        "Ses services",
+        "Voir les projets"
+      ],
+      "cta": {
+        "text": { "fr": "En savoir plus", "en": "Learn more" },
+        "action": "navigate",
+        "target": "/about"
+      }
+    },
+    {
+      "id": "about_ayoub",
+      "category": "about",
+      "keywords": [
+        "ayoub", "moslih", "profil", "biographie", "bio", "metier", "role", "consultant",
+        "chkon", "chkun", "chkoun", "tajriba", "khibra", "experience"
+      ],
+      "questions": [
+        "Qui est Ayoub MOSLIH ?",
+        "Chkon huwwa Ayoub Moslih ?",
+        "Quel est le profil d'Ayoub ?",
+        "Combien d'années d'expérience a-t-il ?"
+      ],
+      "answer": {
+        "fr": "Ayoub MOSLIH est Consultant en Transformation Digitale & IA avec 19 ans d'expérience (10+ ans Digital, 7+ ans UX/UI, 2+ ans IA).",
+        "en": "Ayoub MOSLIH is a Digital Transformation & AI Consultant with 19 years of experience (10+ yrs Digital, 7+ yrs UX/UI, 2+ yrs AI)."
+      },
+      "quickReplies": [
+        "Ses services",
+        "Me contacter"
+      ],
+      "cta": {
+        "text": { "fr": "Voir sa biographie", "en": "View bio" },
+        "action": "navigate",
+        "target": "/about"
+      }
+    },
+    {
+      "id": "services_overview",
+      "category": "services",
+      "keywords": [
+        "service", "services", "prestation", "prestations", "expertise", "offre", "accompagnement",
+        "khadamat", "khedma", "khedmat", "ach", "katdir", "chkatdir", "chno", "katsawb"
+      ],
+      "questions": [
+        "Quels sont vos services ?",
+        "Chno huma lkhadamat dialkoum ?",
+        "Ach katdir ?",
+        "Que propose Ayoub ?"
+      ],
+      "answer": {
+        "fr": "Ayoub intervient sur 4 axes : Transformation Digitale, Stratégie IA & LLM, Product & UX Strategy et Design Systems.",
+        "en": "Ayoub provides 4 core services: Digital Transformation, AI Strategy & LLMs, Product & UX Strategy, and Design Systems."
+      },
+      "quickReplies": [
+        "Stratégie IA",
+        "Voir les projets"
+      ],
+      "cta": {
+        "text": { "fr": "Voir les expertises", "en": "Explore expertise" },
+        "action": "navigate",
+        "target": "/about#expertise"
+      }
+    },
+    {
+      "id": "service_ia",
+      "category": "services",
+      "keywords": [
+        "ia", "ai", "intelligence", "artificielle", "llm", "automatisation", "gpt", "prompt",
+        "dhakaa", "isntina3i", "genai", "workflow"
+      ],
+      "questions": [
+        "Proposez-vous des services en IA ?",
+        "Wach katkhdmou b IA ?",
+        "Comment intégrez-vous l'IA ?"
+      ],
+      "answer": {
+        "fr": "Oui, Ayoub intègre l'IA générative (LLM, RAG, agents) pour automatiser vos processus et concevoir des MVP IA rapides.",
+        "en": "Yes, Ayoub integrates Generative AI (LLMs, RAG, agents) to automate processes and build rapid AI MVPs."
+      },
+      "quickReplies": [
+        "Projets MVP IA",
+        "Me contacter"
+      ],
+      "cta": {
+        "text": { "fr": "Voir les projets IA", "en": "Discover AI Projects" },
+        "action": "navigate",
+        "target": "/work"
+      }
+    },
+    {
+      "id": "projects_overview",
+      "category": "projects",
+      "keywords": [
+        "projet", "projets", "realisation", "realisations", "portfolio", "work", "etudes", "cas",
+        "machoari3", "mashari3", "mchari3", "a3mal", "aamal", "clients"
+      ],
+      "questions": [
+        "Quels sont vos projets récents ?",
+        "Wrena l'mchari3 dialk",
+        "Voir les réalisations",
+        "Avec quels clients avez-vous travaillé ?"
+      ],
+      "answer": {
+        "fr": "Ayoub a réalisé des projets majeurs pour Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, Nexastay, etc.",
+        "en": "Ayoub has delivered key projects for Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, Nexastay, etc."
+      },
+      "quickReplies": [
+        "Autocash MVP",
+        "Nexastay MVP"
+      ],
+      "cta": {
+        "text": { "fr": "Tous les projets", "en": "All projects" },
+        "action": "navigate",
+        "target": "/work"
+      }
+    },
+    {
+      "id": "project_autocash",
+      "category": "projects",
+      "keywords": [
+        "autocash", "auto", "cash", "sourcing", "vehicule", "voiture", "mvp", "sayarat"
+      ],
+      "questions": [
+        "Parle-moi du projet Autocash",
+        "C'est quoi Autocash Sourcing ?",
+        "Projet Autocash"
+      ],
+      "answer": {
+        "fr": "Autocash Sourcing (2026) : SaaS mobile-first d'achat/vente de véhicules avec MVP accéléré par IA.",
+        "en": "Autocash Sourcing (2026): Mobile-first SaaS for buying/selling vehicles with AI-accelerated MVP."
+      },
+      "quickReplies": [
+        "Nexastay MVP",
+        "Voir tous les projets"
+      ],
+      "cta": {
+        "text": { "fr": "Voir la démo", "en": "View demo" },
+        "action": "external",
+        "target": "https://autocash-sourcing.vercel.app/"
+      }
+    },
+    {
+      "id": "project_nexastay",
+      "category": "projects",
+      "keywords": [
+        "nexastay", "proptech", "booking", "airbnb", "reservation", "hebergement", "krra", "kra"
+      ],
+      "questions": [
+        "Présente le projet Nexastay",
+        "C'est quoi Nexastay ?",
+        "Projet Nexastay MVP"
+      ],
+      "answer": {
+        "fr": "Nexastay (2026) : Proptech de réservation de logements (style Airbnb) enrichie par l'IA et conçue sur Figma.",
+        "en": "Nexastay (2026): AI-enhanced property rental platform (Airbnb style) designed on Figma."
+      },
+      "quickReplies": [
+        "Autocash MVP",
+        "Voir tous les projets"
+      ],
+      "cta": {
+        "text": { "fr": "Ouvrir Figma", "en": "Open Figma" },
+        "action": "external",
+        "target": "https://www.figma.com/design/TGjrdYNkeGePCJtO7CPcWp/Nexa-UI--MVP-?m=auto&t=uVDJRvhRmGeplPnd-1"
+      }
+    },
+    {
+      "id": "skills_overview",
+      "category": "skills",
+      "keywords": [
+        "competence", "competences", "stack", "techno", "technologies", "outils", "figma", "react", "ux", "ui", "design", "agile",
+        "maharat", "adawat", "tools"
+      ],
+      "questions": [
+        "Quelles sont vos compétences ?",
+        "Quelle est votre stack ?",
+        "Wach katkhdm b Figma w React ?",
+        "Quels outils utilisez-vous ?"
+      ],
+      "answer": {
+        "fr": "UX/UI (Discovery, Wireframing, Figma, Design Systems), IA (LLM, Prompting, Prototypage React), et Méthodes Agiles.",
+        "en": "UX/UI (Discovery, Wireframes, Figma, Design Systems), AI (LLM, Prompting, React Prototyping), and Agile methods."
+      },
+      "quickReplies": [
+        "Voir les projets",
+        "Me contacter"
+      ],
+      "cta": {
+        "text": { "fr": "Voir le profil", "en": "View profile" },
+        "action": "navigate",
+        "target": "/about"
+      }
+    },
+    {
+      "id": "experience_timeline",
+      "category": "experience",
+      "keywords": [
+        "experience", "experiences", "parcours", "carriere", "historique", "postes", "cgi", "ocp", "credit", "maroc",
+        "khedma", "tajriba", "khibra", "fin", "khdam"
+      ],
+      "questions": [
+        "Quel est votre parcours ?",
+        "Fin khdam Ayoub ?",
+        "Où Ayoub a-t-il travaillé ?",
+        "Quelles sont ses expériences passées ?"
+      ],
+      "answer": {
+        "fr": "19 ans de parcours : Consultant Digital & IA (2024+), Lead UX/UI chez CGI, OCP, Crédit du Maroc, Wiggli (2019-2023), Directeur Artistique (2017-2019).",
+        "en": "19 years track record: Digital & AI Consultant (2024+), Lead UX/UI at CGI, OCP, Crédit du Maroc (2019-2023), Art Director (2017-2019)."
+      },
+      "quickReplies": [
+        "Ses compétences",
+        "Prendre contact"
+      ],
+      "cta": {
+        "text": { "fr": "Voir la timeline", "en": "View timeline" },
+        "action": "navigate",
+        "target": "/about#timeline"
+      }
+    },
+    {
+      "id": "contact_info",
+      "category": "contact",
+      "keywords": [
+        "contact", "contacter", "email", "mail", "telephone", "phone", "whatsapp", "linkedin", "rdv", "joindre",
+        "twasal", "nemra", "nmerte", "num", "kifash", "ntwasl", "mailou"
+      ],
+      "questions": [
+        "Comment contacter Ayoub ?",
+        "Kifash ntwasel m3a Ayoub ?",
+        "Quel est l'email d'Ayoub ?",
+        "A3tini nemra dial Ayoub"
+      ],
+      "answer": {
+        "fr": "Contactez Ayoub par Email : moslihayoub@gmail.com ou Téléphone / WhatsApp : +212 6 63 58 50 65.",
+        "en": "Reach Ayoub via Email: moslihayoub@gmail.com or Phone / WhatsApp: +212 6 63 58 50 65."
+      },
+      "quickReplies": [
+        "Ouvrir WhatsApp",
+        "Envoyer un Email"
+      ],
+      "cta": {
+        "text": { "fr": "Discuter sur WhatsApp", "en": "Chat on WhatsApp" },
+        "action": "external",
+        "target": "https://wa.me/212663585065"
+      }
+    },
+    {
+      "id": "pricing_availability",
+      "category": "pricing",
+      "keywords": [
+        "tarif", "tarifs", "prix", "devis", "combien", "tjm", "disponibilite", "freelance",
+        "taman", "thaman", "bchhal", "bch7al", "chehal"
+      ],
+      "questions": [
+        "Quels sont vos tarifs ?",
+        "Bchhal katkhdm ?",
+        "Combien coûte une mission ?",
+        "Comment obtenir un devis ?"
+      ],
+      "answer": {
+        "fr": "Les tarifs dépendent du périmètre (audit, UX/UI, stratégie IA). Contactez Ayoub pour obtenir un devis sur-mesure.",
+        "en": "Rates depend on the project scope (audit, UX/UI, AI strategy). Contact Ayoub for a custom quote."
+      },
+      "quickReplies": [
+        "Demander un devis",
+        "Discuter sur WhatsApp"
+      ],
+      "cta": {
+        "text": { "fr": "Demander un devis", "en": "Request quote" },
+        "action": "external",
+        "target": "mailto:moslihayoub@gmail.com?subject=Demande%20de%20devis"
+      }
+    }
+  ],
+  "fallback": {
+    "fr": "Je réponds uniquement aux questions sur ce portfolio. Essayez : projets, services, compétences ou contact.",
+    "en": "I only answer questions about this portfolio. Try asking: projects, services, skills, or contact.",
+    "quickReplies": [
+      "Quels sont tes services ?",
+      "Voir les projets"
+    ]
+  }
+}

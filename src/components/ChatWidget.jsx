@@ -1,45 +1,64 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot } from 'lucide-react';
+import { MessageCircle, X, Send, ExternalLink, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { findBestMatch } from '../utils/chatbotEngine';
+
+const AVATAR_URL = '/assets/m84-avatar.jpg';
+
+// URL Google Apps Script Webhook de collecte
+const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwET1lj4T_bGyx2UWhyg484DF9rniFS9i2d1jsUjbAImsi0wuQ_udm34eu4jH7i1Hml0Q/exec';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showProactivePrompt, setShowProactivePrompt] = useState(false);
+  const [proactiveDismissed, setProactiveDismissed] = useState(false);
+
+  const { lang, t } = useLanguage();
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState(() => {
-    const saved = localStorage.getItem('chat_session');
+    const saved = localStorage.getItem('m84_chat_session');
     if (saved) {
       try {
         const { messages: savedMessages, timestamp } = JSON.parse(saved);
-        // Expiration après 1 heure (60 * 60 * 1000 ms)
-        if (new Date().getTime() - timestamp < 3600000) {
+        if (new Date().getTime() - timestamp < 7200000) {
           return savedMessages;
         }
       } catch (e) {
-        console.error("Erreur lecture session", e);
+        console.error("Erreur lecture session M84", e);
       }
     }
     return [
-      { role: 'model', text: "Bonjour ! Je suis Moslih84 Assistant AI. Comment puis-je vous aider à découvrir le portfolio d'Ayoub ?" }
+      {
+        role: 'model',
+        text: lang === 'en'
+          ? "Hello! I am M84, Ayoub MOSLIH's virtual assistant. How can I help you?"
+          : "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?",
+        quickReplies: lang === 'en'
+          ? ["Services offered", "Recent projects"]
+          : ["Quels sont tes services ?", "Voir les projets"]
+      }
     ];
   });
+
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const { t } = useLanguage();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    // Sauvegarder la session à chaque modification
-    localStorage.setItem('chat_session', JSON.stringify({
+    localStorage.setItem('m84_chat_session', JSON.stringify({
       messages,
       timestamp: new Date().getTime()
     }));
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -47,49 +66,104 @@ const ChatWidget = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  // Timer 5 secondes pour le message proactif
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isOpen && !proactiveDismissed) {
+        setShowProactivePrompt(true);
+      }
+    }, 5000);
 
-    const userMsg = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
-    setIsLoading(true);
+    return () => clearTimeout(timer);
+  }, [isOpen, proactiveDismissed]);
+
+  const handleOpenChat = () => {
+    setIsOpen(true);
+    setShowProactivePrompt(false);
+  };
+
+  const handleDismissProactive = (e) => {
+    e.stopPropagation();
+    setShowProactivePrompt(false);
+    setProactiveDismissed(true);
+  };
+
+  // Envoi asynchrone des données vers Google Sheets
+  const logInteractionToSheet = (userQueryText, botAnswerText, category) => {
+    if (!DEFAULT_WEBHOOK_URL) return;
 
     try {
-      // Prepare history for chat
-      const history = messages.slice(1).map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.text }]
-      }));
-
-      const response = await fetch('/api/chat', {
+      fetch(DEFAULT_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          message: userMsg,
-          history: history
-        })
-      });
+          timestamp: new Date().toLocaleString(),
+          type: 'Chatbot M84',
+          userMessage: userQueryText,
+          botAnswer: botAnswerText,
+          category: category || 'general',
+          language: lang || 'fr'
+        }),
+        mode: 'no-cors'
+      }).catch(err => console.debug('Sheet logging skipped:', err));
+    } catch (e) {
+      // Ignorer l'erreur pour ne pas impacter l'expérience utilisateur
+    }
+  };
 
-      if (!response.ok) {
-        let errorMsg = 'Erreur de connexion au serveur';
-        try {
-          const errData = await response.json();
-          if (errData.error) errorMsg = errData.error;
-        } catch(e) {}
-        throw new Error(errorMsg);
+  const processQuery = (userQueryText) => {
+    if (!userQueryText || !userQueryText.trim()) return;
+    const query = userQueryText.trim();
+    
+    setMessages(prev => [...prev, { role: 'user', text: query }]);
+    setInput('');
+
+    // Recherche locale instantanée via chatbotEngine
+    setTimeout(() => {
+      const match = findBestMatch(query, lang);
+      
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'model',
+          text: match.text,
+          quickReplies: (match.quickReplies || []).slice(0, 2),
+          cta: match.cta || null,
+          category: match.category
+        }
+      ]);
+
+      // Collecte discrète en arrière-plan vers Google Sheet
+      logInteractionToSheet(query, match.text, match.category);
+
+    }, 120);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    processQuery(input);
+  };
+
+  const handleQuickReplyClick = (replyText) => {
+    processQuery(replyText);
+  };
+
+  const handleCtaClick = (cta) => {
+    if (!cta) return;
+
+    logInteractionToSheet(`[Clic CTA] ${cta.text}`, `Navigation/Lien vers ${cta.target}`, 'cta_click');
+
+    if (cta.action === 'external' && cta.target) {
+      window.open(cta.target, '_blank', 'noopener,noreferrer');
+    } else if (cta.action === 'navigate' && cta.target) {
+      const [path, hash] = cta.target.split('#');
+      navigate(path || '/');
+      if (hash) {
+        setTimeout(() => {
+          const el = document.getElementById(hash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
       }
-
-      const data = await response.json();
-      setMessages(prev => [...prev, { role: 'model', text: data.text }]);
-    } catch (error) {
-      console.error('Chat error:', error);
-      setMessages(prev => [...prev, { role: 'model', text: `Désolé, problème rencontré : ${error.message}` }]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -98,133 +172,327 @@ const ChatWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 15, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            exit={{ opacity: 0, y: 15, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             style={isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow}
             className="glass-panel"
           >
+            {/* Header Chat */}
             <div style={styles.chatHeader}>
               <div style={styles.chatHeaderTitle}>
-                <div style={styles.avatar}>
-                  <Bot size={18} color="var(--color-electric-green)" />
+                <div style={styles.avatarWrapper}>
+                  <img src={AVATAR_URL} alt="M84 Avatar" style={styles.avatarImg} />
+                  <span style={styles.onlineBadge}></span>
                 </div>
                 <div>
-                  <h4 style={styles.botName}>Moslih84 Assistant AI</h4>
-                  <span style={styles.botStatus}>{t('chat_online')}</span>
+                  <h4 style={styles.botName}>M84</h4>
+                  <span style={styles.botStatus}>
+                    {lang === 'en' ? 'Portfolio Assistant' : 'Assistant Portfolio'} • {t('chat_online')}
+                  </span>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} style={styles.closeBtn} className="hover-trigger">
+              <button onClick={() => setIsOpen(false)} style={styles.closeBtn} aria-label="Fermer le chat">
                 <X size={18} />
               </button>
             </div>
 
+            {/* Corps de conversation */}
             <div style={styles.chatBody}>
               {messages.map((msg, idx) => (
-                <div key={idx} style={{
-                  ...styles.messageWrapper,
-                  justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start'
-                }}>
-                  {msg.role === 'model' && (
-                    <div style={styles.smallAvatar}>
-                      <Bot size={12} color="var(--color-electric-green)" />
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <div
+                    style={{
+                      ...styles.messageWrapper,
+                      justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start'
+                    }}
+                  >
+                    {msg.role === 'model' && (
+                      <img src={AVATAR_URL} alt="M84" style={styles.smallAvatarImg} />
+                    )}
+                    <div
+                      style={{
+                        ...styles.messageBubble,
+                        backgroundColor: msg.role === 'user' ? 'var(--color-electric-green, #006253)' : 'var(--color-surface, #FFFFFF)',
+                        color: msg.role === 'user' ? '#FFFFFF' : 'var(--color-text-primary, #111111)',
+                        borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                        border: msg.role === 'model' ? '1px solid var(--color-border, #EAEAEA)' : 'none'
+                      }}
+                    >
+                      {msg.text.split('\n').map((line, lIdx) => (
+                        <p
+                          key={lIdx}
+                          style={{
+                            margin: lIdx > 0 ? '3px 0 0 0' : 0,
+                            color: msg.role === 'user' ? '#FFFFFF' : 'inherit',
+                            fontWeight: msg.role === 'user' ? 500 : 400
+                          }}
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Bouton (Fond Vert Clair, Bordure Verte, Texte Vert) */}
+                  {msg.role === 'model' && msg.cta && (
+                    <div style={{ marginLeft: '30px', marginTop: '2px' }}>
+                      <button
+                        onClick={() => handleCtaClick(msg.cta)}
+                        style={styles.ctaBtn}
+                      >
+                        <span>{msg.cta.text}</span>
+                        {msg.cta.action === 'external' ? (
+                          <ExternalLink size={13} color="var(--color-electric-green, #006253)" />
+                        ) : (
+                          <ArrowRight size={13} color="var(--color-electric-green, #006253)" />
+                        )}
+                      </button>
                     </div>
                   )}
-                  <div style={{
-                    ...styles.messageBubble,
-                    backgroundColor: msg.role === 'user' ? 'var(--color-electric-green)' : 'var(--color-bg)',
-                    color: msg.role === 'user' ? '#FFFFFF' : 'var(--color-text-primary)',
-                    borderRadius: msg.role === 'user' ? '16px 16px 0px 16px' : '16px 16px 16px 0px',
-                  }}>
-                    {msg.text}
-                  </div>
+
+                  {/* Quick replies (Max 2) */}
+                  {msg.role === 'model' && idx === messages.length - 1 && msg.quickReplies && msg.quickReplies.length > 0 && (
+                    <div style={styles.quickRepliesContainer}>
+                      {msg.quickReplies.slice(0, 2).map((qr, qIdx) => (
+                        <button
+                          key={qIdx}
+                          onClick={() => handleQuickReplyClick(qr)}
+                          style={styles.quickReplyChip}
+                        >
+                          {qr}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
-              {isLoading && (
-                <div style={{...styles.messageWrapper, justifyContent: 'flex-start'}}>
-                  <div style={styles.smallAvatar}>
-                    <Bot size={12} color="var(--color-electric-green)" />
-                  </div>
-                  <div style={{...styles.messageBubble, backgroundColor: 'var(--color-bg)'}}>
-                    <motion.div
-                      animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ repeat: Infinity, duration: 1.5 }}
-                    >
-                      ...
-                    </motion.div>
-                  </div>
-                </div>
-              )}
               <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSend} style={styles.chatFooter}>
+            {/* Pied de chat / Formulaire */}
+            <form onSubmit={handleSubmit} style={styles.chatFooter}>
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={t('chat_placeholder')}
+                placeholder={lang === 'en' ? 'Ask a question...' : 'Posez votre question...'}
                 style={styles.input}
               />
-              <button type="submit" disabled={isLoading || !input.trim()} style={styles.sendBtn} className="hover-trigger">
-                <Send size={18} color={input.trim() ? "var(--color-electric-green)" : "#ccc"} />
+              <button
+                type="submit"
+                disabled={!input.trim()}
+                style={{
+                  ...styles.sendBtn,
+                  opacity: input.trim() ? 1 : 0.4,
+                  cursor: input.trim() ? 'pointer' : 'default'
+                }}
+              >
+                <Send size={16} color="#FFFFFF" />
               </button>
             </form>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.button
-        drag={isMobile}
-        dragConstraints={{ left: typeof window !== 'undefined' ? -window.innerWidth + 80 : 0, right: 0, top: typeof window !== 'undefined' ? -window.innerHeight + 140 : 0, bottom: 0 }}
-        dragElastic={0.1}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        style={isMobile ? { ...styles.fab, ...styles.fabMobile } : styles.fab}
-        className="hover-trigger"
-      >
-        {isOpen ? <X size={24} color="#FFF" /> : <Bot size={24} color="#FFF" />}
-      </motion.button>
+      {/* Pop-up proactif 5 sec */}
+      <AnimatePresence>
+        {!isOpen && showProactivePrompt && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.9 }}
+            style={isMobile ? { ...styles.proactiveBubble, ...styles.proactiveBubbleMobile } : styles.proactiveBubble}
+            onClick={handleOpenChat}
+          >
+            <div style={styles.proactiveContent}>
+              <span style={{ fontSize: '0.82rem', lineHeight: '1.4', color: '#111111', fontWeight: 500 }}>
+                Bonjour ! Je suis votre <strong style={{ color: 'var(--color-electric-green, #006253)' }}>M84</strong>. Comment puis-je vous aider ?
+              </span>
+            </div>
+            <button onClick={handleDismissProactive} style={styles.proactiveCloseBtn} aria-label="Fermer">
+              <X size={13} color="#666666" />
+            </button>
+            <div style={styles.proactiveArrow} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bouton Flottant FAB avec Tooltip au survol */}
+      <div style={isMobile ? { ...styles.fabContainer, ...styles.fabContainerMobile } : styles.fabContainer}>
+        <AnimatePresence>
+          {!isOpen && isHovered && (
+            <motion.div
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              style={styles.hoverTooltip}
+            >
+              <div style={styles.hoverTooltipIconWrapper}>
+                <MessageCircle size={13} color="#FFFFFF" />
+              </div>
+              <span style={styles.hoverTooltipText}>
+                {lang === 'en' ? 'Need help ?' : "Besoin d'aide ?"}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false);
+            } else {
+              handleOpenChat();
+            }
+          }}
+          style={styles.fabBtn}
+          aria-label="Ouvrir le chatbot M84"
+        >
+          {isOpen ? (
+            <X size={24} color="#FFF" />
+          ) : (
+            <div style={styles.fabAvatarWrapper}>
+              <img src={AVATAR_URL} alt="M84" style={styles.fabAvatarImg} />
+            </div>
+          )}
+        </motion.button>
+      </div>
     </>
   );
 };
 
 const styles = {
-  fab: {
+  fabContainer: {
     position: 'fixed',
     bottom: '24px',
     right: '24px',
-    width: '60px',
-    height: '60px',
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  fabContainerMobile: {
+    bottom: '80px',
+    right: '16px',
+  },
+  fabBtn: {
+    width: '56px',
+    height: '56px',
     borderRadius: '50%',
-    backgroundColor: 'var(--color-electric-green)',
+    backgroundColor: 'var(--color-electric-green, #006253)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: 'var(--shadow-lg)',
-    zIndex: 9999,
-    cursor: 'none',
+    boxShadow: '0 6px 20px rgba(0, 98, 83, 0.35)',
+    border: '2px solid rgba(255, 255, 255, 0.2)',
+    cursor: 'pointer',
+    outline: 'none',
+    transition: 'all 0.3s ease',
   },
-  fabMobile: {
-    bottom: '100px', /* Au dessus de la Bottom Navbar */
+  fabAvatarWrapper: {
+    width: '42px',
+    height: '42px',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    border: '2px solid #FFFFFF',
   },
+  fabAvatarImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  hoverTooltip: {
+    backgroundColor: 'var(--color-electric-green, #006253)',
+    color: '#FFFFFF',
+    padding: '7px 14px',
+    borderRadius: '20px',
+    fontSize: '0.84rem',
+    fontWeight: 600,
+    boxShadow: '0 4px 14px rgba(0, 98, 83, 0.3)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    whiteSpace: 'nowrap',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+  },
+  hoverTooltipIconWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hoverTooltipText: {
+    fontFamily: 'var(--font-family, sans-serif)',
+    color: '#FFFFFF',
+  },
+
+  /* Pop-up proactif 5s */
+  proactiveBubble: {
+    position: 'fixed',
+    bottom: '90px',
+    right: '24px',
+    zIndex: 9998,
+    backgroundColor: '#FFFFFF',
+    border: '1px solid #EAEAEA',
+    borderRadius: '14px',
+    padding: '12px 34px 12px 14px',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+    maxWidth: '280px',
+    cursor: 'pointer',
+  },
+  proactiveBubbleMobile: {
+    bottom: '144px',
+    right: '16px',
+  },
+  proactiveContent: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  proactiveCloseBtn: {
+    position: 'absolute',
+    top: '6px',
+    right: '6px',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '3px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  proactiveArrow: {
+    position: 'absolute',
+    bottom: '-7px',
+    right: '22px',
+    width: '0',
+    height: '0',
+    borderLeft: '7px solid transparent',
+    borderRight: '7px solid transparent',
+    borderTop: '7px solid #FFFFFF',
+  },
+
+  /* Fenêtre du chat (Compacte: 330px x 460px) */
   chatWindow: {
     position: 'fixed',
-    bottom: '100px',
+    bottom: '90px',
     right: '24px',
-    width: '350px',
-    height: '500px',
-    maxHeight: 'calc(100vh - 120px)',
-    maxWidth: 'calc(100vw - 48px)',
-    backgroundColor: 'var(--color-surface)',
-    borderRadius: 'var(--radius-lg)',
-    boxShadow: 'var(--shadow-lg)',
+    width: '330px',
+    height: '460px',
+    maxHeight: 'calc(100vh - 110px)',
+    maxWidth: 'calc(100vw - 32px)',
+    backgroundColor: 'var(--color-surface, #FFFFFF)',
+    borderRadius: '20px',
+    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.12)',
     zIndex: 9998,
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+    border: '1px solid var(--color-border, #EAEAEA)',
   },
   chatWindowMobile: {
     bottom: '0',
@@ -234,98 +502,160 @@ const styles = {
     maxHeight: '100vh',
     maxWidth: '100vw',
     borderRadius: '0',
+    border: 'none',
   },
   chatHeader: {
-    padding: '16px',
-    borderBottom: '1px solid var(--color-border)',
+    padding: '12px 16px',
+    borderBottom: '1px solid var(--color-border, #EAEAEA)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'var(--color-surface)',
+    backgroundColor: 'var(--color-surface, #FFFFFF)',
   },
   chatHeaderTitle: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '10px',
   },
-  avatar: {
+  avatarWrapper: {
+    position: 'relative',
     width: '36px',
     height: '36px',
     borderRadius: '50%',
-    backgroundColor: 'rgba(57, 255, 20, 0.1)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    overflow: 'hidden',
+    border: '2px solid var(--color-electric-green, #006253)',
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  onlineBadge: {
+    position: 'absolute',
+    bottom: '1px',
+    right: '1px',
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#22C55E',
+    border: '1.5px solid #FFFFFF',
   },
   botName: {
-    fontSize: '0.95rem',
+    fontSize: '0.92rem',
     margin: 0,
-    fontWeight: 600,
+    fontWeight: 700,
+    color: 'var(--color-text-primary, #111111)',
   },
   botStatus: {
-    fontSize: '0.75rem',
-    color: 'var(--color-electric-green)',
+    fontSize: '0.72rem',
+    color: 'var(--color-electric-green, #006253)',
+    fontWeight: 500,
   },
   closeBtn: {
     background: 'none',
     border: 'none',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-secondary, #666666)',
     padding: '4px',
-    cursor: 'none',
+    cursor: 'pointer',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chatBody: {
     flex: 1,
-    padding: '16px',
+    padding: '12px',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
+    gap: '10px',
+    backgroundColor: 'var(--color-bg, #FAFAFA)',
   },
   messageWrapper: {
     display: 'flex',
     gap: '8px',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
-  smallAvatar: {
+  smallAvatarImg: {
     width: '24px',
     height: '24px',
     borderRadius: '50%',
-    backgroundColor: 'rgba(57, 255, 20, 0.1)',
+    objectFit: 'cover',
+    marginTop: '2px',
+    border: '1px solid var(--color-electric-green, #006253)',
+    flexShrink: 0,
+  },
+  messageBubble: {
+    padding: '8px 12px',
+    fontSize: '0.84rem',
+    maxWidth: '84%',
+    lineHeight: 1.4,
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
+  },
+
+  /* Style du CTA : Background vert clair, Bordure vert émeraude, Texte vert émeraude */
+  ctaBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '6px 12px',
+    borderRadius: '20px',
+    backgroundColor: 'var(--color-green-light, #e6efee)',
+    border: '1px solid var(--color-electric-green, #006253)',
+    color: 'var(--color-electric-green, #006253)',
+    fontSize: '0.8rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(0, 98, 83, 0.1)',
+    transition: 'all 0.2s ease',
+  },
+  quickRepliesContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '5px',
+    marginLeft: '32px',
+    marginTop: '1px',
+  },
+  quickReplyChip: {
+    backgroundColor: 'var(--color-surface, #FFFFFF)',
+    border: '1px solid var(--color-electric-green, #006253)',
+    color: 'var(--color-electric-green, #006253)',
+    borderRadius: '14px',
+    padding: '4px 10px',
+    fontSize: '0.76rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  chatFooter: {
+    padding: '10px 12px',
+    borderTop: '1px solid var(--color-border, #EAEAEA)',
+    display: 'flex',
+    gap: '8px',
+    backgroundColor: 'var(--color-surface, #FFFFFF)',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    border: '1px solid var(--color-border, #EAEAEA)',
+    backgroundColor: 'var(--color-bg, #FAFAFA)',
+    padding: '8px 14px',
+    borderRadius: '20px',
+    fontSize: '0.84rem',
+    outline: 'none',
+    color: 'var(--color-text-primary, #111111)',
+    fontFamily: 'inherit',
+  },
+  sendBtn: {
+    backgroundColor: 'var(--color-electric-green, #006253)',
+    border: 'none',
+    borderRadius: '50%',
+    width: '34px',
+    height: '34px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-  },
-  messageBubble: {
-    padding: '10px 14px',
-    fontSize: '0.9rem',
-    maxWidth: '85%',
-    lineHeight: 1.4,
-  },
-  chatFooter: {
-    padding: '12px 16px',
-    borderTop: '1px solid var(--color-border)',
-    display: 'flex',
-    gap: '8px',
-    backgroundColor: 'var(--color-surface)',
-  },
-  input: {
-    flex: 1,
-    border: 'none',
-    backgroundColor: 'var(--color-bg)',
-    padding: '10px 14px',
-    borderRadius: 'var(--radius-full)',
-    fontSize: '0.9rem',
-    outline: 'none',
-    fontFamily: 'var(--font-family)',
-    cursor: 'none',
-    color: 'var(--color-text-primary)'
-  },
-  sendBtn: {
-    background: 'none',
-    border: 'none',
-    padding: '8px',
-    cursor: 'none',
   }
 };
 
