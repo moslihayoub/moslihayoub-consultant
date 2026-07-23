@@ -587,7 +587,7 @@ const styles = {
   },
   messageBubble: {
     padding: '8px 12px',
-    fontSize: '0.84rem',
+    fontSize: '0.74rem',
     maxWidth: '84%',
     lineHeight: 1.4,
     boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
@@ -641,7 +641,7 @@ const styles = {
     backgroundColor: 'var(--color-bg, #FAFAFA)',
     padding: '8px 14px',
     borderRadius: '20px',
-    fontSize: '0.84rem',
+    fontSize: '0.96rem',
     outline: 'none',
     color: 'var(--color-text-primary, #111111)',
     fontFamily: 'inherit',
