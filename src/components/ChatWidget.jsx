@@ -159,10 +159,13 @@ const ChatWidget = () => {
             body: JSON.stringify({
               timestamp: new Date().toLocaleString(),
               type: 'LEAD M84',
-              userMessage: leadData.name || 'Inconnu', // Stocké dans la colonne Message / Nom
-              botAnswer: finalContact, // Stocké dans la colonne Bot / Contact
+              userMessage: '=== LEAD CAPTURÉ ===', 
+              botAnswer: '=== DONNÉES ENREGISTRÉES ===', 
               category: 'Lead Capture',
-              language: leadData.type || 'Non spécifié' // Stocké dans la colonne Langue / Type
+              language: lang || 'fr',
+              leadName: leadData.name || 'Inconnu',
+              leadContact: finalContact,
+              leadType: leadData.type || 'Non spécifié'
             }),
             mode: 'no-cors'
           }).catch(err => console.debug('Sheet logging skipped:', err));
