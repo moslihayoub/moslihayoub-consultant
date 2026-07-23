@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, ExternalLink, ArrowRight } from 'lucide-react';
+import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -20,30 +20,41 @@ const ChatWidget = () => {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
 
+  const getInitialMessage = (currentLang) => ({
+    role: 'model',
+    text: currentLang === 'en'
+      ? "Hello! I am M84, Ayoub MOSLIH's virtual assistant. How can I help you?"
+      : "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?",
+    quickReplies: currentLang === 'en'
+      ? ["Services offered", "Recent projects"]
+      : ["Quels sont tes services ?", "Voir les projets"]
+  });
+
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('m84_chat_session');
     if (saved) {
       try {
         const { messages: savedMessages, timestamp } = JSON.parse(saved);
-        if (new Date().getTime() - timestamp < 7200000) {
+        // Expiration de session: 1 heure (3600000 ms)
+        if (new Date().getTime() - timestamp < 3600000) {
           return savedMessages;
         }
       } catch (e) {
         console.error("Erreur lecture session M84", e);
       }
     }
-    return [
-      {
-        role: 'model',
-        text: lang === 'en'
-          ? "Hello! I am M84, Ayoub MOSLIH's virtual assistant. How can I help you?"
-          : "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?",
-        quickReplies: lang === 'en'
-          ? ["Services offered", "Recent projects"]
-          : ["Quels sont tes services ?", "Voir les projets"]
-      }
-    ];
+    return [getInitialMessage(lang)];
   });
+
+  const resetChat = () => {
+    setMessages([getInitialMessage(lang)]);
+    setLeadState('idle');
+    setLeadData({ type: '', name: '', contact: '' });
+    localStorage.setItem('m84_chat_session', JSON.stringify({
+      messages: [getInitialMessage(lang)],
+      timestamp: new Date().getTime()
+    }));
+  };
 
   const [input, setInput] = useState('');
   const [leadState, setLeadState] = useState('idle');
@@ -260,18 +271,22 @@ const ChatWidget = () => {
               <div style={styles.chatHeaderTitle}>
                 <div style={styles.avatarWrapper}>
                   <img src={AVATAR_URL} alt="M84 Avatar" style={styles.avatarImg} />
-                  <span style={styles.onlineBadge}></span>
                 </div>
                 <div>
                   <h4 style={styles.botName}>M84</h4>
                   <span style={styles.botStatus}>
-                    {lang === 'en' ? 'Consultant Assistant' : 'Assistant Consultant'} • {t('chat_online')}
+                    {lang === 'en' ? 'Consultant Assistant' : 'Assistant Consultant'} • 7/24
                   </span>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} style={styles.closeBtn} aria-label="Fermer le chat">
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button onClick={resetChat} style={styles.closeBtn} aria-label="Nouveau chat" title="Nouveau chat">
+                  <RotateCcw size={16} />
+                </button>
+                <button onClick={() => setIsOpen(false)} style={styles.closeBtn} aria-label="Fermer le chat">
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             {/* Corps de conversation */}
@@ -311,35 +326,34 @@ const ChatWidget = () => {
                     </div>
                   </div>
 
-                  {/* CTA Bouton (Fond Vert Clair, Bordure Verte, Texte Vert) */}
-                  {msg.role === 'model' && msg.cta && (
-                    <div style={{ marginLeft: '30px', marginTop: '2px' }}>
-                      <button
-                        onClick={() => handleCtaClick(msg.cta)}
-                        style={styles.ctaBtn}
-                      >
-                        <span>{msg.cta.text}</span>
-                        {msg.cta.action === 'external' ? (
-                          <ExternalLink size={13} color="var(--color-electric-green, #006253)" />
-                        ) : (
-                          <ArrowRight size={13} color="var(--color-electric-green, #006253)" />
-                        )}
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Quick replies (Max 2) */}
-                  {msg.role === 'model' && idx === messages.length - 1 && msg.quickReplies && msg.quickReplies.length > 0 && (
+                  {/* Grouped CTA and Quick Replies for proper wrapping */}
+                  {msg.role === 'model' && (msg.cta || (idx === messages.length - 1 && msg.quickReplies?.length > 0)) && (
                     <div style={styles.quickRepliesContainer}>
-                      {msg.quickReplies.slice(0, 2).map((qr, qIdx) => (
+                      {msg.cta && (
                         <button
-                          key={qIdx}
-                          onClick={() => handleQuickReplyClick(qr)}
-                          style={styles.quickReplyChip}
+                          onClick={() => handleCtaClick(msg.cta)}
+                          style={styles.ctaBtn}
                         >
-                          {qr}
+                          <span>{msg.cta.text}</span>
+                          {msg.cta.action === 'external' ? (
+                            <ExternalLink size={13} color="var(--color-electric-green, #006253)" />
+                          ) : (
+                            <ArrowRight size={13} color="var(--color-electric-green, #006253)" />
+                          )}
                         </button>
-                      ))}
+                      )}
+                      
+                      {idx === messages.length - 1 && msg.quickReplies && msg.quickReplies.length > 0 && (
+                        msg.quickReplies.slice(0, 3).map((qr, qIdx) => (
+                          <button
+                            key={qIdx}
+                            onClick={() => handleQuickReplyClick(qr)}
+                            style={styles.quickReplyChip}
+                          >
+                            {qr}
+                          </button>
+                        ))
+                      )}
                     </div>
                   )}
                 </div>

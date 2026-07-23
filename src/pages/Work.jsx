@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useInView } from 'framer-motion';
-import { Award, CheckCircle2, Clock, FolderOpen, Search, Brain, Layout, Compass, Smartphone, Target, Bot } from 'lucide-react';
+import { Award, CheckCircle2, Clock, FolderOpen, Search, Brain, Layout, Compass, Smartphone, Target, Bot, ArrowRight } from 'lucide-react';
 import AnimatedPage from '../components/AnimatedPage';
 import ProjectCard from '../components/ProjectCard';
 import ProtectedProjectModal from '../components/ProtectedProjectModal';
@@ -77,6 +77,7 @@ const Work = () => {
   const { t, lang } = useLanguage();
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTab, setActiveTab] = useState('Tous');
+  const [visibleProjectsCount, setVisibleProjectsCount] = useState(6);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -85,10 +86,16 @@ const Work = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setVisibleProjectsCount(6);
+  }, [activeTab]);
+
   const filteredProjects = projectsData.filter(project => {
     if (activeTab === 'Tous') return true;
     return project.category === activeTab;
   });
+
+  const displayedProjects = filteredProjects.slice(0, visibleProjectsCount);
 
   const handleProjectClick = (project) => { if (project.isProtected) { setSelectedProject(project); } else { window.open(project.url, '_blank', 'noopener,noreferrer'); } };
   const handleProceed = () => { if (selectedProject) { window.open(selectedProject.url, '_blank', 'noopener,noreferrer'); setSelectedProject(null); } };
@@ -216,12 +223,20 @@ const Work = () => {
             </motion.div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
-              {filteredProjects.map((project, index) => (
+              {displayedProjects.map((project, index) => (
                 <motion.div key={project.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.4 }} style={{ height: '100%' }}>
                   <ProjectCard project={project} onClick={handleProjectClick} />
                 </motion.div>
               ))}
             </div>
+
+            {visibleProjectsCount < filteredProjects.length && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginTop: '40px', display: 'flex', justifyContent: 'center' }}>
+                <button onClick={() => setVisibleProjectsCount(prev => prev + 6)} className="btn-secondary hover-trigger">
+                  {lang === 'fr' ? 'Charger plus' : 'Load more'}
+                </button>
+              </motion.div>
+            )}
           </div>
         </section>
 
@@ -242,7 +257,7 @@ const Work = () => {
             
             <div style={{ marginTop: '48px', display: 'flex', justifyContent: 'center' }}>
               <a href="/about" className="btn-primary hover-trigger">
-                Voir toutes les certificats
+                Voir toutes les certificats <ArrowRight size={18} />
               </a>
             </div>
           </div>

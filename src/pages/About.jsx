@@ -114,6 +114,7 @@ export default function About() {
   const [calType, setCalType] = useState('30min');
   const [activeCertTab, setActiveCertTab] = useState('Tous');
   const [filterValue, setFilterValue] = useState('Tous');
+  const [visibleCertsCount, setVisibleCertsCount] = useState(6);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -122,12 +123,18 @@ export default function About() {
     }
   }, []);
 
+  useEffect(() => {
+    setVisibleCertsCount(6);
+  }, [activeCertTab, filterValue]);
+
   const filteredCerts = certificationsData.filter(cert => {
     const matchCat = activeCertTab === 'Tous' || cert.category === activeCertTab;
     const matchFilter = filterValue === 'Tous' || cert.year === filterValue || cert.issuer === filterValue;
     return matchCat && matchFilter;
   });
   
+  const displayedCerts = filteredCerts.slice(0, visibleCertsCount);
+
   const certCategories = ['Tous', ...new Set(certificationsData.map(c => c.category))];
 
   const toggleTimeline = (index) => {
@@ -373,7 +380,7 @@ export default function About() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
-              {filteredCerts.map((cert, i) => (
+              {displayedCerts.map((cert, i) => (
                 <TiltWrapper key={`${activeCertTab}-${i}`} style={{ display: 'block', height: '100%' }}>
                   <a
                     href={cert.url}
@@ -409,6 +416,14 @@ export default function About() {
                 </TiltWrapper>
               ))}
             </div>
+
+            {visibleCertsCount < filteredCerts.length && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginTop: '40px', display: 'flex', justifyContent: 'center' }}>
+                <button onClick={() => setVisibleCertsCount(prev => prev + 6)} className="btn-secondary hover-trigger">
+                  {lang === 'fr' ? 'Charger plus' : 'Load more'}
+                </button>
+              </motion.div>
+            )}
             </motion.div>
             </div>
           </section>

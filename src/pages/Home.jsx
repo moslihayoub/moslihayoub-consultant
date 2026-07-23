@@ -178,16 +178,16 @@ export default function Home() {
               </p>
               
               <div className="hero-cta-container" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
-                <TiltWrapper style={{ flex: 1, minWidth: 0 }}>
-                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0, width: '100%' }}>
-                    <span className="hide-on-mobile">{t('btn_work')}</span>
-                    <span className="hide-on-desktop">Mes projets</span>
+                <TiltWrapper>
+                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0 }}>
+                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{t('btn_work')} <ArrowRight size={17} /></span>
+                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Mes projets <ArrowRight size={17} /></span>
                   </Link>
                 </TiltWrapper>
-                <TiltWrapper style={{ flex: 1, minWidth: 0 }}>
-                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0, width: '100%' }}>
-                    <span className="hide-on-mobile">{t('home_section3_label')} <ChevronRight size={17} /></span>
-                    <span className="hide-on-desktop">Trajectoire</span>
+                <TiltWrapper>
+                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0 }}>
+                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{t('home_section3_label')} <ChevronRight size={17} /></span>
+                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Trajectoire <ChevronRight size={17} /></span>
                   </a>
                 </TiltWrapper>
               </div>
