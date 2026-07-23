@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase } from 'lucide-react';
+import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase, Route } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import AnimatedPage from '../components/AnimatedPage';
 import ProjectCard from '../components/ProjectCard';
@@ -162,7 +162,7 @@ export default function Home() {
         <div className="container">
           <div className="hero-grid">
             
-            <motion.div className="hero-text-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
+            <motion.div className="hero-text-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: '100%', overflow: 'visible' }} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
               <motion.div className="hero-role-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--color-electric-green)', backgroundColor: 'oklch(51.1% 0.096 186.391 / 0.1)', border: '1px solid oklch(51.1% 0.096 186.391 / 0.25)', borderRadius: '999px', padding: '6px 14px', marginBottom: '28px', width: 'fit-content' }} initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--color-electric-green)', display: 'inline-block', flexShrink: 0, animation: 'pulse-green 2s ease-in-out infinite' }} />
                 {t('hero_role')}
@@ -186,8 +186,8 @@ export default function Home() {
                 </TiltWrapper>
                 <TiltWrapper>
                   <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0 }}>
-                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{t('home_section3_label')} <ChevronRight size={17} /></span>
-                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Trajectoire <ChevronRight size={17} /></span>
+                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={17} /> {t('home_section3_label')}</span>
+                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={17} /> Trajectoire</span>
                   </a>
                 </TiltWrapper>
               </div>
