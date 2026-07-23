@@ -225,9 +225,7 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Mobile hero image fallback */}
-              <div style={{ display: 'none' }} className="mobile-only-hero">
-                 <img src="/assets/2.png" alt="Ayoub MOSLIH" loading="lazy" style={{ width: '100%', height: '340px', objectFit: 'cover', borderRadius: '24px', display: 'block', animation: 'float-up 6s ease-in-out infinite', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--color-border)' }} />
+              {/* Mobile hero image fallback removed as requested */}
               </div>
             </motion.div>
             
@@ -282,7 +280,6 @@ export default function Home() {
       
       <style>{`
         @media(max-width: 768px) {
-          .mobile-only-hero { display: block !important; margin-top: 32px; }
           .hero-text-container {
             width: 100% !important;
             max-width: 100% !important;
@@ -295,17 +292,17 @@ export default function Home() {
           .hero-text-container p { text-align: left; margin-left: 0; margin-right: 0; }
           .hero-cta-container {
             width: 100%;
-            justify-content: flex-start;
-            flex-wrap: nowrap !important;
-            gap: 10px !important;
-            /* Pas de scroll pour les boutons, on ajuste la taille pour qu'ils rentrent */
+            display: flex;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
             overflow: visible;
           }
-          .hero-cta-container > * { flex-shrink: 1; min-width: 0; }
+          .hero-cta-container > * { width: 100%; }
           .mobile-btn-adjust {
-            padding: 12px 14px !important;
-            font-size: 0.85rem !important;
-            width: 100%;
+            width: 100% !important;
+            padding: 16px !important;
+            font-size: 1rem !important;
             text-align: center;
             justify-content: center;
           }
@@ -326,16 +323,17 @@ export default function Home() {
           
           /* Horizontal Marquee on mobile */
           .hero-marquee-container {
-            height: 120px !important;
+            height: 70vh !important;
             display: flex !important;
             flex-direction: row !important;
             overflow-x: hidden !important;
             overflow-y: visible !important;
             width: 100vw !important;
             margin-left: -24px !important;
-            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%) !important;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%) !important;
             margin-bottom: 24px;
+            align-items: center;
           }
           .marquee-column {
             flex-direction: row !important;
@@ -353,9 +351,9 @@ export default function Home() {
           }
           .marquee-content img {
             width: auto !important;
-            height: 120px !important;
-            border-radius: 16px !important;
-            max-width: 220px;
+            height: 60vh !important;
+            border-radius: 24px !important;
+            max-width: none !important;
             flex-shrink: 0 !important;
           }
         }
