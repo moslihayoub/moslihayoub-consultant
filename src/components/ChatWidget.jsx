@@ -8,7 +8,7 @@ import { findBestMatch } from '../utils/chatbotEngine';
 const AVATAR_URL = '/assets/m84-avatar.jpg';
 
 // URL Google Apps Script Webhook de collecte
-const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwaVrbXeytQ4J2SiMtXtEVmULicYOuAxg_rgGqRLNAx5Duup7S2IhlvwMEGY93nsuFF0w/exec';
+const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwmTBJNJpOTMdAtVqaPo1qE3vvxoQ9xSI39sRac8J9kYcyPf-zK4tIP4qs4gn6FFWYPpg/exec';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
