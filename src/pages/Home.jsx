@@ -289,16 +289,7 @@ export default function Home() {
             align-items: center;
           }
           .hero-text-container p { text-align: center; margin-left: 0; margin-right: 0; }
-          .hero-cta-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 16px !important;
-            overflow: visible;
-          }
-          .hero-cta-container > * { width: 100%; }
+          /* hero-cta-container styles moved to index.css */
           .mobile-btn-adjust {
             width: 100% !important;
             padding: 16px !important;
@@ -323,7 +314,7 @@ export default function Home() {
           
           /* Horizontal Marquee on mobile */
           .hero-marquee-container {
-            height: 70vh !important;
+            height: 40vh !important;
             display: flex !important;
             flex-direction: row !important;
             overflow-x: hidden !important;
@@ -351,7 +342,7 @@ export default function Home() {
           }
           .marquee-content img {
             width: auto !important;
-            height: 60vh !important;
+            height: 35vh !important;
             border-radius: 24px !important;
             max-width: none !important;
             flex-shrink: 0 !important;

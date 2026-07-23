@@ -152,7 +152,14 @@ const translations = {
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState('fr');
+  const [lang, setLang] = useState(() => {
+    // Detect browser language (fr or en, default to fr)
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang && browserLang.toLowerCase().startsWith('en')) {
+      return 'en';
+    }
+    return 'fr';
+  });
 
   const toggleLanguage = () => {
     setLang(prev => (prev === 'fr' ? 'en' : 'fr'));

@@ -161,7 +161,7 @@ export default function About() {
                 {t('about_hero_desc')}
               </p>
 
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <div className="hero-cta-container" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <TiltWrapper>
                   <a href="/assets/Ayoub MOSLIH UX-UI.pdf" download className="btn-primary hover-trigger">
                     <Download size={18} /> {t('home_section3_download')}
