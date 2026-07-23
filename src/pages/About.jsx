@@ -244,7 +244,7 @@ export default function About() {
           </section>
 
           {/* EXPERTISE GRID */}
-          <section id="expertise" data-scrollspy={t('about_expert_label')} style={{ marginBottom: '100px' }}>
+          <section id="services" data-scrollspy={t('about_section1_label')} className="section-padding">
             <span className="section-label">{t('about_expert_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_expert_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_expert_desc')}</p>
@@ -263,7 +263,7 @@ export default function About() {
           </section>
 
           {/* EXPERIENCE TIMELINE */}
-          <section id="parcours" data-scrollspy={t('about_timeline_label')} style={{ marginBottom: '100px' }}>
+          <section id="parcours" data-scrollspy={t('about_section2_label')} className="section-padding" style={{ backgroundColor: 'var(--color-surface)' }}>
             <span className="section-label">{t('about_timeline_label')}</span>
             <h2 style={{ marginBottom: '12px', marginTop: '8px' }}>{t('about_timeline_title')}</h2>
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_timeline_desc')}</p>

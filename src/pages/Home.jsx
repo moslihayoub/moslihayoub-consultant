@@ -158,7 +158,7 @@ export default function Home() {
 
   return (
     <AnimatedPage>
-      <section id="accueil" data-scrollspy={t('nav_home')} style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '120px', paddingBottom: '80px', overflow: 'hidden' }}>
+      <section id="accueil" data-scrollspy={t('nav_home')} className="home-hero-section">
         <div className="container">
           <div className="hero-grid">
             
@@ -229,7 +229,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="recent-work" data-scrollspy={t('home_section2_label')} style={{ padding: '120px 0' }}>
+      <section id="recent-work" data-scrollspy={t('home_section2_label')} className="section-padding">
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }} style={{ marginBottom: '56px', maxWidth: '640px' }}>
             <span className="section-label">{t('home_section2_label')}</span>
@@ -253,7 +253,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="timeline" data-scrollspy={t('home_section3_label')} style={{ padding: '120px 0', backgroundColor: 'var(--color-surface)' }}>
+      <section id="timeline" data-scrollspy={t('home_section3_label')} className="section-padding" style={{ backgroundColor: 'var(--color-surface)' }}>
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }} style={{ marginBottom: '56px', maxWidth: '640px' }}>
             <span className="section-label">{t('home_section3_label')}</span>
@@ -308,9 +308,10 @@ export default function Home() {
             flex-direction: row !important;
           }
           .marquee-content img {
-            width: 160px !important;
-            height: 110px !important;
-            border-radius: 12px !important;
+            width: auto !important;
+            height: 120px !important;
+            border-radius: 16px !important;
+            max-width: 220px;
           }
         }
         .hero-marquee-container {

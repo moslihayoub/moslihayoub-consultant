@@ -55,7 +55,7 @@ function App() {
         <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <CustomCursor />
           <Navbar />
-          <main style={{ flex: 1, paddingBottom: '80px' /* Espace pour la bottom navbar sur mobile */ }}>
+          <main style={{ flex: 1 }}>
             <AnimatedRoutes />
           </main>
           <Footer />
