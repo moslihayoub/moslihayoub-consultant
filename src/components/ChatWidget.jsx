@@ -159,8 +159,8 @@ const ChatWidget = () => {
             body: JSON.stringify({
               timestamp: new Date().toLocaleString(),
               type: 'LEAD M84',
-              userMessage: '=== LEAD CAPTURÉ ===', 
-              botAnswer: '=== DONNÉES ENREGISTRÉES ===', 
+              userMessage: '*** LEAD CAPTURÉ ***', 
+              botAnswer: '*** DONNÉES ENREGISTRÉES ***', 
               category: 'Lead Capture',
               language: lang || 'fr',
               leadName: leadData.name || 'Inconnu',
