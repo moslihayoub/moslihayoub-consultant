@@ -165,10 +165,10 @@ button {
   overflow: hidden;
 }
 .section-padding {
-  padding: 120px 0;
+  padding: 84px 0;
 }
 .section-margin {
-  margin-bottom: 120px;
+  margin-bottom: 84px;
 }
 @media (max-width: 768px) {
   .app-wrapper {
