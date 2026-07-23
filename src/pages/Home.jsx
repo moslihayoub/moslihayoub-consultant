@@ -278,7 +278,9 @@ export default function Home() {
         @media(max-width: 768px) {
           .mobile-only-hero { display: block !important; margin-top: 32px; }
           .hero-text-container {
-            min-width: 100% !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
             text-align: left;
             display: flex;
             flex-direction: column;
@@ -286,6 +288,7 @@ export default function Home() {
           }
           .hero-text-container p { text-align: left; margin-left: 0; margin-right: 0; }
           .hero-cta-container {
+            width: 100%;
             justify-content: flex-start;
             flex-wrap: nowrap !important;
             overflow-x: auto;
@@ -297,6 +300,7 @@ export default function Home() {
           .hero-cta-container > * { flex-shrink: 0; }
           
           .hero-tags-container {
+            width: 100%;
             justify-content: flex-start;
             flex-wrap: nowrap !important;
             overflow-x: auto;

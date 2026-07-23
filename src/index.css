@@ -225,6 +225,7 @@ button {
     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent) !important;
     width: 100vw;
     margin-left: -24px;
+    display: flex !important;
   }
   
   .marquee-column {
@@ -234,9 +235,16 @@ button {
     gap: 16px !important;
   }
   
-  .marquee-column img {
+  .marquee-content {
+    flex-direction: row !important;
+    width: max-content !important;
+    gap: 16px !important;
+  }
+  
+  .marquee-column img, .marquee-content img {
     width: auto !important;
     height: 120px !important;
+    flex-shrink: 0;
   }
 }
 
