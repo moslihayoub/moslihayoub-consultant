@@ -290,25 +290,27 @@ export default function Home() {
           
           /* Horizontal Marquee on mobile */
           .hero-marquee-container {
-            height: 180px !important;
+            height: 120px !important;
             grid-template-columns: 1fr !important;
-            grid-template-rows: 1fr 1fr;
+            grid-template-rows: 1fr;
             mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+            margin-bottom: 24px;
           }
           .marquee-column {
             flex-direction: row !important;
             animation: marquee-horizontal linear infinite !important;
           }
           .marquee-column-reverse {
-            animation: marquee-horizontal-reverse linear infinite !important;
+            display: none !important;
           }
           .marquee-content {
             flex-direction: row !important;
           }
           .marquee-content img {
-            width: 140px !important;
-            height: 80px !important;
+            width: 160px !important;
+            height: 110px !important;
+            border-radius: 12px !important;
           }
         }
         .hero-marquee-container {

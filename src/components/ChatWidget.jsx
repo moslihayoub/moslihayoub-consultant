@@ -176,13 +176,13 @@ const ChatWidget = () => {
       </AnimatePresence>
 
       <motion.button
-        drag
-        dragConstraints={{ left: typeof window !== 'undefined' ? -window.innerWidth + 80 : 0, right: 0, top: typeof window !== 'undefined' ? -window.innerHeight + 80 : 0, bottom: 0 }}
+        drag={isMobile}
+        dragConstraints={{ left: typeof window !== 'undefined' ? -window.innerWidth + 80 : 0, right: 0, top: typeof window !== 'undefined' ? -window.innerHeight + 140 : 0, bottom: 0 }}
         dragElastic={0.1}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        style={styles.fab}
+        style={isMobile ? { ...styles.fab, ...styles.fabMobile } : styles.fab}
         className="hover-trigger"
       >
         {isOpen ? <X size={24} color="#FFF" /> : <Bot size={24} color="#FFF" />}
@@ -206,6 +206,9 @@ const styles = {
     boxShadow: 'var(--shadow-lg)',
     zIndex: 9999,
     cursor: 'none',
+  },
+  fabMobile: {
+    bottom: '100px', /* Au dessus de la Bottom Navbar */
   },
   chatWindow: {
     position: 'fixed',

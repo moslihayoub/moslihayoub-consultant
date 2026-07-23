@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -15,12 +15,28 @@ const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+const PageSkeleton = () => (
+  <div style={{ minHeight: '100vh', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="skeleton-box" style={{ width: '40%', height: '40px', borderRadius: '12px' }}></div>
+    <div className="skeleton-box" style={{ width: '80%', height: '80px', borderRadius: '12px' }}></div>
+    <div className="skeleton-box" style={{ width: '100%', height: '200px', borderRadius: '24px' }}></div>
+  </div>
+);
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   
   return (
     <AnimatePresence mode="wait">
-      <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="loading-spinner"></div></div>}>
+      <Suspense fallback={<PageSkeleton />}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />
@@ -35,10 +51,11 @@ function App() {
   return (
     <LanguageProvider>
       <Router>
+        <ScrollToTop />
         <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <CustomCursor />
           <Navbar />
-          <main style={{ flex: 1 }}>
+          <main style={{ flex: 1, paddingBottom: '80px' /* Espace pour la bottom navbar sur mobile */ }}>
             <AnimatedRoutes />
           </main>
           <Footer />

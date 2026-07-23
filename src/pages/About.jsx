@@ -140,7 +140,7 @@ export default function About() {
 
   return (
     <AnimatedPage>
-      <div style={{ paddingTop: '140px', paddingBottom: '80px', fontFamily: 'var(--font-family)' }}>
+      <div className="page-wrapper" style={{ fontFamily: 'var(--font-family)' }}>
         <div className="container">
           
           {/* HERO SECTION */}

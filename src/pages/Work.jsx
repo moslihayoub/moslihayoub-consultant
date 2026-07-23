@@ -95,8 +95,8 @@ const Work = () => {
 
   return (
     <AnimatedPage>
-      <div style={styles.page}>
-        <section id="work-hero" data-scrollspy={t('work_hero_label')} style={styles.heroSection}>
+      <div className="page-wrapper">
+        <section id="work-hero" data-scrollspy={t('work_hero_label')}>
           <div className="container">
             <div style={styles.heroGrid}>
               <motion.div style={styles.heroLeft} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, ease: 'easeOut' }}>
@@ -251,11 +251,9 @@ const Work = () => {
 };
 
 const styles = {
-  page: { paddingBottom: '80px' },
-  heroSection: { paddingTop: '140px', paddingBottom: '80px' },
   heroGrid: { display: 'flex', flexWrap: 'wrap', gap: '64px', alignItems: 'center' },
   heroLeft: { flex: '1 1 480px', minWidth: '300px' },
-  heroTitle: { fontSize: 'clamp(2.8rem, 5.5vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '20px', marginTop: '14px' },
+  heroTitle: { fontSize: 'clamp(2.4rem, 5vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '20px', marginTop: '14px' },
   heroDesc: { fontSize: '1.1rem', color: 'var(--color-text-secondary)', lineHeight: 1.75, marginBottom: '40px', maxWidth: '520px' },
   sectionLabel: { display: 'inline-block', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-electric-green)', marginBottom: '12px', padding: '4px 14px', backgroundColor: 'rgba(57,255,20,0.08)', borderRadius: '999px', border: '1px solid rgba(57,255,20,0.2)' },
   sectionTitle: { fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.03em', marginBottom: '12px', marginTop: '8px' },

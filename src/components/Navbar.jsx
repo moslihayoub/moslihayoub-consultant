@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Home, User, Globe, Menu, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Briefcase, Home, User, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Navbar = () => {
   const location = useLocation();
   const { lang, toggleLanguage, t } = useLanguage();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Close menu on route change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
 
   const navLinks = [
     { name: t('nav_home'), path: '/', icon: <Home size={18} /> },
@@ -32,14 +26,15 @@ END:VCARD`;
 
   return (
     <>
-      <nav style={styles.nav} className="glass-panel">
+      {/* Top Navbar (Desktop only) */}
+      <nav style={styles.nav} className="glass-panel hide-on-mobile">
         <div className="container" style={styles.navContainer}>
           <Link to="/" style={styles.logo}>
             <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} />
             Ayoub MOSLIH
           </Link>
           
-          <ul style={styles.navLinks} className="hide-on-mobile">
+          <ul style={styles.navLinks}>
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
@@ -48,7 +43,7 @@ END:VCARD`;
                     {link.icon}
                     {isActive && (
                       <motion.div
-                        layoutId="navIndicator"
+                        layoutId="navIndicatorDesktop"
                         style={styles.activeIndicator}
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                       />
@@ -67,76 +62,47 @@ END:VCARD`;
               </button>
             </li>
           </ul>
-
-          <button 
-            className="hide-on-desktop hover-trigger" 
-            onClick={() => setIsMobileMenuOpen(true)}
-            style={styles.burgerBtn}
-            aria-label="Open menu"
-          >
-            <Menu size={24} color="var(--color-text-primary)" />
-          </button>
         </div>
       </nav>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            style={styles.mobileOverlay}
-          >
-            <div style={styles.mobileHeader}>
-              <Link to="/" style={styles.logo} onClick={() => setIsMobileMenuOpen(false)}>
-                <img src="/favicon.svg" alt="Ayoub MOSLIH Logo" style={{ width: '24px', height: '24px' }} />
-                Ayoub MOSLIH
-              </Link>
-              <button 
-                onClick={() => setIsMobileMenuOpen(false)} 
-                style={styles.closeBtn}
-                className="hover-trigger"
-              >
-                <X size={32} color="var(--color-text-primary)" />
-              </button>
-            </div>
-
-            <div style={styles.mobileContent}>
-              <ul style={styles.mobileNavLinks}>
-                {navLinks.map((link) => {
-                  const isActive = location.pathname === link.path;
-                  return (
-                    <li key={link.name} style={{ width: '100%' }}>
-                      <Link 
-                        to={link.path} 
-                        style={{ ...styles.mobileNavLink, color: isActive ? 'var(--color-electric-green)' : 'var(--color-text-primary)' }}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {link.icon}
-                        {link.name}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <button onClick={toggleLanguage} style={styles.mobileLangBtn} className="hover-trigger">
-                <Globe size={24} color="var(--color-text-primary)" />
-                <span style={{ fontWeight: 600 }}>{lang === 'fr' ? 'Switch to English' : 'Passer en Français'}</span>
-              </button>
-
-              <div style={styles.mobileQrContainer}>
-                <span style={{ fontSize: '1rem', color: 'var(--color-electric-green)', fontWeight: 800 }}>↓</span>
-                <img src={qrCodeUrl} alt="QR Code" style={styles.mobileQr} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>
-                  {lang === 'fr' ? "Scanner Contact" : "Scan Contact"}
-                </span>
+      {/* Bottom Floating Navbar (Mobile only) */}
+      <nav style={styles.bottomNav} className="glass-panel hide-on-desktop">
+        <ul style={styles.bottomNavLinks}>
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <li key={link.name} style={{ position: 'relative' }}>
+                <Link 
+                  to={link.path} 
+                  style={{ ...styles.bottomNavLink, color: isActive ? 'var(--color-electric-green)' : 'var(--color-text-secondary)' }}
+                  className="hover-trigger"
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    {link.icon}
+                    <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>{link.name}</span>
+                  </div>
+                  {isActive && (
+                    <motion.div
+                      layoutId="navIndicatorMobile"
+                      style={styles.activeIndicatorBottom}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+          
+          <li style={{ position: 'relative' }}>
+            <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger">
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: 'var(--color-text-secondary)' }}>
+                <Globe size={18} />
+                <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>{lang.toUpperCase()}</span>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </button>
+          </li>
+        </ul>
+      </nav>
     </>
   );
 };
@@ -209,96 +175,45 @@ const styles = {
     fontSize: '0.9rem',
     fontWeight: 500,
   },
-  burgerBtn: {
-    background: 'none',
-    border: 'none',
-    padding: '4px',
-    cursor: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mobileOverlay: {
+  bottomNav: {
     position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'var(--color-surface)',
-    zIndex: 999,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '24px',
+    bottom: '24px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '90%',
+    padding: '12px 16px',
+    borderRadius: 'var(--radius-full)',
+    zIndex: 100,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
   },
-  mobileHeader: {
+  bottomNavLinks: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: '48px',
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+    width: '100%',
   },
-  closeBtn: {
+  bottomNavLink: {
     background: 'none',
     border: 'none',
     padding: '8px',
-    cursor: 'none',
-    display: 'flex',
-  },
-  mobileContent: {
-    flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: '48px',
-  },
-  mobileNavLinks: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    width: '100%',
-    gap: '32px',
-  },
-  mobileNavLink: {
-    fontSize: '2rem',
-    fontWeight: 700,
     textDecoration: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    transition: 'color 0.2s',
-  },
-  mobileQrContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-    marginTop: 'auto',
-    marginBottom: '24px',
-  },
-  mobileQr: {
-    width: '140px',
-    height: '140px',
-    borderRadius: '16px',
-    padding: '8px',
-    backgroundColor: '#fff',
-    border: '1px solid var(--color-border)',
-  },
-  mobileLangBtn: {
-    background: 'rgba(0, 0, 0, 0.05)',
-    border: 'none',
-    padding: '16px 24px',
-    borderRadius: 'var(--radius-full)',
     cursor: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: '12px',
-    fontSize: '1.1rem',
-    width: '100%',
-  }
+  },
+  activeIndicatorBottom: {
+    position: 'absolute',
+    top: '-4px',
+    left: '20%',
+    right: '20%',
+    height: '3px',
+    backgroundColor: 'var(--color-electric-green)',
+    borderRadius: '3px',
+  },
 };
 
 export default Navbar;

@@ -35,15 +35,15 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "meta/llama-3.2-1b-instruct",
+        model: "mistralai/mistral-medium-3.5-128b",
         messages: [
           { role: "system", content: SYSTEM_INSTRUCTION },
           ...formattedHistory,
           { role: "user", content: message }
         ],
-        temperature: 0.2,
-        top_p: 0.7,
-        max_tokens: 1024,
+        temperature: 0.7,
+        top_p: 1,
+        max_tokens: 16384,
         stream: false
       })
     });
