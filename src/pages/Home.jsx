@@ -330,7 +330,7 @@ export default function Home() {
             flex-direction: row !important;
             animation: marquee-horizontal 25s linear infinite !important;
             width: max-content !important;
-            gap: 16px !important;
+            gap: 8px !important;
           }
           .marquee-column-reverse {
             display: none !important;
@@ -338,7 +338,7 @@ export default function Home() {
           .marquee-content {
             flex-direction: row !important;
             width: max-content !important;
-            gap: 16px !important;
+            gap: 8px !important;
           }
           .marquee-content img {
             width: auto !important;

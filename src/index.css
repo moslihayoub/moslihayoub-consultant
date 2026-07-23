@@ -314,17 +314,44 @@ p {
     padding: 12px 8px !important;
     font-size: 0.85rem !important;
     white-space: nowrap;
+  }  .hero-cta-container-stacked {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 12px !important;
   }
-
-  
+  .hero-cta-container-stacked > * { 
+    width: 100%; 
+  }
+  .hero-cta-container-stacked a, .hero-cta-container-stacked button { 
+    width: 100%; 
+    justify-content: center; 
+    padding: 14px 16px !important;
+  }
+  .hero-text-container h1, .hero-text-container h2, .hero-text-container h3, .hero-text-container p {
+    text-align: center !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+  }
+  .hero-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .floating-tag-left {
     left: 8px !important;
-    max-width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 48px) !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
   }
   .floating-tag-right {
     right: 8px !important;
     left: auto !important;
-    max-width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 48px) !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
   }
   
   /* Global tags container (scrollable on mobile) */

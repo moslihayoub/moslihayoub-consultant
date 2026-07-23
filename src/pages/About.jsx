@@ -145,7 +145,7 @@ export default function About() {
           {/* HERO SECTION */}
           <section id="about-hero" data-scrollspy={t('nav_about')} style={{ marginBottom: '80px' }}>
             <div className="container page-hero-grid">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div className="hero-text-container" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="section-label">{t('nav_about')}</span>
               <h1 style={{ marginBottom: '8px' }}>Ayoub MOSLIH.</h1>
               <h3 style={{ color: 'var(--color-electric-green)', marginBottom: '24px', fontWeight: 600 }}>{t('hero_role')}</h3>
@@ -161,7 +161,7 @@ export default function About() {
                 {t('about_hero_desc')}
               </p>
 
-              <div className="hero-cta-container" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <div className="hero-cta-container-stacked" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <TiltWrapper>
                   <a href="/assets/Ayoub MOSLIH UX-UI.pdf" download className="btn-primary hover-trigger">
                     <Download size={18} /> {t('home_section3_download')}
@@ -175,7 +175,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative' }}>
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative', minWidth: 0, width: '100%' }}>
               <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <video 
                   ref={videoRef}

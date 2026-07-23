@@ -94,9 +94,9 @@ END:VCARD`;
           
           <li style={{ position: 'relative' }}>
             <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger">
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: 'var(--color-text-secondary)' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'var(--color-text-secondary)' }}>
                 <Globe size={18} />
-                <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>{lang.toUpperCase()}</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{lang.toUpperCase()}</span>
               </div>
             </button>
           </li>

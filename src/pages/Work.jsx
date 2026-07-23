@@ -256,7 +256,7 @@ const Work = () => {
 
 const styles = {
   heroGrid: { display: 'flex', flexWrap: 'wrap', gap: '64px', alignItems: 'center' },
-  heroLeft: { flex: '1 1 480px', minWidth: '300px' },
+  heroLeft: { flex: '1 1 480px', minWidth: 0 },
   heroTitle: { fontSize: 'clamp(2.4rem, 5vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '20px', marginTop: '14px' },
   heroDesc: { fontSize: '1.1rem', color: 'var(--color-text-secondary)', lineHeight: 1.75, marginBottom: '40px', maxWidth: '520px' },
   sectionLabel: { display: 'inline-block', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-electric-green)', marginBottom: '12px', padding: '4px 14px', backgroundColor: 'rgba(57,255,20,0.08)', borderRadius: '999px', border: '1px solid rgba(57,255,20,0.2)' },
@@ -267,7 +267,7 @@ const styles = {
   statIcon: { color: 'var(--color-electric-green)', marginBottom: '2px' },
   statNumber: { fontSize: '1.8rem', fontWeight: 800, color: 'var(--color-electric-green)', letterSpacing: '-0.03em', lineHeight: 1 },
   statLabel: { fontSize: '0.72rem', color: 'var(--color-text-secondary)', fontWeight: 600, lineHeight: 1.35, maxWidth: '90px' },
-  heroRight: { flex: '0 0 420px', display: 'flex', justifyContent: 'center' },
+  heroRight: { flex: '1 1 420px', display: 'flex', justifyContent: 'center', minWidth: 0 },
   tiltWrapper: { position: 'relative', width: '100%', maxWidth: '420px', borderRadius: '32px', overflow: 'visible', cursor: 'none' },
   heroImage: { width: '100%', height: 'auto', borderRadius: '32px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', display: 'block', objectFit: 'cover' },
   availBadge: { position: 'absolute', bottom: '-18px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '999px', padding: '8px 20px', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary)', whiteSpace: 'nowrap', boxShadow: '0 8px 24px rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)', zIndex: 2 },
