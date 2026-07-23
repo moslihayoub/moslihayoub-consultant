@@ -119,6 +119,7 @@
         "Quels sont vos projets récents ?",
         "Wrena l'mchari3 dialk",
         "Voir les réalisations",
+        "Voir les projets",
         "Avec quels clients avez-vous travaillé ?"
       ],
       "answer": {
@@ -295,11 +296,12 @@
     }
   ],
   "fallback": {
-    "fr": "Je réponds uniquement aux questions sur ce portfolio. Essayez : projets, services, compétences ou contact.",
-    "en": "I only answer questions about this portfolio. Try asking: projects, services, skills, or contact.",
+    "fr": "Je n'ai pas bien saisi les détails de votre demande, mais je suis là pour vous aider ! Que recherchez-vous exactement ?",
+    "en": "I didn't quite catch that, but I'm here to help! What are you looking for exactly?",
     "quickReplies": [
+      "Voir les projets",
       "Quels sont tes services ?",
-      "Voir les projets"
+      "Laissez vos coordonnées"
     ]
   }
 }

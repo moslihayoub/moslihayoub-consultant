@@ -68,17 +68,56 @@ export function normalizeText(text) {
 }
 
 /**
- * Tokenize normalized text and resolve synonyms
+ * Calculate Levenshtein distance for fuzzy matching (typo tolerance)
+ */
+function levenshteinDistance(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) { matrix[i] = [i]; }
+  for (let j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1) // insertion, deletion
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+/**
+ * Tokenize normalized text and resolve synonyms with Fuzzy Matching
  */
 export function tokenizeAndMap(text) {
   const normalized = normalizeText(text);
   const rawTokens = normalized.split(/\s+/).filter(Boolean);
+  const synonymKeys = Object.keys(SYNONYM_MAP);
   
   const tokens = [];
   for (const token of rawTokens) {
     if (token.length > 1 && (!STOP_WORDS.has(token) || rawTokens.length <= 2)) {
-      // Si la phrase est très courte (ex: "salut"), on n'ignore pas le STOP_WORD
-      const mapped = SYNONYM_MAP[token] || token;
+      let mapped = token;
+      
+      // 1. Match Exact
+      if (SYNONYM_MAP[token]) {
+        mapped = SYNONYM_MAP[token];
+      } else {
+        // 2. Fuzzy Match (Recherche tolérante aux fautes)
+        for (const key of synonymKeys) {
+          const distance = levenshteinDistance(token, key);
+          // Tolérance proportionnelle à la taille du mot (1 erreur si mot court, 2 si long)
+          const threshold = key.length >= 6 ? 2 : 1; 
+          
+          if (distance <= threshold && Math.abs(token.length - key.length) <= threshold) {
+            mapped = SYNONYM_MAP[key];
+            break; // Dès qu'on trouve un mot très proche, on l'adopte
+          }
+        }
+      }
       tokens.push(mapped);
     }
   }
