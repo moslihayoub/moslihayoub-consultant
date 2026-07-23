@@ -179,10 +179,16 @@ export default function Home() {
               
               <div className="hero-cta-container" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
                 <TiltWrapper>
-                  <Link to="/work" className="btn-primary hover-trigger" style={{ margin: 0, height: '100%' }}>{t('btn_work')} <ArrowRight size={17} /></Link>
+                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0, height: '100%' }}>
+                    <span className="hide-on-mobile">{t('btn_work')}</span>
+                    <span className="hide-on-desktop">Mes projets</span>
+                  </Link>
                 </TiltWrapper>
                 <TiltWrapper>
-                  <a href="#timeline" className="btn-secondary hover-trigger" style={{ margin: 0, height: '100%' }}>{t('home_section3_label')} <ChevronRight size={17} /></a>
+                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0, height: '100%' }}>
+                    <span className="hide-on-mobile">{t('home_section3_label')} <ChevronRight size={17} /></span>
+                    <span className="hide-on-desktop">Trajectoire</span>
+                  </a>
                 </TiltWrapper>
               </div>
               
@@ -291,13 +297,18 @@ export default function Home() {
             width: 100%;
             justify-content: flex-start;
             flex-wrap: nowrap !important;
-            overflow-x: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            padding-bottom: 8px;
+            gap: 10px !important;
+            /* Pas de scroll pour les boutons, on ajuste la taille pour qu'ils rentrent */
+            overflow: visible;
           }
-          .hero-cta-container::-webkit-scrollbar { display: none; }
-          .hero-cta-container > * { flex-shrink: 0; }
+          .hero-cta-container > * { flex-shrink: 1; min-width: 0; }
+          .mobile-btn-adjust {
+            padding: 12px 14px !important;
+            font-size: 0.85rem !important;
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+          }
           
           .hero-tags-container {
             width: 100%;
@@ -306,7 +317,7 @@ export default function Home() {
             overflow-x: auto;
             -ms-overflow-style: none;
             scrollbar-width: none;
-            padding-bottom: 8px;
+            padding-bottom: 12px;
             margin-right: -24px;
             padding-right: 24px;
           }
@@ -316,27 +327,36 @@ export default function Home() {
           /* Horizontal Marquee on mobile */
           .hero-marquee-container {
             height: 120px !important;
-            grid-template-columns: 1fr !important;
-            grid-template-rows: 1fr;
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
+            width: 100vw !important;
+            margin-left: -24px !important;
             mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%) !important;
             margin-bottom: 24px;
           }
           .marquee-column {
             flex-direction: row !important;
-            animation: marquee-horizontal linear infinite !important;
+            animation: marquee-horizontal 25s linear infinite !important;
+            width: max-content !important;
+            gap: 16px !important;
           }
           .marquee-column-reverse {
             display: none !important;
           }
           .marquee-content {
             flex-direction: row !important;
+            width: max-content !important;
+            gap: 16px !important;
           }
           .marquee-content img {
             width: auto !important;
             height: 120px !important;
             border-radius: 16px !important;
             max-width: 220px;
+            flex-shrink: 0 !important;
           }
         }
         .hero-marquee-container {
