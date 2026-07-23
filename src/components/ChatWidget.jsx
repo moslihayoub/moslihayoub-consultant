@@ -46,6 +46,9 @@ const ChatWidget = () => {
   });
 
   const [input, setInput] = useState('');
+  const [leadState, setLeadState] = useState('idle');
+  const [leadData, setLeadData] = useState({ type: '', name: '', contact: '' });
+
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -111,6 +114,65 @@ const ChatWidget = () => {
     }
   };
 
+  const startLeadCapture = () => {
+    setLeadState('asking_type');
+    setMessages(prev => [...prev, {
+      role: 'model',
+      text: lang === 'en' ? "Great! Are you a Professional or an Individual?" : "Super ! Êtes-vous un Professionnel ou un Particulier ?",
+      quickReplies: lang === 'en' ? ["Professional", "Individual"] : ["Professionnel", "Particulier"]
+    }]);
+  };
+
+  const handleLeadCaptureFlow = (answer) => {
+    if (leadState === 'asking_type') {
+      setLeadData(prev => ({ ...prev, type: answer }));
+      setLeadState('asking_name');
+      setMessages(prev => [...prev, {
+        role: 'model',
+        text: lang === 'en' ? "Thank you. What is your name?" : "Merci. Quel est votre nom ?"
+      }]);
+    } else if (leadState === 'asking_name') {
+      setLeadData(prev => ({ ...prev, name: answer }));
+      setLeadState('asking_contact');
+      setMessages(prev => [...prev, {
+        role: 'model',
+        text: lang === 'en' ? "Nice to meet you! Please leave your email or phone number." : "Enchanté ! Veuillez laisser votre email ou numéro de téléphone."
+      }]);
+    } else if (leadState === 'asking_contact') {
+      const finalContact = answer;
+      setLeadState('idle');
+      
+      const successText = lang === 'en' 
+        ? "Got it! Ayoub will contact you very soon. Have a great day!"
+        : "C'est noté ! Ayoub vous recontactera très vite. Excellente journée !";
+
+      setMessages(prev => [...prev, {
+        role: 'model',
+        text: successText
+      }]);
+
+      if (DEFAULT_WEBHOOK_URL) {
+        try {
+          fetch(DEFAULT_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              timestamp: new Date().toLocaleString(),
+              type: 'LEAD M84',
+              userMessage: leadData.name || 'Inconnu', // Stocké dans la colonne Message / Nom
+              botAnswer: finalContact, // Stocké dans la colonne Bot / Contact
+              category: 'Lead Capture',
+              language: leadData.type || 'Non spécifié' // Stocké dans la colonne Langue / Type
+            }),
+            mode: 'no-cors'
+          }).catch(err => console.debug('Sheet logging skipped:', err));
+        } catch (e) {}
+      }
+      
+      setLeadData({ type: '', name: '', contact: '' });
+    }
+  };
+
   const processQuery = (userQueryText) => {
     if (!userQueryText || !userQueryText.trim()) return;
     const query = userQueryText.trim();
@@ -118,10 +180,21 @@ const ChatWidget = () => {
     setMessages(prev => [...prev, { role: 'user', text: query }]);
     setInput('');
 
-    // Recherche locale instantanée via chatbotEngine
     setTimeout(() => {
+      // Si nous sommes dans le flux de capture de leads, on dérive la logique
+      if (leadState !== 'idle') {
+        handleLeadCaptureFlow(query);
+        return;
+      }
+
+      // Recherche locale instantanée via chatbotEngine
       const match = findBestMatch(query, lang);
       
+      if (match.action === "START_LEAD_CAPTURE") {
+        startLeadCapture();
+        return;
+      }
+
       setMessages(prev => [
         ...prev,
         {

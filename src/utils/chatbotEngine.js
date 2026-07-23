@@ -6,14 +6,11 @@ const STOP_WORDS = new Set([
   'sur', 'pour', 'dans', 'par', 'avec', 'sans', 'mon', 'ma', 'mes', 'ton', 'ta',
   'tes', 'son', 'sa', 'ses', 'nos', 'vos', 'leurs', 'the', 'a', 'an', 'and', 'or',
   'to', 'in', 'on', 'is', 'of', 'for', 'with', 'by', 'at', 'from', 'as', 'it',
-  'w', 'wa', 'f', 'fi', 'fe', 'men', 'mn', 'dial', 'dyal', 'd'
+  'w', 'wa', 'f', 'fi', 'fe', 'men', 'mn', 'dial', 'dyal', 'd', 'qui', 'que', 'quoi', 'donne', 'donnee', 'donnez', 'moi', 'me', 'montre', 'voir',
+  'salut', 'bonjour', 'hello', 'coucou', 'salam', 'slm', 'marhaba' // Ignore greetings when they are part of a longer sentence
 ]);
 
 const SYNONYM_MAP = {
-  // Darija & Multilingual Greetings
-  'salam': 'bonjour', 'slm': 'bonjour', 'ssalam': 'bonjour', 'ahlan': 'bonjour',
-  'marhaba': 'bonjour', 'labas': 'bonjour', 'hello': 'bonjour', 'coucou': 'bonjour',
-
   // Pricing / Devis (Darija + FR + EN)
   'tarif': 'tarif', 'tarifs': 'tarif', 'prix': 'tarif', 'devis': 'tarif', 'combien': 'tarif',
   'cout': 'tarif', 'couts': 'tarif', 'tjm': 'tarif', 'tjms': 'tarif', 'facture': 'tarif',
@@ -23,6 +20,7 @@ const SYNONYM_MAP = {
   'projet': 'projet', 'projets': 'projet', 'realisation': 'projet', 'realisations': 'projet',
   'travail': 'projet', 'travaux': 'projet', 'portfolio': 'projet', 'cas': 'projet', 'clients': 'projet',
   'machoari3': 'projet', 'mashari3': 'projet', 'mchari3': 'projet', 'a3mal': 'projet', 'aamal': 'projet',
+  'site': 'projet', 'sites': 'projet', 'web': 'projet', 'application': 'projet', 'app': 'projet', 'pertinante': 'projet', 'pertinent': 'projet', 'pertinentes': 'projet',
 
   // Services (Darija + FR + EN)
   'service': 'service', 'services': 'service', 'prestation': 'service', 'prestations': 'service',
@@ -41,11 +39,12 @@ const SYNONYM_MAP = {
   'cv': 'experience', 'poste': 'experience', 'postes': 'experience', 'timeline': 'experience',
   'tajriba': 'experience', 'khibra': 'experience', 'khdam': 'experience',
 
-  // Contact (Darija + FR + EN)
+  // Contact & Lead (Darija + FR + EN)
   'contact': 'contact', 'contacter': 'contact', 'email': 'contact', 'mail': 'contact',
   'telephone': 'contact', 'phone': 'contact', 'tel': 'contact', 'whatsapp': 'contact',
   'linkedin': 'contact', 'rdv': 'contact', 'joindre': 'contact', 'ecrire': 'contact',
   'twasal': 'contact', 'ntwasel': 'contact', 'nemra': 'contact', 'nmerte': 'contact', 'num': 'contact',
+  'appel': 'contact', 'rappeler': 'contact', 'appelles': 'contact', 'lead': 'contact', 'coordonnees': 'contact', 'message': 'contact',
 
   // AI & Tech
   'ia': 'ia', 'ai': 'ia', 'llm': 'ia', 'gpt': 'ia', 'automatisation': 'ia', 'dhakaa': 'ia',
@@ -77,7 +76,8 @@ export function tokenizeAndMap(text) {
   
   const tokens = [];
   for (const token of rawTokens) {
-    if (!STOP_WORDS.has(token) && token.length > 1) {
+    if (token.length > 1 && (!STOP_WORDS.has(token) || rawTokens.length <= 2)) {
+      // Si la phrase est très courte (ex: "salut"), on n'ignore pas le STOP_WORD
       const mapped = SYNONYM_MAP[token] || token;
       tokens.push(mapped);
     }
@@ -152,6 +152,11 @@ function scoreEntry(rawQuery, queryTokens, entry) {
   if (queryTokens.includes(mappedCategory) || queryTokens.includes(entry.id)) {
     finalScore += 0.3;
   }
+  
+  // Special handling for Lead Capture trigger keywords explicitly typed by user
+  if (entry.id === "contact_info" && (queryTokens.includes("appel") || queryTokens.includes("rappeler") || queryTokens.includes("devis"))) {
+      finalScore += 0.4;
+  }
 
   return Math.min(finalScore, 0.99);
 }
@@ -162,6 +167,15 @@ function scoreEntry(rawQuery, queryTokens, entry) {
 export function findBestMatch(userQuery, lang = 'fr') {
   const currentLang = (lang && lang.toLowerCase().startsWith('en')) ? 'en' : 'fr';
   
+  // Gestion directe du flux Lead Capture
+  if (userQuery === "Laissez vos coordonnées" || userQuery === "Leave your details") {
+    return {
+      matched: true,
+      action: "START_LEAD_CAPTURE",
+      category: "lead_trigger"
+    };
+  }
+
   if (!userQuery || !userQuery.trim()) {
     return {
       matched: false,
@@ -184,10 +198,16 @@ export function findBestMatch(userQuery, lang = 'fr') {
     }
   }
 
-  // Lower threshold (0.20) to handle typos like uc/ui
   const THRESHOLD = 0.20;
 
   if (bestEntry && highestScore >= THRESHOLD) {
+    if (bestEntry.action === "START_LEAD_CAPTURE") {
+      return {
+        matched: true,
+        action: "START_LEAD_CAPTURE",
+        category: bestEntry.category
+      };
+    }
     return {
       matched: true,
       score: highestScore,
