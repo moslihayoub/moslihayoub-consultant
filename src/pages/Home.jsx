@@ -162,7 +162,7 @@ export default function Home() {
         <div className="container">
           <div className="hero-grid">
             
-            <motion.div className="hero-text-container" style={{ flex: '1 1 540px', display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
+            <motion.div className="hero-text-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
               <motion.div className="hero-role-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--color-electric-green)', backgroundColor: 'oklch(51.1% 0.096 186.391 / 0.1)', border: '1px solid oklch(51.1% 0.096 186.391 / 0.25)', borderRadius: '999px', padding: '6px 14px', marginBottom: '28px', width: 'fit-content' }} initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--color-electric-green)', display: 'inline-block', flexShrink: 0, animation: 'pulse-green 2s ease-in-out infinite' }} />
                 {t('hero_role')}
@@ -178,14 +178,14 @@ export default function Home() {
               </p>
               
               <div className="hero-cta-container" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
-                <TiltWrapper>
-                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0, height: '100%' }}>
+                <TiltWrapper style={{ flex: 1, minWidth: 0 }}>
+                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0, width: '100%' }}>
                     <span className="hide-on-mobile">{t('btn_work')}</span>
                     <span className="hide-on-desktop">Mes projets</span>
                   </Link>
                 </TiltWrapper>
-                <TiltWrapper>
-                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0, height: '100%' }}>
+                <TiltWrapper style={{ flex: 1, minWidth: 0 }}>
+                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0, width: '100%' }}>
                     <span className="hide-on-mobile">{t('home_section3_label')} <ChevronRight size={17} /></span>
                     <span className="hide-on-desktop">Trajectoire</span>
                   </a>
@@ -201,7 +201,7 @@ export default function Home() {
               </motion.div>
             </motion.div>
 
-            <motion.div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 0, width: '100%' }} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, delay: 0.2, ease: 'easeOut' }}>
+            <motion.div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 0, width: '100%' }} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, delay: 0.2, ease: 'easeOut' }}>
               <div className="hero-marquee-container">
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
