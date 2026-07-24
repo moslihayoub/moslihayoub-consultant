@@ -1,6 +1,24 @@
 export const projectsData = [
   // UX / UI Projects
   {
+    id: 'quicktoken',
+    title: 'QuickToken UI',
+    client: 'Outil Interne',
+    category: 'MVP Ai',
+    year: '2026',
+    shortDesc: {
+      fr: "Générateur intelligent de Design System au format JSON pour paramétrer et prévisualiser instantanément vos composants UI.",
+      en: "Smart JSON Design System generator to easily configure and instantly preview your UI components."
+    },
+    techDesc: {
+      fr: "Ce MVP innovant a été entièrement conçu et développé à l'aide de Google AI Studio, démontrant le potentiel des LLMs dans l'automatisation du Design System.",
+      en: "This innovative MVP was entirely designed and developed using Google AI Studio, showcasing the potential of LLMs in automating Design Systems."
+    },
+    image: '/assets/works/ux-ui/quicktoken.webp',
+    isProtected: false,
+    url: 'https://quick-token-ui.vercel.app/'
+  },
+  {
     id: 'autocash-sourcing',
     title: 'Autocash Sourcing MVP',
     client: 'Autocash.ma',
