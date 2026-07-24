@@ -24,10 +24,13 @@
 - Toaster PWA réactif et centré sur mobile (`src/components/PwaInstallPrompt.jsx`).
 - Message optimisé pour inciter le téléchargement.
 
-### 4. 📁 Projets Récents Ajoutés
+### 4. 📁 Projets Récents Ajoutés & Ajustements
 - **QuickToken UI** dans la catégorie **MVP Ai** (`public/assets/works/ux-ui/quicktoken.webp`).
 - Ajout de la nouvelle catégorie **AI Filmmaking** dans `Work.jsx`.
 - Ajout de la page de détail dynamique pour **The Factory** (`/project/the-factory`), sécurisée par mot de passe et illustrant le making-of (storyboard, character sheet, vidéos AI).
+  - Intégration de vidéos YouTube (autoplay, loop, mute) avec un overlay de protection (anti-clic droit).
+  - Optimisations mobiles : centrage du fil d'Ariane, empilement des vidéos en colonne, désactivation du chat sur les pages de détails.
+  - Fusion d'image principale via `mix-blend-mode: multiply` pour cacher le fond.
 
 ### 5. 🔍 SEO & Accessibilité (A11y)
 - Méta-titre, description, Open Graph et balises sémantiques HTML5 configurés.
