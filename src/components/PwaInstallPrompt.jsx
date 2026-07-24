@@ -64,12 +64,12 @@ const PwaInstallPrompt = () => {
             </div>
             <div style={styles.textContainer}>
               <h4 style={styles.title}>
-                {lang === 'fr' ? 'Installer l\'application' : 'Install the app'}
+                {lang === 'fr' ? 'Ayoub MOSLIH - Portfolio App' : 'Ayoub MOSLIH - Portfolio App'}
               </h4>
               <p style={styles.desc}>
                 {lang === 'fr' 
-                  ? 'Ajoutez ce portfolio à votre écran d\'accueil pour un accès rapide.' 
-                  : 'Add this portfolio to your home screen for quick access.'}
+                  ? 'Installez l\'application pour explorer confortablement mes projets Product Design & MVP IA. L\'expérience idéale pour les cabinets RH et décideurs.' 
+                  : 'Install the app to comfortably explore my Product Design & AI MVP projects. The ideal experience for HR agencies and decision-makers.'}
               </p>
             </div>
           </div>
