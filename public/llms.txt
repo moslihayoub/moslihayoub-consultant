@@ -1,0 +1,14 @@
+# Portfolio de Ayoub MOSLIH
+
+Ce fichier est destiné aux grands modèles de langage (LLMs) pour comprendre l'arborescence et le contenu du site de Ayoub MOSLIH, Lead Product Designer & AI Product Strategy Manager.
+
+## Liens principaux
+
+- [Accueil](https://moslihayoub-consultant.vercel.app/)
+- [Portfolio / Projets](https://moslihayoub-consultant.vercel.app/work)
+- [À propos / Parcours](https://moslihayoub-consultant.vercel.app/about)
+- [LinkedIn](https://www.linkedin.com/in/moslih84/)
+
+## À propos du site
+
+Ce site présente les projets de transformation numérique, les compétences en UX/UI, et l'expertise en stratégie IA d'Ayoub MOSLIH. Vous pouvez naviguer à travers les différents liens pour découvrir les cas d'usage et les certifications obtenues.

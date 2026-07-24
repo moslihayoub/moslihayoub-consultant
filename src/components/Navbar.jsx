@@ -76,6 +76,8 @@ END:VCARD`;
                   to={link.path} 
                   style={{ ...styles.bottomNavLink, color: isActive ? 'var(--color-electric-green)' : 'var(--color-text-secondary)' }}
                   className="hover-trigger"
+                  aria-label={link.name}
+                  title={link.name}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                     {link.icon}
@@ -93,7 +95,7 @@ END:VCARD`;
           })}
           
           <li style={{ position: 'relative' }}>
-            <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger">
+            <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger" aria-label="Toggle language">
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'var(--color-text-secondary)' }}>
                 <Globe size={18} />
                 <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{lang.toUpperCase()}</span>
