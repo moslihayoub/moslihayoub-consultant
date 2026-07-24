@@ -68,8 +68,8 @@ const PwaInstallPrompt = () => {
               </h4>
               <p style={styles.desc}>
                 {lang === 'fr' 
-                  ? 'Installez l\'application pour explorer confortablement mes projets Product Design & MVP IA. L\'expérience idéale pour les cabinets RH et décideurs.' 
-                  : 'Install the app to comfortably explore my Product Design & AI MVP projects. The ideal experience for HR agencies and decision-makers.'}
+                  ? 'Installez l\'application pour explorer confortablement mes projets Product Design & MVP IA.' 
+                  : 'Install the app to comfortably explore my Product Design & AI MVP projects.'}
               </p>
             </div>
           </div>
