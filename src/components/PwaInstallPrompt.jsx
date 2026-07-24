@@ -48,9 +48,9 @@ const PwaInstallPrompt = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 50, scale: 0.9 }}
+          initial={{ opacity: 0, x: "-50%", y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, x: "-50%", y: 0, scale: 1 }}
+          exit={{ opacity: 0, x: "-50%", y: 50, scale: 0.9 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           style={styles.container}
           className="glass-panel"
@@ -88,7 +88,6 @@ const styles = {
     position: 'fixed',
     bottom: '90px', // Above the mobile nav bar
     left: '50%',
-    transform: 'translateX(-50%)',
     width: '90%',
     maxWidth: '400px',
     padding: '20px',
