@@ -21,11 +21,43 @@ const ProjectDetail = () => {
 
   return (
     <AnimatedPage>
-      <div className="page-wrapper" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+      <style>
+        {`
+          .project-detail-wrapper {
+            padding-top: 100px;
+            padding-bottom: 100px;
+          }
+          .breadcrumb-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+          }
+          .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+          }
+          @media (max-width: 768px) {
+            .project-detail-wrapper {
+              padding-top: 40px;
+            }
+            .breadcrumb-container {
+              justify-content: center;
+            }
+            .video-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}
+      </style>
+      <div className="page-wrapper project-detail-wrapper">
         <div className="container">
           
           {/* Breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginBottom: '32px' }}>
+          <div className="breadcrumb-container">
             <span onClick={() => navigate('/work')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover-trigger">Work</span>
             <ChevronRight size={16} />
             <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{project.title}</span>
@@ -136,8 +168,8 @@ const ProjectDetail = () => {
                 </p>
               </div>
               
-              {/* Vidéos - 2 par ligne */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+              {/* Vidéos - Responsive via classe video-grid */}
+              <div className="video-grid">
                 {[
                   "btbAuvsQiHc", "xxAjoV6bi4o", "F1W3iohmdTM", "EMOsKp7OTHQ", "rayz4dW8NUM"
                 ].map((videoId, idx) => (

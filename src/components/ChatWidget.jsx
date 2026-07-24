@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { findBestMatch } from '../utils/chatbotEngine';
 
@@ -11,6 +11,7 @@ const AVATAR_URL = '/assets/m84-avatar.jpg';
 const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwmTBJNJpOTMdAtVqaPo1qE3vvxoQ9xSI39sRac8J9kYcyPf-zK4tIP4qs4gn6FFWYPpg/exec';
 
 const ChatWidget = () => {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [isHovered, setIsHovered] = useState(false);
@@ -18,6 +19,10 @@ const ChatWidget = () => {
   const [proactiveDismissed, setProactiveDismissed] = useState(false);
 
   const { lang, t } = useLanguage();
+
+  if (location.pathname.startsWith('/project/')) {
+    return null;
+  }
   const navigate = useNavigate();
 
   const getInitialMessage = (currentLang) => ({
