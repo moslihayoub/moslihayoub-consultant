@@ -149,9 +149,9 @@ export default function Home() {
     }
   };
 
-  const handleProceed = () => {
-    if (selectedProject) {
-      window.open(selectedProject.url, '_blank', 'noopener,noreferrer');
+  const handleProceed = (url) => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
       setSelectedProject(null);
     }
   };

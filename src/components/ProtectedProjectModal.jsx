@@ -2,23 +2,40 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, ExternalLink, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import CryptoJS from 'crypto-js';
 
 const ProtectedProjectModal = ({ isOpen, onClose, onProceed, project }) => {
   const { lang, t } = useLanguage();
   const [code, setCode] = useState('');
 
+  const [error, setError] = useState(false);
+
   useEffect(() => {
     if (!isOpen) {
       setCode('');
+      setError(false);
     }
   }, [isOpen]);
 
-  const isValidCode = code.trim() === '031984';
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isValidCode) {
-      onProceed();
+    if (!code.trim()) return;
+    
+    try {
+      // Attempt to decrypt the URL
+      const bytes = CryptoJS.AES.decrypt(project.url, code.trim());
+      const decryptedUrl = bytes.toString(CryptoJS.enc.Utf8);
+      
+      // If it successfully decrypted to a valid URL string
+      if (decryptedUrl && decryptedUrl.startsWith('http')) {
+        setError(false);
+        onProceed(decryptedUrl);
+      } else {
+        // Incorrect password results in empty string or gibberish
+        setError(true);
+      }
+    } catch (err) {
+      setError(true);
     }
   };
 
@@ -67,22 +84,23 @@ const ProtectedProjectModal = ({ isOpen, onClose, onProceed, project }) => {
                     id="access-code"
                     type="password"
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    onChange={(e) => { setCode(e.target.value); setError(false); }}
                     placeholder={lang === 'fr' ? "Saisir le code d'accès..." : "Enter access code..."}
-                    style={styles.input}
+                    style={{...styles.input, borderColor: error ? 'var(--color-error, #ff4444)' : 'var(--color-border)'}}
                     autoFocus
                   />
+                  {error && <span style={{ color: 'var(--color-error, #ff4444)', fontSize: '0.8rem', marginTop: '4px' }}>{lang === 'fr' ? 'Mot de passe incorrect' : 'Incorrect password'}</span>}
                 </div>
                 
                 <button
                   type="submit"
-                  disabled={!isValidCode}
+                  disabled={!code.trim()}
                   className="btn-primary hover-trigger"
                   style={{
                     ...styles.cta,
-                    opacity: isValidCode ? 1 : 0.4,
-                    cursor: isValidCode ? 'pointer' : 'not-allowed',
-                    pointerEvents: isValidCode ? 'auto' : 'none',
+                    opacity: code.trim() ? 1 : 0.4,
+                    cursor: code.trim() ? 'pointer' : 'not-allowed',
+                    pointerEvents: code.trim() ? 'auto' : 'none',
                   }}
                 >
                   <span>{t('modal_btn')}</span>

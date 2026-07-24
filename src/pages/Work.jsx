@@ -98,7 +98,7 @@ const Work = () => {
   const displayedProjects = filteredProjects.slice(0, visibleProjectsCount);
 
   const handleProjectClick = (project) => { if (project.isProtected) { setSelectedProject(project); } else { window.open(project.url, '_blank', 'noopener,noreferrer'); } };
-  const handleProceed = () => { if (selectedProject) { window.open(selectedProject.url, '_blank', 'noopener,noreferrer'); setSelectedProject(null); } };
+  const handleProceed = (url) => { if (url) { window.open(url, '_blank', 'noopener,noreferrer'); setSelectedProject(null); } };
 
   return (
     <AnimatedPage>

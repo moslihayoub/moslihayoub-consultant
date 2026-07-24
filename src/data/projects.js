@@ -14,9 +14,9 @@ export const projectsData = [
       fr: "Discovery UX, entretiens one-to-one, et conception rapide d'un MVP assisté par IA (LLM) pour la validation d'idée en s'appuyant sur le Design System Autocash existant.",
       en: "UX Discovery, one-to-one interviews, and rapid LLM-assisted MVP design for idea validation leveraging the existing Autocash Design System."
     },
-    image: '/assets/works/ux-ui/autocash-appsourcing.png',
+    image: '/assets/works/ux-ui/autocash-appsourcing.webp',
     isProtected: true,
-    url: 'https://autocash-sourcing.vercel.app/'
+    url: 'U2FsdGVkX19d53kC/eCMEXOrSTZq95AxeypH630djrmnfxxmtKRxFW4mACwpzr8qFTs29NDTWFqmLPwpkZ1RSA=='
   },
   {
     id: 'nexastay',
@@ -32,9 +32,9 @@ export const projectsData = [
       fr: "Le projet a impliqué une phase approfondie de Discovery UX et la création de l'interface (UI) complète sur Figma.",
       en: "The project involved an in-depth UX Discovery phase and the creation of the complete UI on Figma."
     },
-    image: '/assets/works/ux-ui/nexastay.png',
+    image: '/assets/works/ux-ui/nexastay.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/TGjrdYNkeGePCJtO7CPcWp/Nexa-UI--MVP-?m=auto&t=uVDJRvhRmGeplPnd-1'
+    url: 'U2FsdGVkX19bndMTD4gyQv7KpT7DDfRoqZ83k3Gz8A4OfthMyoR1u9G73jmwN2zPtUxHNsFogmLDGTMwa6pb3bG8MDbPWGb2JY9SZyDqdGU7zPMyJxAwJunCR5DGMLhgARWCwXeua880YIgkbbU1dg=='
   },
   {
     id: 'parceliq',
@@ -50,7 +50,7 @@ export const projectsData = [
       fr: "Le MVP a été réalisé en exploitant Google AI Studio (LLM) pour valider la viabilité de l'idée.",
       en: "The MVP was built using Google AI Studio (LLM) to validate the viability of the concept."
     },
-    image: '/assets/works/ux-ui/parcelIQ.png',
+    image: '/assets/works/ux-ui/parcelIQ.webp',
     isProtected: false,
     url: 'https://ai-tool-jade.vercel.app/'
   },
@@ -68,7 +68,7 @@ export const projectsData = [
       fr: "Un MVP développé en collaboration avec l'IA Google Studio.",
       en: "An MVP developed in collaboration with Google AI Studio."
     },
-    image: '/assets/works/ux-ui/freelance-calculator.png',
+    image: '/assets/works/ux-ui/freelance-calculator.webp',
     isProtected: false,
     url: 'https://financial-calculator-five-rho.vercel.app/'
   },
@@ -86,9 +86,9 @@ export const projectsData = [
       fr: "Audit UX, wireframes, itérations UI et conception de maquettes interactives sous Figma.",
       en: "UX Audit, wireframing, UI iterations, and design of interactive mockups on Figma."
     },
-    image: '/assets/works/ux-ui/laarich.png',
+    image: '/assets/works/ux-ui/laarich.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/o90lrDQiTOQh1FONj3J8tS/AULO---UI?node-id=2-2&t=eGGC6QfFbh0GwVCp-1'
+    url: 'U2FsdGVkX18gh1CLrnakkmvnUFumpNUOXGiG4XmoLHKfHqTeK4J5EPEbJwxVo6FjNdeIgKkFlGMVY4zegLyva98hWG6NrIdqZPMW0VnyEeqZGreppjX/yjAmyGSAB9EsUHvf6jBwJb8ktcgsLEUjGg=='
   },
   {
     id: 'damane-cash',
@@ -104,7 +104,7 @@ export const projectsData = [
       fr: "Conception complète de l'interface et prototypage sur Figma pour un rendu moderne et intuitif.",
       en: "Complete interface design and prototyping on Figma for a modern and intuitive look."
     },
-    image: '/assets/works/ux-ui/damanecash.png',
+    image: '/assets/works/ux-ui/damanecash.webp',
     isProtected: false,
     url: 'https://www.figma.com/design/AwukBIZte1D3tYEGkOpwfJ/Damane-Cash--UX-UI-?node-id=2-3&t=pFlPPRUWPdlF1C8u-1'
   },
@@ -122,7 +122,7 @@ export const projectsData = [
       fr: "Processus mené depuis la Discovery UX jusqu'à l'implémentation de l'UI sur Figma.",
       en: "Process carried out from UX Discovery through to UI implementation on Figma."
     },
-    image: '/assets/works/ux-ui/edrive.png',
+    image: '/assets/works/ux-ui/edrive.webp',
     isProtected: false,
     url: 'https://edrive.ma/fr/'
   },
@@ -140,7 +140,7 @@ export const projectsData = [
       fr: "Entretiens utilisateurs, Discovery UX, élaboration de user flows sur FigJam et conception UI sur Figma.",
       en: "User interviews, UX Discovery, mapping user flows on FigJam, and UI design on Figma."
     },
-    image: '/assets/works/ux-ui/autocash.ma.png',
+    image: '/assets/works/ux-ui/autocash.ma.webp',
     isProtected: false,
     url: 'https://autocash.ma'
   },
@@ -158,9 +158,9 @@ export const projectsData = [
       fr: "Le projet intègre une cartographie des user flows (FigJam) et une conception UI/UX premium sur Figma.",
       en: "The project includes mapping user flows on FigJam and creating a premium UI/UX design on Figma."
     },
-    image: '/assets/works/ux-ui/babmoulaydriss.png',
+    image: '/assets/works/ux-ui/babmoulaydriss.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/uGYSzOXevIg0cqZ5JrItID/Bab-Moulay-Idriss---UI?m=auto&t=RTaVZszZ8HeK9H0b-1'
+    url: 'U2FsdGVkX1+zro0YhvHgYAmM58ixRQjAxXgEdUFTZhUea9totAITLags0YVPB2R9ZDUYjY9fz2YmuqFWvnBPxV6GQBmdny56DaykOFMHw1VfuIp6CkiG7xZtIiWUHGYgdyNAXs1kcdY9RRafyqxT6vK/MR1jpwAfAMJUy3dm2vs='
   },
   {
     id: 'foodeals',
@@ -176,9 +176,9 @@ export const projectsData = [
       fr: "Discovery UX/UI exhaustive couvrant le backoffice web, l'ERP, l'application pro en magasin et la version mobile.",
       en: "Comprehensive UX/UI Discovery covering the web backoffice, ERP, in-store pro app, and mobile version."
     },
-    image: '/assets/works/ux-ui/foodeals.png',
+    image: '/assets/works/ux-ui/foodeals.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/6u3Lypzvi31MUMXphsbxmm/Foodeals-Group-solutions---SaaS-Wast?m=auto&t=Pm3rX5XXWGiE8mKi-1'
+    url: 'U2FsdGVkX1/iuym9U3Q/wnfD0FluPxhzErMjao6/nvGizEVKs/uBHUW8mG2/8wDSqwJHwesIn7+hy3djtplOAM9jluiNrVfjQqkwZGInfMcYUtfEkNkWtpvE0x/nQogKu9VhIsK4bQUh1UJ3GtduSqFuiLk0o+GOjeIZPZA2lVXGDHCtx5IuZCN/v50lNqzB'
   },
   {
     id: 'mealbox',
@@ -194,7 +194,7 @@ export const projectsData = [
       fr: "Discovery UX, entretiens qualitatifs et co-conception UI orientée vers le marché marocain.",
       en: "UX Discovery, qualitative interviews, and UI co-design tailored for the Moroccan market."
     },
-    image: '/assets/works/ux-ui/mealbox.png',
+    image: '/assets/works/ux-ui/mealbox.webp',
     isProtected: false,
     url: 'https://www.figma.com/design/7Hob0tbHlIThQNoiwsbBDO/Fact-App--UX-UI-?m=auto&t=uVDJRvhRmGeplPnd-1'
   },
@@ -212,9 +212,9 @@ export const projectsData = [
       fr: "Audit heuristique approfondi, conception basée sur la gamification et UI design complet sur Figma.",
       en: "In-depth heuristic audit, gamification-based design, and comprehensive UI design on Figma."
     },
-    image: '/assets/works/ux-ui/ydg.png',
+    image: '/assets/works/ux-ui/ydg.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/qFbb3LpLgDB45CmPxv6Jov/YDG-UI?node-id=2-3&t=mrUDNxVLKoPQAp25-1'
+    url: 'U2FsdGVkX18GyjaWEq+tGT3sM8GxiBB4mbWCFaAtxawthOluWZzQ8RqpUUoILOb+v1nDQVI3+8rYjf2msdb5t82+eZnc1HWxrftN3VdCrIV9hdbVKBQ951wnx8768CucVOXbJa25paWS+pZEDzn2cg=='
   },
   {
     id: 'laval',
@@ -230,9 +230,9 @@ export const projectsData = [
       fr: "Projet mené en co-conception avec des experts métiers : architecture de l'information, wireframes, itérations, prototypes et UI.",
       en: "Project conducted in co-design with business experts: information architecture, wireframing, iterations, prototyping, and UI."
     },
-    image: '/assets/works/ux-ui/laval.png',
+    image: '/assets/works/ux-ui/laval.webp',
     isProtected: true,
-    url: 'https://www.figma.com/design/dlv7ZpbwGukMBAvue8CGS5/Source-Info-r%C3%A8glements---MAJ-02-2022?m=auto&t=uVDJRvhRmGeplPnd-1'
+    url: 'U2FsdGVkX19JkEA2wnyTmfRRRVE7uCfho+cLEknF1FoJMnpHb7JXzxvt+XyJNkPOHAMeVYu7CSMQ0n9+e2yVaq1fz/iklOUwqogcavw8aMoRbXjprjjbtTqL4Z+d839qfDeMLBSnfGCG0cdE1+BkTdveBtpuDm+AZr/ZydL0fppptS4Jwi0CBliWrCQbBb8u'
   },
 
   // Motion Graphics Projects
@@ -250,7 +250,7 @@ export const projectsData = [
       fr: "Création du storyboard, illustrations (Illustrator) et animation complète sur After Effects.",
       en: "Storyboard creation, illustrations (Illustrator), and full animation on After Effects."
     },
-    image: '/assets/works/motion/bp.png',
+    image: '/assets/works/motion/bp.webp',
     isProtected: false,
     url: 'https://youtu.be/z8bTcifgsl4?si=hDv4FUDL7zJENMBk'
   },
@@ -268,7 +268,7 @@ export const projectsData = [
       fr: "Storyboard, graphisme vectoriel et montage After Effects.",
       en: "Storyboarding, vector graphics, and After Effects editing."
     },
-    image: '/assets/works/motion/bpv2.png',
+    image: '/assets/works/motion/bpv2.webp',
     isProtected: false,
     url: 'https://youtu.be/HdgyJAmTCgw?si=bcTVnw3xvhmIQR_e'
   },
@@ -322,7 +322,7 @@ export const projectsData = [
       fr: "Création des storyboards et animations vectorielles (Flash ActionScript 3.0 / Illustrator).",
       en: "Storyboard creation and vector animations (Flash ActionScript 3.0 / Illustrator)."
     },
-    image: '/assets/works/motion/stibits.png',
+    image: '/assets/works/motion/stibits.webp',
     isProtected: false,
     url: 'https://youtu.be/8KoAOqP30Sg?si=DYsod_GgZJjZuUYE'
   },
@@ -340,7 +340,7 @@ export const projectsData = [
       fr: "Storyboarding, graphisme et réalisation Flash ActionScript 3.0.",
       en: "Storyboarding, graphics, and Flash ActionScript 3.0 execution."
     },
-    image: '/assets/works/motion/cooconbaby.png',
+    image: '/assets/works/motion/cooconbaby.webp',
     isProtected: false,
     url: 'https://youtu.be/ysLNJLE32Co?si=l0ZOehBTgp4BtDe4'
   },
@@ -358,7 +358,7 @@ export const projectsData = [
       fr: "Illustration vectorielle et animation sous Flash ActionScript 3.0.",
       en: "Vector illustration and animation in Flash ActionScript 3.0."
     },
-    image: '/assets/works/motion/lavachequirit.png',
+    image: '/assets/works/motion/lavachequirit.webp',
     isProtected: false,
     url: 'https://youtu.be/8KoAOqP30Sg?si=DYsod_GgZJjZuUYE'
   }

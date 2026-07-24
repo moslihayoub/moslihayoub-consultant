@@ -439,18 +439,16 @@ export default function About() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', minWidth: 0 }}>
                 {contactLinks.map((link, i) => (
-                  <TiltWrapper key={i} style={{ display: 'block' }}>
-                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="glass-panel hover-trigger" style={{ display: 'flex', alignItems: 'center', padding: '16px', borderRadius: 'var(--radius-md)', textDecoration: 'none', gap: '12px', border: '1px solid var(--color-border)', width: '100%', boxSizing: 'border-box' }}>
-                      <div style={{ flexShrink: 0, width: '44px', height: '44px', borderRadius: '12px', backgroundColor: `${link.color}15`, color: link.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <link.icon size={22} />
-                      </div>
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{link.label}</h4>
-                        <p style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-primary)', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis' }}>{link.value}</p>
-                      </div>
-                      <ExternalLink size={18} style={{ flexShrink: 0, color: 'var(--color-text-secondary)' }} />
-                    </a>
-                  </TiltWrapper>
+                  <a key={i} href={link.href} target="_blank" rel="noopener noreferrer" className="glass-panel hover-trigger" style={{ display: 'flex', alignItems: 'center', padding: '16px', borderRadius: 'var(--radius-md)', textDecoration: 'none', gap: '12px', border: '1px solid var(--color-border)', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ flexShrink: 0, width: '44px', height: '44px', borderRadius: '12px', backgroundColor: `${link.color}15`, color: link.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <link.icon size={22} />
+                    </div>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{link.label}</h4>
+                      <p style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-primary)', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis' }}>{link.value}</p>
+                    </div>
+                    <ExternalLink size={18} style={{ flexShrink: 0, color: 'var(--color-text-secondary)' }} />
+                  </a>
                 ))}
               </div>
 
