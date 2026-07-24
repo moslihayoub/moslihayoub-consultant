@@ -437,24 +437,24 @@ export default function About() {
             <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, margin: 0 }}>{t('about_contact_desc')}</p>
             <div className="page-hero-grid" style={{ marginTop: '40px', gap: '40px', alignItems: 'flex-start' }}>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', minWidth: 0 }}>
                 {contactLinks.map((link, i) => (
                   <TiltWrapper key={i} style={{ display: 'block' }}>
-                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="glass-panel hover-trigger" style={{ display: 'flex', alignItems: 'center', padding: '20px', borderRadius: 'var(--radius-md)', textDecoration: 'none', gap: '16px', border: '1px solid var(--color-border)' }}>
-                      <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: `${link.color}15`, color: link.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <link.icon size={24} />
+                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="glass-panel hover-trigger" style={{ display: 'flex', alignItems: 'center', padding: '16px', borderRadius: 'var(--radius-md)', textDecoration: 'none', gap: '12px', border: '1px solid var(--color-border)', width: '100%', boxSizing: 'border-box' }}>
+                      <div style={{ flexShrink: 0, width: '44px', height: '44px', borderRadius: '12px', backgroundColor: `${link.color}15`, color: link.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <link.icon size={22} />
                       </div>
-                      <div>
-                        <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>{link.label}</h4>
-                        <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{link.value}</p>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{link.label}</h4>
+                        <p style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-primary)', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis' }}>{link.value}</p>
                       </div>
-                      <ExternalLink size={18} style={{ marginLeft: 'auto', color: 'var(--color-text-secondary)' }} />
+                      <ExternalLink size={18} style={{ flexShrink: 0, color: 'var(--color-text-secondary)' }} />
                     </a>
                   </TiltWrapper>
                 ))}
               </div>
 
-              <div className="glass-panel" style={{ padding: '32px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)' }}>
+              <div className="glass-panel" style={{ padding: 'clamp(16px, 5vw, 32px)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', width: '100%', boxSizing: 'border-box' }}>
                 <h3 style={{ marginBottom: '24px' }}>{lang === 'fr' ? 'Réserver une consultation' : 'Book a consultation'}</h3>
                 
                 <div style={{ width: '100%', height: '500px', borderRadius: 'var(--radius-md)', overflow: 'hidden', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>

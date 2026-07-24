@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Ayoub MOSLIH — Portfolio',
+        name: 'Ayoub MOSLIH - Consultant en transformation digital & AI',
         short_name: 'MOSLIH',
-        description: 'Portfolio de Ayoub MOSLIH, Lead Product Designer & AI Strategy Manager',
+        description: 'Portfolio de Ayoub MOSLIH, Consultant en transformation digital & AI',
         theme_color: '#39A169',
         background_color: '#FAFAFA',
         display: 'standalone',

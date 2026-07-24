@@ -178,18 +178,14 @@ export default function Home() {
               </p>
               
               <div className="hero-cta-container" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '36px' }}>
-                <TiltWrapper>
-                  <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust" style={{ margin: 0 }}>
-                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{t('btn_work')} <ArrowRight size={17} /></span>
-                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Mes projets <ArrowRight size={17} /></span>
-                  </Link>
-                </TiltWrapper>
-                <TiltWrapper>
-                  <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust" style={{ margin: 0 }}>
-                    <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={17} /> {t('home_section3_label')}</span>
-                    <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={17} /> Trajectoire</span>
-                  </a>
-                </TiltWrapper>
+                <Link to="/work" className="btn-primary hover-trigger mobile-btn-adjust">
+                  <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{t('btn_work')} <ArrowRight size={18} /></span>
+                  <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Mes projets <ArrowRight size={18} /></span>
+                </Link>
+                <a href="#timeline" className="btn-secondary hover-trigger mobile-btn-adjust">
+                  <span className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={18} /> {t('home_section3_label')}</span>
+                  <span className="hide-on-desktop" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Route size={18} /> Trajectoire</span>
+                </a>
               </div>
               
               <motion.div className="hero-tags-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.45 }}>
@@ -206,20 +202,20 @@ export default function Home() {
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/20230517_184215.jpg" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/20250419_155833.png" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/3_20250419_225936_0002.png" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/IMG-20230515-WA0022.jpg" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/20230517_184215.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/20250419_155833.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/3_20250419_225936_0002.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/IMG-20230515-WA0022.webp" alt="Gallery image" fetchPriority="high" />
                     </div>
                   ))}
                 </div>
                 <div className="marquee-column marquee-column-reverse" style={{ animationDuration: '35s', animationDelay: '-10s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.png" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.png" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.png" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.jpg" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp" alt="Gallery image" fetchPriority="high" />
                     </div>
                   ))}
                 </div>

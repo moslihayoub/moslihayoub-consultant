@@ -54,7 +54,7 @@ END:VCARD`;
             })}
             
             <li style={styles.navItem}>
-              <button onClick={toggleLanguage} style={styles.langBtn} className="hover-trigger" aria-label="Toggle language">
+              <button onClick={toggleLanguage} style={styles.langBtn} className="hover-trigger" aria-label={`${lang.toUpperCase()} - Changer de langue`}>
                 <Globe size={18} color="var(--color-text-secondary)" />
                 <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.8rem', fontWeight: 600 }}>
                   {lang.toUpperCase()}
@@ -95,7 +95,7 @@ END:VCARD`;
           })}
           
           <li style={{ position: 'relative' }}>
-            <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger" aria-label="Toggle language">
+            <button onClick={toggleLanguage} style={styles.bottomNavLink} className="hover-trigger" aria-label={`${lang.toUpperCase()} - Changer de langue`}>
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'var(--color-text-secondary)' }}>
                 <Globe size={18} />
                 <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{lang.toUpperCase()}</span>
