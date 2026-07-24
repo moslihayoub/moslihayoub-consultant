@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useInView } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Award, CheckCircle2, Clock, FolderOpen, Search, Brain, Layout, Compass, Smartphone, Target, Bot, ArrowRight } from 'lucide-react';
 import AnimatedPage from '../components/AnimatedPage';
 import ProjectCard from '../components/ProjectCard';
@@ -97,8 +98,10 @@ const Work = () => {
 
   const displayedProjects = filteredProjects.slice(0, visibleProjectsCount);
 
-  const handleProjectClick = (project) => { if (project.isProtected) { setSelectedProject(project); } else { window.open(project.url, '_blank', 'noopener,noreferrer'); } };
-  const handleProceed = (url) => { if (url) { window.open(url, '_blank', 'noopener,noreferrer'); setSelectedProject(null); } };
+  const navigate = useNavigate();
+
+  const handleProjectClick = (project) => { if (project.isProtected) { setSelectedProject(project); } else { if(project.url.startsWith('/')){ navigate(project.url); } else { window.open(project.url, '_blank', 'noopener,noreferrer'); } } };
+  const handleProceed = (url) => { if (url) { if(url.startsWith('/')) { navigate(url); } else { window.open(url, '_blank', 'noopener,noreferrer'); } setSelectedProject(null); } };
 
   return (
     <AnimatedPage>
@@ -200,7 +203,7 @@ const Work = () => {
               </div>
               
               <div className="hero-tags-container" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                {['Tous', 'UX/UI', 'MVP Ai', 'Motion Graphics'].map(tab => (
+                {['Tous', 'UX/UI', 'MVP Ai', 'Motion Graphics', 'AI Filmmaking'].map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
