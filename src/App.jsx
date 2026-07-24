@@ -4,7 +4,6 @@ import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
-import ChatWidget from './components/ChatWidget';
 import ScrollSpy from './components/ScrollSpy';
 import CookieBanner from './components/CookieBanner';
 
@@ -14,6 +13,7 @@ import './index.css';
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
+const ChatWidget = lazy(() => import('./components/ChatWidget'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -24,10 +24,11 @@ const ScrollToTop = () => {
 };
 
 const PageSkeleton = () => (
-  <div style={{ minHeight: '100vh', padding: '120px 24px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '800px', margin: '0 auto' }}>
-    <div className="skeleton-box" style={{ width: '40%', height: '40px', borderRadius: '12px' }}></div>
-    <div className="skeleton-box" style={{ width: '80%', height: '80px', borderRadius: '12px' }}></div>
-    <div className="skeleton-box" style={{ width: '100%', height: '200px', borderRadius: '24px' }}></div>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#e2e8f0', animation: 'pulse 1.5s infinite ease-in-out', marginBottom: '24px' }}></div>
+    <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '6px', animation: 'pulse 1.5s infinite ease-in-out', marginBottom: '12px', width: '200px' }}></div>
+    <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '6px', animation: 'pulse 1.5s infinite ease-in-out', marginBottom: '12px', width: '140px' }}></div>
+    <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
   </div>
 );
 
@@ -60,7 +61,9 @@ function App() {
           </main>
           <Footer />
           <ScrollSpy />
-          <ChatWidget />
+          <Suspense fallback={null}>
+            <ChatWidget />
+          </Suspense>
           <CookieBanner />
         </div>
       </Router>

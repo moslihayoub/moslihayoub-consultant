@@ -206,20 +206,20 @@ export default function Home() {
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/20230517_184215.jpg" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/20250419_155833.png" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/3_20250419_225936_0002.png" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/IMG-20230515-WA0022.jpg" alt="Gallery image" loading="lazy" />
+                      <img src="/assets/galerie/20230517_184215.jpg" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/20250419_155833.png" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/3_20250419_225936_0002.png" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/IMG-20230515-WA0022.jpg" alt="Gallery image" fetchPriority="high" />
                     </div>
                   ))}
                 </div>
                 <div className="marquee-column marquee-column-reverse" style={{ animationDuration: '35s', animationDelay: '-10s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.png" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.png" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.png" alt="Gallery image" loading="lazy" />
-                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.jpg" alt="Gallery image" loading="lazy" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.png" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.png" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.png" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.jpg" alt="Gallery image" fetchPriority="high" />
                     </div>
                   ))}
                 </div>
@@ -250,8 +250,8 @@ export default function Home() {
             ))}
           </div>
           
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} style={{ marginTop: '48px', display: 'flex', justifyContent: 'flex-end' }}>
-            <Link to="/work" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--color-electric-green)', fontWeight: 600, textDecoration: 'none', fontSize: '0.93rem', transition: 'gap 0.2s ease' }} className="hover-trigger hover-lift">{t('btn_work')} <ChevronRight size={16} /></Link>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} style={{ marginTop: '48px', display: 'flex', justifyContent: 'center' }}>
+            <Link to="/work" className="btn-primary hover-trigger">{t('btn_work')} <ArrowRight size={18} /></Link>
           </motion.div>
         </div>
       </section>
