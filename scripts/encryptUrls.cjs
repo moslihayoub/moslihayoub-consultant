@@ -1,8 +1,9 @@
 const CryptoJS = require("crypto-js");
 
-const password = "M84";
+const password = "031984";
 
 const urls = {
+  'the-factory': '/project/the-factory',
   'autocash-sourcing': 'https://autocash-sourcing.vercel.app/',
   'nexastay': 'https://www.figma.com/design/TGjrdYNkeGePCJtO7CPcWp/Nexa-UI--MVP-?m=auto&t=uVDJRvhRmGeplPnd-1',
   'agence-urbaine': 'https://www.figma.com/design/o90lrDQiTOQh1FONj3J8tS/AULO---UI?node-id=2-2&t=eGGC6QfFbh0GwVCp-1',

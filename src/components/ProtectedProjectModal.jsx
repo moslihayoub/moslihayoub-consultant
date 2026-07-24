@@ -26,8 +26,8 @@ const ProtectedProjectModal = ({ isOpen, onClose, onProceed, project }) => {
       const bytes = CryptoJS.AES.decrypt(project.url, code.trim());
       const decryptedUrl = bytes.toString(CryptoJS.enc.Utf8);
       
-      // If it successfully decrypted to a valid URL string
-      if (decryptedUrl && decryptedUrl.startsWith('http')) {
+      // If it successfully decrypted to a valid URL string or internal route
+      if (decryptedUrl && (decryptedUrl.startsWith('http') || decryptedUrl.startsWith('/'))) {
         setError(false);
         onProceed(decryptedUrl);
       } else {

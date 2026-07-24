@@ -15,6 +15,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
 const ChatWidget = lazy(() => import('./components/ChatWidget'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -43,6 +44,7 @@ const AnimatedRoutes = () => {
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />
           <Route path="/about" element={<About />} />
+          <Route path="/project/:id" element={<ProjectDetail />} />
         </Routes>
       </Suspense>
     </AnimatePresence>

@@ -379,5 +379,24 @@ export const projectsData = [
     image: '/assets/works/motion/lavachequirit.webp',
     isProtected: false,
     url: 'https://youtu.be/8KoAOqP30Sg?si=DYsod_GgZJjZuUYE'
+  },
+  // AI Filmmaking Projects
+  {
+    id: 'the-factory',
+    title: 'The Factory',
+    client: 'Série 2D',
+    category: 'AI Filmmaking',
+    year: '2026',
+    shortDesc: {
+      fr: "Série d'animation 2D business/comédie, générée par IA. L'histoire d'une agence digitale basée à Casablanca.",
+      en: "2D animated business/comedy series, AI-generated. The story of a digital agency based in Casablanca."
+    },
+    techDesc: {
+      fr: "Génération de script avec Gemini/Claude, storyboard auto avec Google Flow, création des personnages et montage AI.",
+      en: "Script generation with Gemini/Claude, auto storyboard with Google Flow, character creation and AI editing."
+    },
+    image: '/assets/works/filmmaker/the-factory.webp',
+    isProtected: true,
+    url: 'U2FsdGVkX19ciokMROb0HQxbmGM7gkHmhjxSKhFKWxqQLKdkhT1qrCKSqCOL8BlD'
   }
 ];

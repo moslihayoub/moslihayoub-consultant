@@ -27,6 +27,7 @@
 ### 4. 📁 Projets Récents Ajoutés
 - **QuickToken UI** dans la catégorie **MVP Ai** (`public/assets/works/ux-ui/quicktoken.webp`).
 - Ajout de la nouvelle catégorie **AI Filmmaking** dans `Work.jsx`.
+- Ajout de la page de détail dynamique pour **The Factory** (`/project/the-factory`), sécurisée par mot de passe et illustrant le making-of (storyboard, character sheet, vidéos AI).
 
 ### 5. 🔍 SEO & Accessibilité (A11y)
 - Méta-titre, description, Open Graph et balises sémantiques HTML5 configurés.
@@ -36,6 +37,6 @@
 ---
 
 ## 📋 Tâches / Prochaines Étapes
-- [ ] Ajouter des projets dans la catégorie **AI Filmmaking** si disponible.
-- [ ] Vérifier la bonne intégration globale après les ajouts de projets.
-- [ ] Pousser les changements récents sur Git (`git push origin main`).
+- [x] Ajouter des projets dans la catégorie **AI Filmmaking** si disponible (Ajout de *The Factory*).
+- [x] Vérifier la bonne intégration globale après les ajouts de projets.
+- [x] Pousser les changements récents sur Git (`git push origin main`).
