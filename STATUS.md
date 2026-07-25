@@ -10,8 +10,13 @@
 
 ## 🛠️ Dernières Fonctionnalités & Optimisations Réalisées
 
-### 1. 🖼️ Performance & Images (WebP)
+### 1. 🖼️ Performance & Images (WebP & Lighthouse Mobile)
 - Toutes les images dans `public/assets/galerie/` et `public/assets/works/` (UX/UI, Motion) ont été optimisées et converties au format `.webp` (largeur max 1000px).
+- **Optimisation Mobile Lighthouse (LCP & TBT)** :
+  - Preload de la 1ère image visuelle Hero (`20230517_184215.webp`) et attribution du tag `loading="lazy"` + `fetchPriority="low"` sur les 7 autres images du Marquee.
+  - Différé de l'exécution des scripts analytiques (GTM / GA4) après le chargement pour libérer le thread principal JS.
+  - Chunking isolé de la dépendance lourde `Three.js` dans `vite.config.js` (`manualChunks`).
+  - Désactivation des écouteurs `CustomCursor` sur appareils mobiles/tactiles.
 - Utilisation d'un script Node.js dédié : `scripts/optimize-images.js`.
 - Suppression complète des anciens fichiers `.png` / `.jpg` lourds.
 
