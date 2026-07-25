@@ -115,7 +115,7 @@ const Work = () => {
                 <span style={styles.sectionLabel}>{t('work_hero_label')}</span>
                 <h1 style={styles.heroTitle}>{t('work_hero_title')}</h1>
                 <p style={styles.heroDesc}>{t('work_hero_desc')}</p>
-                <motion.div className="hero-tags-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.25 }}>
+                <motion.div className="hero-tags-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.25 }}>
                   {[t('work_hero_tag1'), t('work_hero_tag2'), t('work_hero_tag3')].map((s, i) => (
                     <div key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#ffffff', backgroundColor: '#333333', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '999px', padding: '6px 16px', letterSpacing: '0.01em' }}>
                       {s}
