@@ -83,6 +83,8 @@ const ProtectedProjectModal = ({ isOpen, onClose, onProceed, project }) => {
                   <input
                     id="access-code"
                     type="password"
+                    pattern="[0-9]*"
+                    inputMode="numeric"
                     value={code}
                     onChange={(e) => { setCode(e.target.value); setError(false); }}
                     placeholder={lang === 'fr' ? "Saisir le code d'accès..." : "Enter access code..."}

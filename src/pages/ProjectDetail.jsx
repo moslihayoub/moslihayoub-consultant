@@ -89,7 +89,7 @@ const ProjectDetail = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
             
             {/* Étape 1 : Pré-production */}
-            <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
+            <motion.section id="pre-production" data-scrollspy="Pré-production" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
               <div style={styles.stepHeader}>
                 <div style={styles.stepBadge}>PRÉ-PRODUCTION</div>
                 <h2 style={styles.stepTitle}>{lang === 'fr' ? "Scénarisation & Concept" : "Scripting & Concept"}</h2>
@@ -111,7 +111,7 @@ const ProjectDetail = () => {
             </motion.section>
 
             {/* Étape 2 : Production */}
-            <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
+            <motion.section id="production" data-scrollspy="Production" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
               <div style={styles.stepHeader}>
                 <div style={styles.stepBadge}>PRODUCTION</div>
                 <h2 style={styles.stepTitle}>{lang === 'fr' ? "Direction Artistique & Storyboard" : "Art Direction & Storyboard"}</h2>
@@ -157,7 +157,7 @@ const ProjectDetail = () => {
             </motion.section>
 
             {/* Étape 3 : Post-production */}
-            <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
+            <motion.section id="post-production" data-scrollspy="Post-production" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5 }}>
               <div style={styles.stepHeader}>
                 <div style={styles.stepBadge}>POST-PRODUCTION</div>
                 <h2 style={styles.stepTitle}>{lang === 'fr' ? "Animation & Montage Final" : "Animation & Final Edit"}</h2>
