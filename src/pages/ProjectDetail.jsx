@@ -78,7 +78,7 @@ const ProjectDetail = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </motion.section>
 
           {/* Main Cover (No Border, No Bg) */}
           <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ marginBottom: '80px', overflow: 'hidden' }}>
