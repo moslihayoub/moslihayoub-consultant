@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { motion, useMotionValue, useTransform, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Award, CheckCircle2, Clock, FolderOpen, Search, Brain, Layout, Compass, Smartphone, Target, Bot, ArrowRight } from 'lucide-react';
@@ -7,6 +7,8 @@ import ProjectCard from '../components/ProjectCard';
 import ProtectedProjectModal from '../components/ProtectedProjectModal';
 import TiltWrapper from '../components/TiltWrapper';
 import { useLanguage } from '../contexts/LanguageContext';
+
+const HeroShape = lazy(() => import('../components/HeroShape'));
 
 import { projectsData } from '../data/projects';
 
@@ -124,17 +126,9 @@ const Work = () => {
               </motion.div>
               <motion.div style={{ ...styles.heroRight, position: 'relative' }} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.75, delay: 0.2, ease: 'easeOut' }}>
                 <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <video 
-                    ref={videoRef}
-                    src="/assets/vid-HS/works.mp4" 
-                    preload="none"
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    className="video-mask"
-                    style={{ width: '100%', height: '480px', objectFit: 'cover', display: 'block' }}
-                  />
+                  <Suspense fallback={<div style={{ width: '100%', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}><div style={{ width: 120, height: 120, borderRadius: '50%', border: '2px solid #8eddd1', animation: 'pulse 2s infinite' }} /></div>}>
+                    <HeroShape height={480} />
+                  </Suspense>
 
                   {/* Floating element 1 (Top Left) */}
                   <motion.div 

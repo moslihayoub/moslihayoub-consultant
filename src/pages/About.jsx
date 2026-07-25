@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { motion, useMotionValue, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { Calendar, Download, Mail, MapPin, Phone, ExternalLink, Award, Play, ChevronRight, MessageCircle, Briefcase, UserCheck, CheckCircle2, Brain, ChevronDown, ChevronUp, Globe, Layout, Search } from 'lucide-react';
 import TiltWrapper from '../components/TiltWrapper';
 import AnimatedPage from '../components/AnimatedPage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { certificationsData } from '../data/certifications';
+
+const HeroShape = lazy(() => import('../components/HeroShape'));
 
 const LinkedinIcon = ({ size = 20 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -184,17 +186,9 @@ export default function About() {
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative', minWidth: 0, width: '100%', maxWidth: '100%' }}>
               <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <video 
-                  ref={videoRef}
-                  src="/assets/vid-HS/about.mp4" 
-                  preload="none"
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline 
-                  className="video-mask"
-                  style={{ width: '100%', height: '480px', objectFit: 'cover', display: 'block' }} 
-                />
+                <Suspense fallback={<div style={{ width: '100%', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}><div style={{ width: 120, height: 120, borderRadius: '50%', border: '2px solid #8eddd1', animation: 'pulse 2s infinite' }} /></div>}>
+                  <HeroShape height={480} />
+                </Suspense>
 
                 {/* Floating element 1 (Top right) */}
                 <motion.div 
