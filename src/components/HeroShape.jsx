@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { MeshTransmissionMaterial, Environment } from '@react-three/drei';
+import { Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 /* ─── Rotation + souris partagés ─── */
@@ -25,24 +25,13 @@ function useMouseRotation(mouseRef) {
   return update;
 }
 
-/* ─── Matériau cristal/verre réutilisable ─── */
-function GlassMaterial({ color }) {
+/* ─── Matériau standard léger ─── */
+function SolidMaterial({ color }) {
   return (
-    <MeshTransmissionMaterial
-      backside
-      samples={8}
-      thickness={0.6}
-      roughness={0.03}
-      transmission={0.96}
-      ior={1.55}
-      chromaticAberration={0.06}
+    <meshStandardMaterial
       color={color}
-      anisotropy={0.3}
-      distortion={0.15}
-      distortionScale={0.2}
-      temporalDistortion={0.04}
-      attenuationColor={color}
-      attenuationDistance={2}
+      roughness={0.2}
+      metalness={0.4}
     />
   );
 }
@@ -65,7 +54,7 @@ function IcosahedronMesh({ mouseRef, color }) {
   return (
     <group>
       <mesh ref={meshRef} geometry={geometry}>
-        <GlassMaterial color={color} />
+        <SolidMaterial color={color} />
       </mesh>
       <mesh ref={wireRef} geometry={geometry}>
         <meshBasicMaterial color={color} wireframe transparent opacity={0.18} />
@@ -100,25 +89,17 @@ function TorusKnotMesh({ mouseRef }) {
 
   return (
     <group>
-      {/* Matériau nacré bleu — iridescence avec base bleue */}
+      {/* Matériau gris foncé simple */}
       <mesh ref={meshRef} geometry={geometry}>
-        <meshPhysicalMaterial
-          color="#c0d4f5"
-          roughness={0.04}
-          metalness={0.2}
-          iridescence={1.0}
-          iridescenceIOR={2.0}
-          iridescenceThicknessRange={[200, 1000]}
-          transmission={0.1}
-          thickness={1.2}
-          ior={1.45}
-          clearcoat={1.0}
-          clearcoatRoughness={0.03}
+        <meshStandardMaterial
+          color="#555555"
+          roughness={0.3}
+          metalness={0.3}
           side={THREE.DoubleSide}
         />
       </mesh>
       <mesh ref={wireRef} geometry={geometry}>
-        <meshBasicMaterial color="#8ab4f8" wireframe transparent opacity={0.2} />
+        <meshBasicMaterial color="#777777" wireframe transparent opacity={0.3} />
       </mesh>
     </group>
   );

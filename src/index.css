@@ -288,10 +288,10 @@ p {
 /* ── Responsive Utilities ── */
 /* Global floating tags fix for mobile */
 .floating-tag-left {
-  left: -5%;
+  left: 15%;
 }
 .floating-tag-right {
-  right: -5%;
+  right: 15%;
 }
 
 @media (max-width: 768px) {
