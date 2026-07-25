@@ -171,17 +171,16 @@ const ProjectDetail = () => {
               {/* Vidéos - Responsive via classe video-grid */}
               <div className="video-grid">
                 {[
-                  "btbAuvsQiHc", "xxAjoV6bi4o", "F1W3iohmdTM", "EMOsKp7OTHQ", "rayz4dW8NUM"
-                ].map((videoId, idx) => (
-                  <div key={idx} style={styles.videoContainer}>
-                    {/* Transparent overlay to disable right-click and interaction */}
-                    <div style={styles.videoOverlay} onContextMenu={(e) => e.preventDefault()}></div>
-                    <iframe 
-                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&controls=0&cc_load_policy=0&playlist=${videoId}&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-                      style={styles.iframe} 
-                      allow="autoplay; encrypted-media" 
-                      title={`Video ${idx}`} 
-                      tabIndex="-1"
+                  "frame-01.mp4", "frame-02.mp4", "frame-03.mp4", "frame-04.mp4", "frame-05.mp4"
+                ].map((videoName, idx) => (
+                  <div key={idx} style={{ width: '100%', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#000' }}>
+                    <video 
+                      src={`/assets/works/filmmaker/h264/${videoName}`}
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      style={{ width: '100%', height: 'auto', display: 'block' }} 
                     />
                   </div>
                 ))}
@@ -233,30 +232,6 @@ const styles = {
     height: 'auto',
     display: 'block',
     borderRadius: '8px', /* slight radius for a cleaner look */
-  },
-  videoContainer: {
-    position: 'relative',
-    width: '100%',
-    paddingBottom: '56.25%',
-    height: 0,
-    borderRadius: '8px',
-    overflow: 'hidden',
-    backgroundColor: '#000'
-  },
-  videoOverlay: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    zIndex: 10,
-    cursor: 'default'
-  },
-  iframe: {
-    position: 'absolute',
-    top: '-15%',
-    left: '-15%',
-    width: '130%',
-    height: '130%',
-    border: 'none',
-    pointerEvents: 'none'
   }
 };
 
