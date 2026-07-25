@@ -37,6 +37,8 @@ const CustomCursor = () => {
   }, []);
 
   useEffect(() => {
+    if (!isPointerFine) return;
+
     const onMove = (e) => setPos({ x: e.clientX, y: e.clientY });
 
     const onOver = (e) => {
@@ -82,7 +84,7 @@ const CustomCursor = () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseover', onOver);
     };
-  }, []);
+  }, [isPointerFine]);
 
   const isExpanded = cursorState !== 'default';
   const size = isExpanded ? 52 : 20;
