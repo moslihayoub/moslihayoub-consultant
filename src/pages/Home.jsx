@@ -1,6 +1,6 @@
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase, Route } from 'lucide-react';
+import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase, Route, X } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import AnimatedPage from '../components/AnimatedPage';
 import ProjectCard from '../components/ProjectCard';
@@ -140,6 +140,13 @@ import ProtectedProjectModal from '../components/ProtectedProjectModal';
 export default function Home() {
   const { t } = useLanguage();
   const [selectedProject, setSelectedProject] = useState(null);
+  const [lightbox, setLightbox] = useState({ isOpen: false, type: null, src: null });
+  
+  const openLightbox = (type, src) => {
+    if (typeof window !== 'undefined' && window.innerWidth > 768) {
+      setLightbox({ isOpen: true, type, src });
+    }
+  };
   
   const handleProjectClick = (project) => {
     if (project.isProtected) {
@@ -202,20 +209,20 @@ export default function Home() {
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/20230517_184215.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/20250419_155833.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/3_20250419_225936_0002.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/IMG-20230515-WA0022.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/20230517_184215.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20230517_184215.webp')} />
+                      <img src="/assets/galerie/20250419_155833.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20250419_155833.webp')} />
+                      <img src="/assets/galerie/3_20250419_225936_0002.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/3_20250419_225936_0002.webp')} />
+                      <img src="/assets/galerie/IMG-20230515-WA0022.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/IMG-20230515-WA0022.webp')} />
                     </div>
                   ))}
                 </div>
                 <div className="marquee-column marquee-column-reverse" style={{ animationDuration: '35s', animationDelay: '-10s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp" alt="Gallery image" fetchPriority="high" />
-                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp" alt="Gallery image" fetchPriority="high" />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp')} />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp')} />
+                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp')} />
+                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp" alt="Gallery image" fetchPriority="high" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp')} />
                     </div>
                   ))}
                 </div>
@@ -376,9 +383,17 @@ export default function Home() {
           filter: grayscale(100%);
           transition: filter 0.4s ease, transform 0.4s ease;
         }
+        .marquee-column:hover {
+          animation-play-state: paused;
+        }
         .marquee-content img:hover {
           filter: grayscale(0%);
           transform: scale(1.02);
+        }
+        @media (min-width: 769px) {
+          .lightbox-media {
+            cursor: zoom-in;
+          }
         }
         @keyframes marquee-vertical {
           0% { transform: translateY(0); }
@@ -394,6 +409,52 @@ export default function Home() {
         }
       `}</style>
       <ProtectedProjectModal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} onProceed={handleProceed} project={selectedProject || {}} />
+      
+      {/* Lightbox Overlay */}
+      <AnimatePresence>
+        {lightbox.isOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              zIndex: 9999999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'zoom-out'
+            }}
+            onClick={() => setLightbox({ isOpen: false, type: null, src: null })}
+          >
+            <button 
+              style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '8px' }}
+              onClick={() => setLightbox({ isOpen: false, type: null, src: null })}
+            >
+              <X size={32} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: '90%', maxHeight: '90%', position: 'relative' }}
+            >
+              {lightbox.type === 'image' && (
+                <img src={lightbox.src} alt="Fullscreen" style={{ width: '100%', height: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }} />
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AnimatedPage>
   );
 }

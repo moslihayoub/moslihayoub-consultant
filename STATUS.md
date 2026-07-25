@@ -38,9 +38,18 @@
 - Données structurées JSON-LD (`Person`).
 - Attributs `aria-label` et correction des contrastes pour l'accessibilité W3C.
 
+### 6. 🎨 Mises à jour UI & Interactions Récentes
+- **Page d'Accueil (Hero)** : Ajout d'une fonctionnalité de pause au survol et d'une popup (Lightbox) sur les images de la galerie défilante.
+- **Page À Propos** : Intégration du flux X (Twitter) via widget officiel et ajout du lien MTBL avec logo détouré (transparent) et fond harmonisé.
+- **Détail Projet (The Factory)** : 
+  - Ajout d'une fonctionnalité de Lightbox au clic sur les images (version desktop).
+  - Réorganisation de la grille d'images (1 image par ligne au début, puis 2 par ligne pour le storyboard).
+- **ChatWidget** : Amélioration du glisser-déposer sur mobile avec contraintes de bord d'écran strictes pour éviter sa disparition, tout en conservant la fluidité.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
 - [x] Ajouter des projets dans la catégorie **AI Filmmaking** si disponible (Ajout de *The Factory*).
 - [x] Vérifier la bonne intégration globale après les ajouts de projets.
+- [x] Mises à jour UI (Hero, About, Project Detail, ChatWidget).
 - [x] Pousser les changements récents sur Git (`git push origin main`).

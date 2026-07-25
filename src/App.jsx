@@ -14,6 +14,7 @@ import './index.css';
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
+// const XPost = lazy(() => import('./pages/XPost'));
 const ChatWidget = lazy(() => import('./components/ChatWidget'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 
@@ -47,6 +48,7 @@ const AnimatedRoutes = () => {
             <Route path="/" element={<Home />} />
             <Route path="/work" element={<Work />} />
             <Route path="/about" element={<About />} />
+            {/* <Route path="/xpost" element={<XPost />} /> */}
             <Route path="/project/:id" element={<ProjectDetail />} />
           </Routes>
         </Suspense>

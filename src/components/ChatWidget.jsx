@@ -17,10 +17,30 @@ const ChatWidget = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showProactivePrompt, setShowProactivePrompt] = useState(false);
   const [proactiveDismissed, setProactiveDismissed] = useState(false);
+  const [dragConstraints, setDragConstraints] = useState({ left: -250, right: 0, top: -500, bottom: 0 });
 
   const { lang, t } = useLanguage();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateBounds = () => {
+      if (typeof window !== 'undefined') {
+        const fabWidth = 56;
+        const marginX = 16;
+        const marginY = 80;
+        setDragConstraints({
+          left: -(window.innerWidth - fabWidth - marginX * 2),
+          right: 0,
+          top: -(window.innerHeight - fabWidth - marginY - 40),
+          bottom: 0,
+        });
+      }
+    };
+    updateBounds();
+    window.addEventListener('resize', updateBounds);
+    return () => window.removeEventListener('resize', updateBounds);
+  }, []);
 
   const getInitialMessage = (currentLang) => ({
     role: 'model',
@@ -419,8 +439,10 @@ const ChatWidget = () => {
       {/* Bouton Flottant FAB avec Tooltip au survol - Draggable */}
       <motion.div 
         drag 
-        dragMomentum={false} 
-        style={isMobile ? { ...styles.fabContainer, ...styles.fabContainerMobile, touchAction: 'none', cursor: 'grab' } : { ...styles.fabContainer, touchAction: 'none', cursor: 'grab' }}
+        dragConstraints={dragConstraints}
+        dragElastic={0.2}
+        dragMomentum={true}
+        style={isMobile ? { ...styles.fabContainer, ...styles.fabContainerMobile, touchAction: 'none', cursor: 'grab', zIndex: 999999 } : { ...styles.fabContainer, touchAction: 'none', cursor: 'grab', zIndex: 999999 }}
       >
         <AnimatePresence>
           {!isOpen && isHovered && (

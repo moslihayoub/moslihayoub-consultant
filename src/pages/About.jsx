@@ -38,6 +38,10 @@ const TwitterIcon = ({ size = 20 }) => (
   </svg>
 );
 
+const MtblIcon = ({ size = 20 }) => (
+  <img src="/logo-mtbl.png" alt="MTBL" style={{ width: size, height: size, objectFit: 'contain' }} />
+);
+
 const clients = ['Autocash', 'CGI', 'OCP', 'CDM Bank', 'Carrefour', 'Foodeals', 'JSEI', 'HBM', 'Wiggli', 'Stibits'];
 
 const expertiseData = [
@@ -105,6 +109,7 @@ const contactLinks = [
   { icon: MessageCircle, label: 'WhatsApp', value: 'Discutons', href: 'https://wa.me/212663585065', color: '#25D366' },
   { icon: LinkedinIcon, label: 'LinkedIn', value: 'Ayoub MOSLIH', href: 'https://www.linkedin.com/in/moslih84/', color: '#0A66C2' },
   { icon: TwitterIcon, label: 'X (Twitter)', value: '@moslih84', href: 'https://x.com/moslih84', color: '#000000' },
+  { icon: MtblIcon, label: 'MTBL', value: '@moslih84', href: 'https://www.makethelogobigger.co/moslih84?tab=posts', color: '#000000' },
   { icon: YoutubeIcon, label: 'YouTube', value: 'Tutoriels UX/UI', href: 'https://www.youtube.com/@moslih84', color: '#FF0000' },
   { icon: BehanceIcon, label: 'Behance', value: 'Ayoub MOSLIH', href: 'https://www.behance.net/moslih84', color: '#1769ff' },
   { icon: DribbbleIcon, label: 'Dribbble', value: 'moslih84', href: 'https://dribbble.com/moslih84', color: '#ea4c89' }

@@ -90,6 +90,33 @@ function OctahedronMesh({ mouseRef, color }) {
   );
 }
 
+/* ─── Ring (XPost) ─── */
+function RingMesh({ mouseRef, color }) {
+  const meshRef = useRef();
+  const wireRef = useRef();
+  const getRotation = useMouseRotation(mouseRef);
+
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    const r = getRotation(state.clock.getElapsedTime());
+    meshRef.current.rotation.set(r.x, r.y, r.z);
+    if (wireRef.current) wireRef.current.rotation.set(r.x, r.y, r.z);
+  });
+
+  const geometry = useMemo(() => new THREE.RingGeometry(2.91, 4.84, 7, 1, 3.81389, 6.05070), []);
+
+  return (
+    <group>
+      <mesh ref={meshRef} geometry={geometry}>
+        <SolidMaterial color={color} />
+      </mesh>
+      <mesh ref={wireRef} geometry={geometry}>
+        <meshBasicMaterial color={color} wireframe transparent opacity={0.18} />
+      </mesh>
+    </group>
+  );
+}
+
 /* ─── Particules ─── */
 function Particles({ count = 80, color }) {
   const positions = useMemo(() => {
@@ -148,10 +175,9 @@ export default function HeroShape({ height = 480, variant = 'icosahedron', color
         <directionalLight position={[-6, -4, -6]} intensity={0.4} color={color} />
         <pointLight position={[0, 8, 4]} intensity={0.6} color="#ffffff" />
 
-        {variant === 'icosahedron'
-          ? <IcosahedronMesh mouseRef={mouseRef} color={color} />
-          : <OctahedronMesh mouseRef={mouseRef} color={color} />
-        }
+        {variant === 'icosahedron' && <IcosahedronMesh mouseRef={mouseRef} color={color} />}
+        {variant === 'octahedron' && <OctahedronMesh mouseRef={mouseRef} color={color} />}
+        {variant === 'ring' && <RingMesh mouseRef={mouseRef} color={color} />}
 
         <Particles color={color} />
         <Environment preset="studio" />

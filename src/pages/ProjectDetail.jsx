@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AnimatedPage from '../components/AnimatedPage';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -9,11 +9,18 @@ import { projectsData } from '../data/projects';
 const ProjectDetail = () => {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
+  const [lightbox, setLightbox] = useState({ isOpen: false, type: null, src: null });
 
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const openLightbox = (type, src) => {
+    if (window.innerWidth > 768) {
+      setLightbox({ isOpen: true, type, src });
+    }
+  };
 
   const project = projectsData.find(p => p.id === 'the-factory');
   
@@ -40,6 +47,22 @@ const ProjectDetail = () => {
             grid-template-columns: repeat(2, 1fr);
             gap: 24px;
           }
+          .two-column-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+          @media (min-width: 769px) {
+            .lightbox-media {
+              cursor: zoom-in;
+              transition: transform 0.3s ease;
+            }
+            .lightbox-media:hover {
+              transform: scale(1.02);
+              z-index: 10;
+              position: relative;
+            }
+          }
           @media (max-width: 768px) {
             .project-detail-wrapper {
               padding-top: 40px;
@@ -48,6 +71,9 @@ const ProjectDetail = () => {
               justify-content: center;
             }
             .video-grid {
+              grid-template-columns: 1fr;
+            }
+            .two-column-grid {
               grid-template-columns: 1fr;
             }
           }
@@ -100,13 +126,9 @@ const ProjectDetail = () => {
                 </p>
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                <div style={styles.staggeredRow}>
-                  <img src="/assets/works/filmmaker/idea-storyboard.webp" alt="Idea Storyboard" style={styles.fullImage} />
-                </div>
-                <div style={{...styles.staggeredRow, justifyContent: 'flex-end'}}>
-                  <img src="/assets/works/filmmaker/character-draw.webp" alt="Character Draw" style={styles.fullImage} />
-                </div>
+              <div className="two-column-grid">
+                <img src="/assets/works/filmmaker/idea-storyboard.webp" alt="Idea Storyboard" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/idea-storyboard.webp')} style={styles.fullImage} />
+                <img src="/assets/works/filmmaker/character-draw.webp" alt="Character Draw" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/character-draw.webp')} style={styles.fullImage} />
               </div>
             </motion.section>
 
@@ -125,34 +147,22 @@ const ProjectDetail = () => {
               {/* Mood Board Character Sheet (2 par ligne) */}
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Character Sheet (Mood Board)</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/ayoub.webp" alt="Character 1" style={styles.fullImage} />
-                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/chicco.webp" alt="Character 2" style={styles.fullImage} />
-                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/si-abdeljabbar.webp" alt="Character 3" style={{...styles.fullImage, gridColumn: '1 / -1'}} />
+                <div className="two-column-grid" style={{ gap: '16px' }}>
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/ayoub.webp" alt="Character 1" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/character-sheet/ayoub.webp')} style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/chicco.webp" alt="Character 2" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/character-sheet/chicco.webp')} style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/si-abdeljabbar.webp" alt="Character 3" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/character-sheet/si-abdeljabbar.webp')} style={{...styles.fullImage, gridColumn: '1 / -1'}} />
                 </div>
               </div>
 
-              {/* Décors et Storyboards - Alternés */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                <div style={styles.staggeredRow}>
-                  <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/decor-outside.webp" alt="Decor" style={styles.fullImage} />
-                </div>
-                <div style={{...styles.staggeredRow, justifyContent: 'flex-end'}}>
-                  <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/meeting-room.webp" alt="Meeting Room" style={styles.fullImage} />
-                </div>
-                <div style={styles.staggeredRow}>
-                  <img loading="lazy" src="/assets/works/filmmaker/prop-sheet/bike.webp" alt="Prop Bike" style={styles.fullImage} />
-                </div>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '16px' }}>
-                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-action.webp" alt="Storyboard Action" style={styles.fullImage} />
-                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit-2.webp" alt="Storyboard Credit 2" style={styles.fullImage} />
-                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit.webp" alt="Storyboard Credit" style={styles.fullImage} />
-                </div>
-                
-                <div style={styles.staggeredRow}>
-                  <img loading="lazy" src="/assets/works/filmmaker/lab.webp" alt="Lab" style={styles.fullImage} />
-                </div>
+              {/* Décors et Storyboards (Images 4 à 10 - 2 par ligne sur Web) */}
+              <div className="two-column-grid" style={{ marginTop: '16px' }}>
+                <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/decor-outside.webp" alt="Decor" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/decor-sheet/decor-outside.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/meeting-room.webp" alt="Meeting Room" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/decor-sheet/meeting-room.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/prop-sheet/bike.webp" alt="Prop Bike" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/prop-sheet/bike.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-action.webp" alt="Storyboard Action" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/storyboard/storyboard-action.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit-2.webp" alt="Storyboard Credit 2" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/storyboard/storyboard-credit-2.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit.webp" alt="Storyboard Credit" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/storyboard/storyboard-credit.webp')} style={styles.fullImage} />
+                <img loading="lazy" src="/assets/works/filmmaker/lab.webp" alt="Lab" className="lightbox-media" onClick={() => openLightbox('image', '/assets/works/filmmaker/lab.webp')} style={styles.fullImage} />
               </div>
             </motion.section>
 
@@ -191,6 +201,55 @@ const ProjectDetail = () => {
           </div>
         </div>
       </div>
+      
+      {/* Lightbox Overlay */}
+      <AnimatePresence>
+        {lightbox.isOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              zIndex: 9999999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'zoom-out'
+            }}
+            onClick={() => setLightbox({ isOpen: false, type: null, src: null })}
+          >
+            <button 
+              style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '8px' }}
+              onClick={() => setLightbox({ isOpen: false, type: null, src: null })}
+            >
+              <X size={32} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: '90%', maxHeight: '90%', position: 'relative' }}
+            >
+              {lightbox.type === 'image' ? (
+                <img src={lightbox.src} alt="Fullscreen" style={{ width: '100%', height: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }} />
+              ) : (
+                <video src={lightbox.src} autoPlay controls style={{ width: '100%', height: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }} />
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </AnimatedPage>
   );
 };
