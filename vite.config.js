@@ -32,9 +32,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('framer-motion')) {
-              return 'vendor';
-            }
+            if (id.includes('framer-motion')) return 'framer';
+            if (id.includes('react-router')) return 'router';
+            if (id.includes('crypto-js')) return 'crypto';
+            if (id.includes('react-dom') || id.includes('react/')) return 'react';
+            if (id.includes('lucide-react')) return 'icons';
           }
         },
       },

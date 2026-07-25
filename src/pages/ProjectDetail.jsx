@@ -126,32 +126,32 @@ const ProjectDetail = () => {
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Character Sheet (Mood Board)</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                  <img src="/assets/works/filmmaker/character-sheet/ayoub.webp" alt="Character 1" style={styles.fullImage} />
-                  <img src="/assets/works/filmmaker/character-sheet/chicco.webp" alt="Character 2" style={styles.fullImage} />
-                  <img src="/assets/works/filmmaker/character-sheet/si-abdeljabbar.webp" alt="Character 3" style={{...styles.fullImage, gridColumn: '1 / -1'}} />
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/ayoub.webp" alt="Character 1" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/chicco.webp" alt="Character 2" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/character-sheet/si-abdeljabbar.webp" alt="Character 3" style={{...styles.fullImage, gridColumn: '1 / -1'}} />
                 </div>
               </div>
 
               {/* Décors et Storyboards - Alternés */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <div style={styles.staggeredRow}>
-                  <img src="/assets/works/filmmaker/decor-sheet/decor-outside.webp" alt="Decor" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/decor-outside.webp" alt="Decor" style={styles.fullImage} />
                 </div>
                 <div style={{...styles.staggeredRow, justifyContent: 'flex-end'}}>
-                  <img src="/assets/works/filmmaker/decor-sheet/meeting-room.webp" alt="Meeting Room" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/decor-sheet/meeting-room.webp" alt="Meeting Room" style={styles.fullImage} />
                 </div>
                 <div style={styles.staggeredRow}>
-                  <img src="/assets/works/filmmaker/prop-sheet/bike.webp" alt="Prop Bike" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/prop-sheet/bike.webp" alt="Prop Bike" style={styles.fullImage} />
                 </div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '16px' }}>
-                  <img src="/assets/works/filmmaker/storyboard/storyboard-action.webp" alt="Storyboard Action" style={styles.fullImage} />
-                  <img src="/assets/works/filmmaker/storyboard/storyboard-credit-2.webp" alt="Storyboard Credit 2" style={styles.fullImage} />
-                  <img src="/assets/works/filmmaker/storyboard/storyboard-credit.webp" alt="Storyboard Credit" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-action.webp" alt="Storyboard Action" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit-2.webp" alt="Storyboard Credit 2" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/storyboard/storyboard-credit.webp" alt="Storyboard Credit" style={styles.fullImage} />
                 </div>
                 
                 <div style={styles.staggeredRow}>
-                  <img src="/assets/works/filmmaker/lab.webp" alt="Lab" style={styles.fullImage} />
+                  <img loading="lazy" src="/assets/works/filmmaker/lab.webp" alt="Lab" style={styles.fullImage} />
                 </div>
               </div>
             </motion.section>
@@ -179,7 +179,8 @@ const ProjectDetail = () => {
                       autoPlay 
                       loop 
                       muted 
-                      playsInline 
+                      playsInline
+                      preload="none"
                       style={{ width: '100%', height: 'auto', display: 'block' }} 
                     />
                   </div>
