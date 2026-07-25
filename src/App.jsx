@@ -34,20 +34,24 @@ const PageSkeleton = () => (
   </div>
 );
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<PageSkeleton />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/project/:id" element={<ProjectDetail />} />
-        </Routes>
-      </Suspense>
-    </AnimatePresence>
+    <ErrorBoundary>
+      <AnimatePresence mode="wait">
+        <Suspense fallback={<PageSkeleton />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+          </Routes>
+        </Suspense>
+      </AnimatePresence>
+    </ErrorBoundary>
   );
 };
 

@@ -31,6 +31,7 @@
   - Intégration de vidéos YouTube (autoplay, loop, mute) avec un overlay de protection (anti-clic droit).
   - Optimisations mobiles : centrage du fil d'Ariane, empilement des vidéos en colonne, désactivation du chat sur les pages de détails.
   - Fusion d'image principale via `mix-blend-mode: multiply` pour cacher le fond.
+- **Correctif d'erreur de navigation** : Ajout d'un `ErrorBoundary` global pour gérer automatiquement le rechargement de page si le cache (Vite PWA / ChunkLoadError) provoque un écran blanc lors de la navigation (notamment après un déploiement Vercel).
 
 ### 5. 🔍 SEO & Accessibilité (A11y)
 - Méta-titre, description, Open Graph et balises sémantiques HTML5 configurés.
