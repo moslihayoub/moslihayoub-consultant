@@ -127,7 +127,7 @@ const Work = () => {
               <motion.div style={{ ...styles.heroRight, position: 'relative' }} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.75, delay: 0.2, ease: 'easeOut' }}>
                 <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Suspense fallback={<div style={{ width: '100%', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}><div style={{ width: 120, height: 120, borderRadius: '50%', border: '2px solid #8eddd1', animation: 'pulse 2s infinite' }} /></div>}>
-                    <HeroShape height={480} />
+                    <HeroShape height={480} variant="icosahedron" color="#8eddd1" />
                   </Suspense>
 
                   {/* Floating element 1 (Top Left) */}

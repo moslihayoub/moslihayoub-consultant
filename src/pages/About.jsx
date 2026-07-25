@@ -186,8 +186,8 @@ export default function About() {
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ position: 'relative', minWidth: 0, width: '100%', maxWidth: '100%' }}>
               <div style={{ position: 'relative', width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Suspense fallback={<div style={{ width: '100%', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}><div style={{ width: 120, height: 120, borderRadius: '50%', border: '2px solid #8eddd1', animation: 'pulse 2s infinite' }} /></div>}>
-                  <HeroShape height={480} />
+                <Suspense fallback={<div style={{ width: '100%', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}><div style={{ width: 120, height: 120, borderRadius: '50%', border: '2px solid #79afff', animation: 'pulse 2s infinite' }} /></div>}>
+                  <HeroShape height={480} variant="torusknot" color="#79afff" />
                 </Suspense>
 
                 {/* Floating element 1 (Top right) */}
