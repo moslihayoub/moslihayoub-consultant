@@ -247,6 +247,7 @@ const ChatWidget = () => {
     } else if (cta.action === 'navigate' && cta.target) {
       const [path, hash] = cta.target.split('#');
       navigate(path || '/');
+      if (isMobile) setIsOpen(false);
       if (hash) {
         setTimeout(() => {
           const el = document.getElementById(hash);
@@ -415,8 +416,12 @@ const ChatWidget = () => {
         )}
       </AnimatePresence>
 
-      {/* Bouton Flottant FAB avec Tooltip au survol */}
-      <div style={isMobile ? { ...styles.fabContainer, ...styles.fabContainerMobile } : styles.fabContainer}>
+      {/* Bouton Flottant FAB avec Tooltip au survol - Draggable */}
+      <motion.div 
+        drag 
+        dragMomentum={false} 
+        style={isMobile ? { ...styles.fabContainer, ...styles.fabContainerMobile, touchAction: 'none', cursor: 'grab' } : { ...styles.fabContainer, touchAction: 'none', cursor: 'grab' }}
+      >
         <AnimatePresence>
           {!isOpen && isHovered && (
             <motion.div
@@ -448,17 +453,17 @@ const ChatWidget = () => {
             }
           }}
           style={styles.fabBtn}
-          aria-label="Ouvrir le chatbot M84"
+          aria-label="Ouvrir le chat"
         >
           {isOpen ? (
-            <X size={24} color="#FFF" />
+            <X size={26} color="#FFFFFF" />
           ) : (
             <div style={styles.fabAvatarWrapper}>
               <img src={AVATAR_URL} alt="M84" style={styles.fabAvatarImg} />
             </div>
           )}
         </motion.button>
-      </div>
+      </motion.div>
     </>
   );
 };
