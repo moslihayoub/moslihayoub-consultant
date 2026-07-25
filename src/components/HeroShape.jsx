@@ -74,8 +74,8 @@ function IcosahedronMesh({ mouseRef, color }) {
   );
 }
 
-/* ─── Torus Knot (About) — même taille visuelle ─── */
-function TorusKnotMesh({ mouseRef, color }) {
+/* ─── Torus Knot (About) — params exact docs Three.js + matériau nacré ─── */
+function TorusKnotMesh({ mouseRef }) {
   const meshRef = useRef();
   const wireRef = useRef();
   const getRotation = useMouseRotation(mouseRef);
@@ -87,16 +87,37 @@ function TorusKnotMesh({ mouseRef, color }) {
     if (wireRef.current) wireRef.current.rotation.set(r.x, r.y, r.z);
   });
 
-  // radius=3.1, tube=1.1 pour avoir une taille visuelle similaire à l'icosaèdre
-  const geometry = useMemo(() => new THREE.TorusKnotGeometry(3.1, 1.1, 128, 16, 2, 3), []);
+  // Paramètres exacts du geometry browser Three.js
+  const geometry = useMemo(() => new THREE.TorusKnotGeometry(
+    6.916,  // radius
+    2.574,  // tube
+    3,      // tubularSegments
+    4,      // radialSegments
+    5,      // p
+    12      // q
+  ), []);
 
   return (
     <group>
+      {/* Matériau nacré/irisé — inspiré de l'ormeau (abalone shell) */}
       <mesh ref={meshRef} geometry={geometry}>
-        <GlassMaterial color={color} />
+        <meshPhysicalMaterial
+          color="#d0f0e8"
+          roughness={0.05}
+          metalness={0.15}
+          iridescence={1.0}
+          iridescenceIOR={1.9}
+          iridescenceThicknessRange={[150, 900]}
+          transmission={0.15}
+          thickness={1.5}
+          ior={1.45}
+          clearcoat={1.0}
+          clearcoatRoughness={0.05}
+          side={THREE.DoubleSide}
+        />
       </mesh>
       <mesh ref={wireRef} geometry={geometry}>
-        <meshBasicMaterial color={color} wireframe transparent opacity={0.18} />
+        <meshBasicMaterial color="#a8e8d8" wireframe transparent opacity={0.2} />
       </mesh>
     </group>
   );
@@ -150,19 +171,19 @@ export default function HeroShape({ height = 480, variant = 'icosahedron', color
       onMouseLeave={() => { mouseRef.current = { x: 0, y: 0 }; }}
     >
       <Canvas
-        camera={{ position: [0, 0, 18], fov: 45 }}
+        camera={{ position: [0, 0, variant === 'torusknot' ? 24 : 18], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
         dpr={[1, 1.5]}
       >
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.4} />
         <directionalLight position={[8, 8, 8]} intensity={1.5} color="#ffffff" />
         <directionalLight position={[-6, -4, -6]} intensity={0.4} color={color} />
         <pointLight position={[0, 8, 4]} intensity={0.6} color="#ffffff" />
 
         {variant === 'icosahedron'
           ? <IcosahedronMesh mouseRef={mouseRef} color={color} />
-          : <TorusKnotMesh mouseRef={mouseRef} color={color} />
+          : <TorusKnotMesh mouseRef={mouseRef} />
         }
 
         <Particles color={color} />
