@@ -446,10 +446,10 @@ export default function About() {
                 ))}
               </div>
 
-              <div className="glass-panel" style={{ padding: 'clamp(16px, 5vw, 32px)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', width: '100%', boxSizing: 'border-box' }}>
+              <div style={{ width: '100%', boxSizing: 'border-box' }}>
                 <h3 style={{ marginBottom: '24px' }}>{lang === 'fr' ? 'Réserver une consultation' : 'Book a consultation'}</h3>
                 
-                <div style={{ width: '100%', height: '500px', borderRadius: 'var(--radius-md)', overflow: 'hidden', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                <div style={{ width: '100%', height: '500px', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
                   <iframe 
                     src={`https://cal.com/moslihayoub/${calType}?embed=true`} 
                     style={{ width: '100%', height: '100%', border: 'none' }}
