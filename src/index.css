@@ -295,6 +295,15 @@ p {
 }
 
 @media (max-width: 768px) {
+  .page-hero-grid {
+    gap: 16px !important;
+  }
+  .page-hero-shape-wrapper {
+    margin-left: -24px !important;
+    margin-right: -24px !important;
+    width: calc(100% + 48px) !important;
+    max-width: none !important;
+  }
   .hide-on-mobile {
     display: none !important;
   }
