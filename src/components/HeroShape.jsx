@@ -87,37 +87,38 @@ function TorusKnotMesh({ mouseRef }) {
     if (wireRef.current) wireRef.current.rotation.set(r.x, r.y, r.z);
   });
 
-  // Paramètres exacts du geometry browser Three.js
+  // Paramètres reduits pour avoir la même taille visuelle que l'icosaèdre
+  // bounding sphere cible ≈ 4.84 (icosaèdre), ratio tube/radius conservé de la doc
   const geometry = useMemo(() => new THREE.TorusKnotGeometry(
-    6.916,  // radius
-    2.574,  // tube
-    3,      // tubularSegments
-    4,      // radialSegments
-    5,      // p
-    12      // q
+    3.5,   // radius (réduit de 6.916)
+    1.3,   // tube (réduit de 2.574, ratio conservé)
+    3,     // tubularSegments
+    4,     // radialSegments
+    5,     // p
+    12     // q
   ), []);
 
   return (
     <group>
-      {/* Matériau nacré/irisé — inspiré de l'ormeau (abalone shell) */}
+      {/* Matériau nacré bleu — iridescence avec base bleue */}
       <mesh ref={meshRef} geometry={geometry}>
         <meshPhysicalMaterial
-          color="#d0f0e8"
-          roughness={0.05}
-          metalness={0.15}
+          color="#c0d4f5"
+          roughness={0.04}
+          metalness={0.2}
           iridescence={1.0}
-          iridescenceIOR={1.9}
-          iridescenceThicknessRange={[150, 900]}
-          transmission={0.15}
-          thickness={1.5}
+          iridescenceIOR={2.0}
+          iridescenceThicknessRange={[200, 1000]}
+          transmission={0.1}
+          thickness={1.2}
           ior={1.45}
           clearcoat={1.0}
-          clearcoatRoughness={0.05}
+          clearcoatRoughness={0.03}
           side={THREE.DoubleSide}
         />
       </mesh>
       <mesh ref={wireRef} geometry={geometry}>
-        <meshBasicMaterial color="#a8e8d8" wireframe transparent opacity={0.2} />
+        <meshBasicMaterial color="#8ab4f8" wireframe transparent opacity={0.2} />
       </mesh>
     </group>
   );
@@ -171,7 +172,7 @@ export default function HeroShape({ height = 480, variant = 'icosahedron', color
       onMouseLeave={() => { mouseRef.current = { x: 0, y: 0 }; }}
     >
       <Canvas
-        camera={{ position: [0, 0, variant === 'torusknot' ? 24 : 18], fov: 45 }}
+        camera={{ position: [0, 0, 18], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
         dpr={[1, 1.5]}
