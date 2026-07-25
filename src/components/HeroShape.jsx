@@ -63,8 +63,8 @@ function IcosahedronMesh({ mouseRef, color }) {
   );
 }
 
-/* ─── Torus Knot (About) — params exact docs Three.js + matériau nacré ─── */
-function TorusKnotMesh({ mouseRef }) {
+/* ─── Octahedron (About) — radius 4.84 ─── */
+function OctahedronMesh({ mouseRef, color }) {
   const meshRef = useRef();
   const wireRef = useRef();
   const getRotation = useMouseRotation(mouseRef);
@@ -76,30 +76,15 @@ function TorusKnotMesh({ mouseRef }) {
     if (wireRef.current) wireRef.current.rotation.set(r.x, r.y, r.z);
   });
 
-  // Paramètres reduits pour avoir la même taille visuelle que l'icosaèdre
-  // bounding sphere cible ≈ 4.84 (icosaèdre), ratio tube/radius conservé de la doc
-  const geometry = useMemo(() => new THREE.TorusKnotGeometry(
-    3.5,   // radius (réduit de 6.916)
-    1.3,   // tube (réduit de 2.574, ratio conservé)
-    3,     // tubularSegments
-    4,     // radialSegments
-    5,     // p
-    12     // q
-  ), []);
+  const geometry = useMemo(() => new THREE.OctahedronGeometry(4.84, 0), []);
 
   return (
     <group>
-      {/* Matériau gris foncé simple */}
       <mesh ref={meshRef} geometry={geometry}>
-        <meshStandardMaterial
-          color="#555555"
-          roughness={0.3}
-          metalness={0.3}
-          side={THREE.DoubleSide}
-        />
+        <SolidMaterial color={color} />
       </mesh>
       <mesh ref={wireRef} geometry={geometry}>
-        <meshBasicMaterial color="#777777" wireframe transparent opacity={0.3} />
+        <meshBasicMaterial color={color} wireframe transparent opacity={0.18} />
       </mesh>
     </group>
   );
@@ -165,7 +150,7 @@ export default function HeroShape({ height = 480, variant = 'icosahedron', color
 
         {variant === 'icosahedron'
           ? <IcosahedronMesh mouseRef={mouseRef} color={color} />
-          : <TorusKnotMesh mouseRef={mouseRef} />
+          : <OctahedronMesh mouseRef={mouseRef} color={color} />
         }
 
         <Particles color={color} />
