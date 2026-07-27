@@ -209,20 +209,20 @@ export default function Home() {
                 <div className="marquee-column" style={{ animationDuration: '30s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/20230517_184215.webp" alt="Gallery image" fetchPriority={loop === 1 ? "high" : "low"} loading={loop === 1 ? "eager" : "lazy"} className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20230517_184215.webp')} />
-                      <img src="/assets/galerie/20250419_155833.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20250419_155833.webp')} />
-                      <img src="/assets/galerie/3_20250419_225936_0002.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/3_20250419_225936_0002.webp')} />
-                      <img src="/assets/galerie/IMG-20230515-WA0022.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/IMG-20230515-WA0022.webp')} />
+                      <img src="/assets/galerie/20230517_184215.webp" alt="Gallery image" fetchPriority={loop === 1 ? "high" : "auto"} className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20230517_184215.webp')} />
+                      <img src="/assets/galerie/20250419_155833.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/20250419_155833.webp')} />
+                      <img src="/assets/galerie/3_20250419_225936_0002.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/3_20250419_225936_0002.webp')} />
+                      <img src="/assets/galerie/IMG-20230515-WA0022.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/IMG-20230515-WA0022.webp')} />
                     </div>
                   ))}
                 </div>
                 <div className="marquee-column marquee-column-reverse" style={{ animationDuration: '35s', animationDelay: '-10s' }}>
                   {[1, 2].map((loop) => (
                     <div key={loop} className="marquee-content">
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.45.54.webp')} />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.46.30.webp')} />
-                      <img src="/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/Screenshot 2026-07-19 at 18.52.01.webp')} />
-                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp" alt="Gallery image" fetchPriority="low" loading="lazy" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp')} />
+                      <img src="/assets/galerie/screenshot-18-45-54.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/screenshot-18-45-54.webp')} />
+                      <img src="/assets/galerie/screenshot-18-46-30.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/screenshot-18-46-30.webp')} />
+                      <img src="/assets/galerie/screenshot-18-52-01.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/screenshot-18-52-01.webp')} />
+                      <img src="/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp" alt="Gallery image" className="lightbox-media" onClick={() => openLightbox('image', '/assets/galerie/447402561_1004591577261671_4782695626181526568_n.webp')} />
                     </div>
                   ))}
                 </div>
