@@ -108,7 +108,7 @@ const ProjectDetail = () => {
 
           {/* Main Cover (No Border, No Bg) */}
           <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} style={{ marginBottom: '80px', overflow: 'hidden' }}>
-            <img src="/assets/works/filmmaker/the-factory.webp" alt="The Factory" style={{ width: '100%', height: 'auto', display: 'block', mixBlendMode: 'multiply' }} />
+            <img src="/assets/works/filmmaker/the-factory.webp" alt="The Factory" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '16px' }} />
           </motion.div>
 
           {/* Steps */}

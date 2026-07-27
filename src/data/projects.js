@@ -34,7 +34,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/autocash-appsourcing.webp',
     isProtected: true,
-    url: 'U2FsdGVkX19d53kC/eCMEXOrSTZq95AxeypH630djrmnfxxmtKRxFW4mACwpzr8qFTs29NDTWFqmLPwpkZ1RSA=='
+    url: 'U2FsdGVkX1/kbriGfq6lsQSN9OlsooAJunT9bIUXms9pkMl5/FXttVElml4cnlHnfVwcM/ywJ9ufLbsf21nIbw=='
   },
   {
     id: 'nexastay',
@@ -52,7 +52,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/nexastay.webp',
     isProtected: true,
-    url: 'U2FsdGVkX19bndMTD4gyQv7KpT7DDfRoqZ83k3Gz8A4OfthMyoR1u9G73jmwN2zPtUxHNsFogmLDGTMwa6pb3bG8MDbPWGb2JY9SZyDqdGU7zPMyJxAwJunCR5DGMLhgARWCwXeua880YIgkbbU1dg=='
+    url: 'U2FsdGVkX1/3BKA0dNP/4zuOvD+meNOZdrZwHJyKsRMn89iPfOCRJODA1SjGznyfaMHK3XhyKcK6xzYVIlpyAvK2h8XzUjXsAlXiTFEIgSBbKEqu1+rMG1OWQ8JP7PAhrGGjEtM90oCYvcpUngFDSHuFlC5htGJwQDbEvWToY2s='
   },
   {
     id: 'parceliq',
@@ -106,7 +106,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/laarich.webp',
     isProtected: true,
-    url: 'U2FsdGVkX18gh1CLrnakkmvnUFumpNUOXGiG4XmoLHKfHqTeK4J5EPEbJwxVo6FjNdeIgKkFlGMVY4zegLyva98hWG6NrIdqZPMW0VnyEeqZGreppjX/yjAmyGSAB9EsUHvf6jBwJb8ktcgsLEUjGg=='
+    url: 'U2FsdGVkX18/gIuPYUnpE6bLFKudyTgE0+uuBTljgAmP4wNX109IBIxmslpKDt+0o13VokQusubnrM9lwdznKv4EbF0nc5riqTnAXzqvkt7oWGxj7fW3XapjrYH2U9kgc67nUOhBDJXOuSswtbtfEl/91bFAqXs0laFEKrKtDuU='
   },
   {
     id: 'damane-cash',
@@ -178,7 +178,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/babmoulaydriss.webp',
     isProtected: true,
-    url: 'U2FsdGVkX1+zro0YhvHgYAmM58ixRQjAxXgEdUFTZhUea9totAITLags0YVPB2R9ZDUYjY9fz2YmuqFWvnBPxV6GQBmdny56DaykOFMHw1VfuIp6CkiG7xZtIiWUHGYgdyNAXs1kcdY9RRafyqxT6vK/MR1jpwAfAMJUy3dm2vs='
+    url: 'U2FsdGVkX18isNUzAQPw67AlJ9yDrXnPFC7zp8gMP+K/+s3yZw7jSonx0OylTsgAv851xAcWaPrd3gZRB4H0DrVRNZm28T1d1mcMlqvWTxzZK7m9An1DPywTdyS7ynnjexYtz0aedQvIjFL1EZ8QHqWMV43tCDMYL5DAhmV3wn4='
   },
   {
     id: 'foodeals',
@@ -196,7 +196,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/foodeals.webp',
     isProtected: true,
-    url: 'U2FsdGVkX1/iuym9U3Q/wnfD0FluPxhzErMjao6/nvGizEVKs/uBHUW8mG2/8wDSqwJHwesIn7+hy3djtplOAM9jluiNrVfjQqkwZGInfMcYUtfEkNkWtpvE0x/nQogKu9VhIsK4bQUh1UJ3GtduSqFuiLk0o+GOjeIZPZA2lVXGDHCtx5IuZCN/v50lNqzB'
+    url: 'U2FsdGVkX1+5NevjJjBhCSJxxMjucPehDesMUNupTLoPtmNezGaaHIG+IIbeWscsXtDYhZN9PBilr68kjszVbVlDFn2GvDYD/vGKk/KiGRsssXizhdJVC0fu4cflDL5rqpUoEind1z+OMyFAge+eHvj+14cK+b11JlC3U2RcJWJCDUsRbEtTXP0QMo2P1OxW'
   },
   {
     id: 'mealbox',
@@ -232,7 +232,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/ydg.webp',
     isProtected: true,
-    url: 'U2FsdGVkX18GyjaWEq+tGT3sM8GxiBB4mbWCFaAtxawthOluWZzQ8RqpUUoILOb+v1nDQVI3+8rYjf2msdb5t82+eZnc1HWxrftN3VdCrIV9hdbVKBQ951wnx8768CucVOXbJa25paWS+pZEDzn2cg=='
+    url: 'U2FsdGVkX18qP9M0steHqAtPQ+h5AL3clWqy+r64pP3pdFfOCFjGGp5WlErUUAVGZb738fu+rKmf1QZCDXOZQg4HCECQ5qXE2las5AY9n2SQiTVbo6IRs5FgnFlTKVuzErTHDbNEYbxElTDrxmxnGQ=='
   },
   {
     id: 'laval',
@@ -250,7 +250,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/laval.webp',
     isProtected: true,
-    url: 'U2FsdGVkX19JkEA2wnyTmfRRRVE7uCfho+cLEknF1FoJMnpHb7JXzxvt+XyJNkPOHAMeVYu7CSMQ0n9+e2yVaq1fz/iklOUwqogcavw8aMoRbXjprjjbtTqL4Z+d839qfDeMLBSnfGCG0cdE1+BkTdveBtpuDm+AZr/ZydL0fppptS4Jwi0CBliWrCQbBb8u'
+    url: 'U2FsdGVkX18jjcuo3nio9ObghuBzwyS7GlFkIptJpOauko99qRI0buU/L646LsNCmuBo8mBM8ZSTsfJMUss/QyJNRHKw80dbf8kH9+0RUVqkIcAkrwKtLl5bB4h0XXBsWjz2yLDiHCJJumB40OnzaX70AyN6njTSMk1hsrechQkE5cYJsu8OBHEwr/4sdD0N'
   },
 
   // Motion Graphics Projects
@@ -397,6 +397,6 @@ export const projectsData = [
     },
     image: '/assets/works/filmmaker/the-factory.webp',
     isProtected: true,
-    url: 'U2FsdGVkX19ciokMROb0HQxbmGM7gkHmhjxSKhFKWxqQLKdkhT1qrCKSqCOL8BlD'
+    url: 'U2FsdGVkX1/t9RZKKV9Wv4zHLOlENJiu6g0n5QZXdfE3BOhzTCa7WLS87T8QZnEM'
   }
 ];
