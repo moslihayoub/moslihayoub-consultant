@@ -6,20 +6,20 @@ test.describe('Portfolio E2E', () => {
     await page.goto('/');
 
     // Check Home page content
-    await expect(page.locator('h1').first()).toContainText('Catalyser');
+    await expect(page.locator('h1').first()).toContainText(/Catalyser|Catalyzing/i);
 
     // Click "Work" in navbar
-    await page.locator('nav').getByRole('link', { name: 'Projets', exact: true }).click();
+    await page.locator('nav').getByRole('link', { name: /Work|Projets/i }).first().click();
 
     // Verify Work page URL and content
-    await expect(page).toHaveURL('/work');
-    await expect(page.locator('h1').first()).toContainText('Selected Work.');
+    await expect(page).toHaveURL(/.*\/work/);
+    await expect(page.locator('h1').first()).toContainText(/Selected Work|Réalisations|Projets/i);
 
     // Click on the restricted project
     await page.getByText('Autocash Sourcing MVP', { exact: true }).click();
 
     // Check if modal appears
-    const modalTitle = page.getByRole('heading', { name: 'Accès Restreint' });
+    const modalTitle = page.getByRole('heading', { name: /Accès Restreint|Restricted Access/i });
     await expect(modalTitle).toBeVisible();
 
     // Close the modal

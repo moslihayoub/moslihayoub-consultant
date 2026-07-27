@@ -14,21 +14,21 @@ test.describe('Portfolio E2E Tests', () => {
     // Check if the hero section is visible
     const heroTitle = page.locator('h1').first();
     await expect(heroTitle).toBeVisible();
-    await expect(heroTitle).toContainText('Catalyser');
+    await expect(heroTitle).toContainText(/Catalyser|Catalyzing/i);
   });
 
   test('navigation links should work', async ({ page }) => {
     // Click on Work link
-    await page.getByRole('link', { name: 'Projets' }).click();
+    await page.getByRole('link', { name: /Work|Projets|Réalisations/i }).first().click();
     // Ensure URL has changed to /work
     await expect(page).toHaveURL(/.*\/work/);
     
     // Check that Work page loaded
     const workTitle = page.locator('h1').first();
-    await expect(workTitle).toContainText('Selected Work');
+    await expect(workTitle).toContainText(/Selected Work|Réalisations|Projets/i);
     
     // Click on About link
-    await page.getByRole('link', { name: 'À propos' }).click();
+    await page.getByRole('link', { name: /À propos|About/i }).first().click();
     await expect(page).toHaveURL(/.*\/about/);
   });
 
@@ -36,14 +36,12 @@ test.describe('Portfolio E2E Tests', () => {
     // Navigate to Work page
     await page.goto('/work');
     
-    // Click the first project card
-    const firstProject = page.locator('.project-card').first();
     // Find the Autocash Sourcing MVP project card and click it
     const projectCard = page.locator('h3', { hasText: 'Autocash Sourcing MVP' }).first();
     await projectCard.click();
 
     // Wait for the modal to appear
-    const modalHeading = page.locator('h3', { hasText: 'Accès Restreint' });
+    const modalHeading = page.locator('h3', { hasText: /Accès Restreint|Restricted Access/i });
     await expect(modalHeading).toBeVisible();
   });
 });

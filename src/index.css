@@ -507,3 +507,10 @@ p {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ── Video Right-Click & Touch Protection ── */
+video {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}

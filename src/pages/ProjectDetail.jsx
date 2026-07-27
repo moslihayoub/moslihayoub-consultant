@@ -183,15 +183,34 @@ const ProjectDetail = () => {
                 {[
                   "frame-01.mp4", "frame-02.mp4", "frame-03.mp4", "frame-04.mp4", "frame-05.mp4"
                 ].map((videoName, idx) => (
-                  <div key={idx} style={{ width: '100%', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#000' }}>
+                  <div 
+                    key={idx} 
+                    style={{ width: '100%', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#000', position: 'relative' }}
+                    onContextMenu={(e) => e.preventDefault()}
+                  >
                     <video 
                       src={`/assets/works/filmmaker/h264/${videoName}`}
                       autoPlay 
                       loop 
                       muted 
                       playsInline
+                      controlsList="nodownload noremoteplayback"
+                      disablePictureInPicture
+                      onContextMenu={(e) => e.preventDefault()}
                       preload="none"
-                      style={{ width: '100%', height: 'auto', display: 'block' }} 
+                      style={{ 
+                        width: '100%', 
+                        height: 'auto', 
+                        display: 'block', 
+                        WebkitTouchCallout: 'none', 
+                        WebkitUserSelect: 'none', 
+                        userSelect: 'none' 
+                      }} 
+                    />
+                    {/* Transparent protection overlay to block mobile long-press & desktop contextmenu */}
+                    <div 
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2 }} 
+                      onContextMenu={(e) => e.preventDefault()} 
                     />
                   </div>
                 ))}
@@ -243,7 +262,25 @@ const ProjectDetail = () => {
               {lightbox.type === 'image' ? (
                 <img src={lightbox.src} alt="Fullscreen" style={{ width: '100%', height: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }} />
               ) : (
-                <video src={lightbox.src} autoPlay controls style={{ width: '100%', height: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }} />
+                <video 
+                  src={lightbox.src} 
+                  autoPlay 
+                  controls 
+                  controlsList="nodownload noremoteplayback"
+                  disablePictureInPicture
+                  onContextMenu={(e) => e.preventDefault()}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    maxHeight: '90vh', 
+                    objectFit: 'contain', 
+                    borderRadius: '12px', 
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none'
+                  }} 
+                />
               )}
             </motion.div>
           </motion.div>
