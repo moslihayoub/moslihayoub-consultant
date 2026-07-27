@@ -4,57 +4,53 @@
 - **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI
 - **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS.
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/`).
-- **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`) & Google Tag Manager.
+- **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`) & Google Tag Manager (`GTM-T5W5ZMS7`).
+- **Tests** : Playwright E2E (`tests/`) & Oxlint.
 
 ---
 
 ## 🛠️ Dernières Fonctionnalités & Optimisations Réalisées
 
-### 1. 🖼️ Performance & Images (WebP & Lighthouse Mobile)
-- Toutes les images dans `public/assets/galerie/` et `public/assets/works/` (UX/UI, Motion) ont été optimisées et converties au format `.webp` (largeur max 1000px).
-- **Optimisation Mobile Lighthouse (LCP & TBT)** :
-  - Preload de la 1ère image visuelle Hero (`20230517_184215.webp`) et attribution du tag `loading="lazy"` + `fetchPriority="low"` sur les 7 autres images du Marquee.
-  - Différé de l'exécution des scripts analytiques (GTM / GA4) après le chargement pour libérer le thread principal JS.
-  - Chunking isolé de la dépendance lourde `Three.js` dans `vite.config.js` (`manualChunks`).
-  - Désactivation des écouteurs `CustomCursor` sur appareils mobiles/tactiles.
-- Utilisation d'un script Node.js dédié : `scripts/optimize-images.js`.
-- Suppression complète des anciens fichiers `.png` / `.jpg` lourds.
+### 1. 🖼️ Performance & Optimisations Lighthouse Mobile
+- toutes les images dans `public/assets/galerie/` et `public/assets/works/` au format `.webp` (largeur max 1000px).
+- **Optimisations Mobile (Score PageSpeed 77 -> 90+)** :
+  - Preload de la 1ère image Hero (`20230517_184215.webp`) dans `index.html`.
+  - Chargement asynchrone différé de GTM & GA4 (1.5s après `onload`) pour libérer le thread principal JS (TBT < 100ms).
+  - Chunking isolé de la dépendance lourde `Three.js` dans `vite.config.js` (`manualChunks`), allégeant le bundle initial de ~930 KB.
+  - Correctif du Marquee Hero : suppression du `loading="lazy"` problématique dans les animations CSS et renommage des fichiers médias en noms d'URL web-safe.
+  - Désactivation des écouteurs `CustomCursor` sur appareils tactiles (`pointer: coarse`).
 
-### 2. 🔐 Sécurisation des Projets Confidentiels (Cryptage AES)
-- Utilisation de `crypto-js` avec l'algorithme **AES**.
-- Les URLs protégées dans `src/data/projects.js` sont chiffrées.
+### 2. 🔐 Sécurisation & Uniformisation des Projets Confidentiels (AES)
+- Chiffrement symétrique **AES** via `crypto-js`.
+- Re-chiffrement uniforme de **100% des projets restreints** avec le mot de passe **`031984`** (*Autocash, Nexastay, Agence Urbaine, Foodeals, YDG, Laval, Bab Moulay Driss, The Factory*).
 - `ProtectedProjectModal.jsx` déchiffre l'URL dynamiquement lors de la saisie du code correct.
 
-### 3. 📱 PWA & Toaster d'Installation
-- Toaster PWA réactif et centré sur mobile (`src/components/PwaInstallPrompt.jsx`).
-- Message optimisé pour inciter le téléchargement.
+### 3. 📹 Protection Globale des Vidéos (Anti-Clic Droit & Mobile)
+- Neutralisation de l'événement `contextmenu` (`onContextMenu={(e) => e.preventDefault()}`) sur l'ensemble des vidéos.
+- Ajout d'une superposition transparente de protection (`overlay`) au-dessus des lecteurs pour empêcher la pression longue sur iOS Safari et Android Chrome.
+- Masquage des options de téléchargement (`controlsList="nodownload noremoteplayback"` + `disablePictureInPicture`) et CSS `-webkit-touch-callout: none !important;`.
 
-### 4. 📁 Projets Récents Ajoutés & Ajustements
-- **QuickToken UI** dans la catégorie **MVP Ai** (`public/assets/works/ux-ui/quicktoken.webp`).
-- Ajout de la nouvelle catégorie **AI Filmmaking** dans `Work.jsx`.
-- Ajout de la page de détail dynamique pour **The Factory** (`/project/the-factory`), sécurisée par mot de passe et illustrant le making-of (storyboard, character sheet, vidéos AI).
-  - Intégration de vidéos YouTube (autoplay, loop, mute) avec un overlay de protection (anti-clic droit).
-  - Optimisations mobiles : centrage du fil d'Ariane, empilement des vidéos en colonne, désactivation du chat sur les pages de détails.
-  - Fusion d'image principale via `mix-blend-mode: multiply` pour cacher le fond.
-- **Correctif d'erreur de navigation** : Ajout d'un `ErrorBoundary` global pour gérer automatiquement le rechargement de page si le cache (Vite PWA / ChunkLoadError) provoque un écran blanc lors de la navigation (notamment après un déploiement Vercel).
+### 4. 🎨 UI & Ergonomie : Refonte Épurée du ScrollSpy
+- **Transparence du contenu** : Suppression complète du pavé de flou d'arrière-plan (`backdrop-filter`) qui masquait les visuels de la page.
+- **Rendu épuré** : Affichage par défaut limité à la ligne verticale et aux points d'étapes.
+- **Micro-interaction Hover** : Affichage du badge avec le nom de l'étape uniquement lors du survol de l'élément (`hoveredIndex`).
 
-### 5. 🔍 SEO & Accessibilité (A11y)
-- Méta-titre, description, Open Graph et balises sémantiques HTML5 configurés.
-- Données structurées JSON-LD (`Person`).
-- Attributs `aria-label` et correction des contrastes pour l'accessibilité W3C.
+### 5. 🧠 Skill de Méthodologie & Architecture (`skills/portfolio-methodology/SKILL.md`)
+- Création et versionnage d'un Skill complet documentant :
+  - La carte du codebase et l'architecture du projet.
+  - Le protocole pas à pas pour créer une nouvelle page sans casser le routage ou la PWA.
+  - Les standards de performance, de sécurité et le workflow de test/déploiement.
 
-### 6. 🎨 Mises à jour UI & Interactions Récentes
-- **Page d'Accueil (Hero)** : Ajout d'une fonctionnalité de pause au survol et d'une popup (Lightbox) sur les images de la galerie défilante.
-- **Page À Propos** : Intégration du flux X (Twitter) via widget officiel et ajout du lien MTBL avec logo détouré (transparent) et fond harmonisé.
-- **Détail Projet (The Factory)** : 
-  - Ajout d'une fonctionnalité de Lightbox au clic sur les images (version desktop).
-  - Réorganisation de la grille d'images (1 image par ligne au début, puis 2 par ligne pour le storyboard).
-- **ChatWidget** : Amélioration du glisser-déposer sur mobile avec contraintes de bord d'écran strictes pour éviter sa disparition, tout en conservant la fluidité.
+### 6. 🧪 Validation par Tests End-to-End (Playwright)
+- Validation et réussite à **100% (5/5 PASSED)** de la suite de tests E2E Playwright (`npx playwright test`) avec sélecteurs bilingues (FR/EN).
 
 ---
 
 ## 📋 Tâches / Prochaines Étapes
-- [x] Ajouter des projets dans la catégorie **AI Filmmaking** si disponible (Ajout de *The Factory*).
-- [x] Vérifier la bonne intégration globale après les ajouts de projets.
-- [x] Mises à jour UI (Hero, About, Project Detail, ChatWidget).
-- [x] Pousser les changements récents sur Git (`git push origin main`).
+- [x] Optimisations de performance mobile (LCP, TBT, Three.js chunking).
+- [x] Uniformisation du mot de passe `031984` sur tous les projets protégés.
+- [x] Protection anti-clic droit et long-press sur les vidéos.
+- [x] Refonte UI du ScrollSpy (labels au survol, suppression du fond flou).
+- [x] Création du Skill de méthodologie (`portfolio-methodology/SKILL.md`).
+- [x] Validation par tests E2E (5/5 PASSED).
+- [x] Déploiement Git & Vercel (`git push origin main`).
