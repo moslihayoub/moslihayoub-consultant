@@ -1,8 +1,12 @@
 import { findBestMatch } from './chatbotEngine';
+import { projectsData } from '../data/projects';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
-const M84_SYSTEM_INSTRUCTION = `
+function getSystemInstruction(lang = 'fr') {
+  const dynamicProjects = projectsData.map(p => `- ${p.title} (${p.category}): ${p.shortDesc?.[lang] || p.shortDesc?.fr || ''}`).join('\n');
+
+  return `
 Tu es M84, l'assistant virtuel intelligent d'Ayoub MOSLIH (Consultant en Transformation Digitale & IA).
 Ton objectif est de répondre de façon professionnelle, dynamique, claire et chaleureuse aux visiteurs du portfolio d'Ayoub Moslih.
 
@@ -16,12 +20,8 @@ Informations Clés sur Ayoub MOSLIH :
   3. Product & UX Strategy (Discovery, Wireframing, User Research)
   4. Design Systems & Prototypage React / Figma
 - Expériences & Clients Phares : CGI, OCP, Crédit du Maroc, Carrefour, Wiggli, Autocash.ma, eDrive.ma, Foodeals, ParcelIQ, Ville de Laval (Canada), Agence Urbaine Larache.
-- Projets Clés :
-  - Autocash.ma (Marketplace automobile, financement & achat/vente)
-  - eDrive.ma (Gestion B2B et financement de flottes de véhicules)
-  - ParcelIQ HR AI (Outil RH intelligent)
-  - Foodeals (Solution anti-gaspillage alimentaire SaaS/ERP)
-  - The Factory (Série d'animation & faisant appel à des workflows d'IA générative)
+- Projets Récents (mis à jour en temps réel) :
+${dynamicProjects}
 - Tarifs & Devis : Les tarifs sont établis sur-mesure selon le périmètre (audit, stratégie UX/UI, prototypage IA, accompagnement).
 - Contact :
   - Email : moslihayoub@gmail.com
@@ -34,7 +34,19 @@ Consignes de Réponse :
 3. Ne fais jamais de blocs de texte longs : privilégie de courts paragraphes aérés (maximum 2 à 3 lignes par paragraphe).
 4. Sois accueillant, précis et met en valeur l'expertise d'Ayoub Moslih avec enthousiasme.
 5. Si l'utilisateur demande un devis, un contact ou un rendez-vous, propose-lui de contacter Ayoub par WhatsApp (+212 6 63 58 50 65) ou par Email de manière bien visible.
+
+IMPORTANT : Tu dois TOUJOURS répondre au format JSON strict avec la structure suivante :
+{
+  "text": "La réponse formatée en markdown...",
+  "cta": {
+    "text": "Texte du bouton",
+    "action": "external",
+    "target": "https://wa.me/212663585065" // ou un lien pertinent
+  } // cta est optionnel
+}
+Si aucun CTA n'est pertinent, tu peux omettre la propriété "cta".
 `;
+}
 
 export const MAX_AI_QUOTA_PER_HOUR = 5;
 const ONE_HOUR_MS = 3600000;
@@ -115,11 +127,11 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
       const formattedContents = [
         {
           role: 'user',
-          parts: [{ text: M84_SYSTEM_INSTRUCTION }]
+          parts: [{ text: getSystemInstruction(lang) }]
         },
         {
           role: 'model',
-          parts: [{ text: "Bien reçu ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?" }]
+          parts: [{ text: JSON.stringify({ text: "Bien reçu ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?" }) }]
         }
       ];
 
@@ -144,7 +156,12 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
           'Content-Type': 'application/json',
           'X-goog-api-key': GEMINI_API_KEY
         },
-        body: JSON.stringify({ contents: formattedContents })
+        body: JSON.stringify({ 
+          contents: formattedContents,
+          generationConfig: {
+            responseMimeType: "application/json"
+          }
+        })
       });
 
       if (response.ok) {
@@ -152,15 +169,21 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (candidateText && candidateText.trim()) {
-          return {
-            matched: true,
-            text: candidateText.trim(),
-            quickReplies: lang === 'en'
-              ? ["Services offered", "Recent projects"]
-              : ["Quels sont tes services ?", "Voir les projets"],
-            category: 'ai_logic',
-            quota: quotaInfo
-          };
+          try {
+            const parsed = JSON.parse(candidateText.trim());
+            return {
+              matched: true,
+              text: parsed.text || "Désolé, je n'ai pas pu formuler la réponse correctement.",
+              cta: parsed.cta || null,
+              quickReplies: lang === 'en'
+                ? ["Services offered", "Recent projects"]
+                : ["Quels sont tes services ?", "Voir les projets"],
+              category: 'ai_logic',
+              quota: quotaInfo
+            };
+          } catch (jsonError) {
+            console.warn("Erreur de parsing JSON depuis Gemini", jsonError, candidateText);
+          }
         }
       }
     } catch (error) {

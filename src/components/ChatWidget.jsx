@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'lucide-react';
+import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw, Bot, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -60,6 +60,7 @@ const ChatWidget = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showProactivePrompt, setShowProactivePrompt] = useState(false);
   const [proactiveDismissed, setProactiveDismissed] = useState(false);
@@ -359,11 +360,14 @@ const ChatWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 15, scale: 0.95 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            style={isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            style={{
+              ...(isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow),
+              ...(isMaximized && !isMobile ? { width: '80vw', height: '80vh', bottom: '10vh', right: '10vw' } : {})
+            }}
             className="glass-panel"
           >
             {/* Header Chat */}
@@ -376,6 +380,9 @@ const ChatWidget = () => {
                   <h4 style={styles.botName}>M84</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
                     <span style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
                       fontSize: '0.70rem',
                       fontWeight: 600,
                       padding: '2px 6px',
@@ -383,7 +390,8 @@ const ChatWidget = () => {
                       backgroundColor: quotaState.mode === 'ai' ? 'var(--color-green-light, #e6efee)' : '#FEF3C7',
                       color: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#D97706'
                     }}>
-                      {quotaState.mode === 'ai' ? '✨ Mode IA (Gemini)' : '💡 Mode Local (FAQ)'}
+                      <Bot size={12} color={quotaState.mode === 'ai' ? "var(--color-electric-green, #006253)" : "#D97706"} />
+                      {quotaState.mode === 'ai' ? 'Mode IA' : 'Mode Local'}
                     </span>
                     {quotaState.mode === 'ai' && (
                       <div style={{ width: '42px', height: '4px', backgroundColor: '#EAEAEA', borderRadius: '2px', overflow: 'hidden' }} title={`Crédits IA: ${quotaState.count}/${quotaState.max}`}>
@@ -402,6 +410,11 @@ const ChatWidget = () => {
                 <button onClick={resetChat} style={styles.closeBtn} aria-label="Nouveau chat" title="Nouveau chat">
                   <RotateCcw size={16} />
                 </button>
+                {!isMobile && (
+                  <button onClick={() => setIsMaximized(!isMaximized)} style={styles.closeBtn} aria-label="Agrandir/Réduire" title={isMaximized ? "Réduire" : "Agrandir"}>
+                    {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                  </button>
+                )}
                 <button onClick={() => setIsOpen(false)} style={styles.closeBtn} aria-label="Fermer le chat">
                   <X size={18} />
                 </button>
