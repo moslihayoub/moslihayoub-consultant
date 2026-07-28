@@ -272,7 +272,15 @@ export function findBestMatch(userQuery, lang = 'fr') {
   }
 
   // 3. Détection dynamique pour les PROJETS
-  const isProjectQuery = normQuery.includes('projet') || normQuery.includes('projets') || normQuery.includes('realisation') || normQuery.includes('work') || normQuery.includes('portfolio') || normQuery.includes('saas') || normQuery.includes('motion') || normQuery.includes('graphic');
+  // Gestion basique des négations (ex: "pas les projets", "sans projet")
+  const hasNegativeProject = normQuery.includes('pas projet') || normQuery.includes('pas les projet') || normQuery.includes('sans projet') || normQuery.includes('pas de projet');
+  const isProjectQuery = !hasNegativeProject && (
+    normQuery.includes('projet') || normQuery.includes('projets') || 
+    normQuery.includes('realisation') || normQuery.includes('work') || 
+    normQuery.includes('portfolio') || normQuery.includes('saas') || 
+    normQuery.includes('motion') || normQuery.includes('graphic')
+  );
+
   if (isProjectQuery) {
     return getProjectsForQuery(normQuery, currentLang);
   }
