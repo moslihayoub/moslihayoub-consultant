@@ -49,16 +49,16 @@ test.describe('Portfolio E2E Tests', () => {
     await page.goto('/');
     
     // Click on FAB button to open chat
-    const fabButton = page.locator('button[aria-label="Ouvrir le chat"]');
+    const fabButton = page.locator('button[aria-label*="Agent M84"], button[aria-label*="chat"]').first();
     await expect(fabButton).toBeVisible();
     await fabButton.click();
     
     // Check that chat window opened
-    const botName = page.locator('h4', { hasText: 'M84' });
+    const botName = page.locator('h4', { hasText: /Agent M84|M84/i });
     await expect(botName).toBeVisible();
     
     // Find input and type a query
-    const chatInput = page.locator('input[placeholder*="question"]');
+    const chatInput = page.locator('input[placeholder*="Agent M84"], input[placeholder*="question"]').first();
     await expect(chatInput).toBeVisible();
     await chatInput.fill('Quels sont tes services ?');
     

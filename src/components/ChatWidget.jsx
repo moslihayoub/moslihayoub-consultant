@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw, Bot, Maximize2, Minimize2, Cpu } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw, Bot, Maximize2, Minimize2, Cpu, Award, Briefcase } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { queryM84Chatbot, getQuotaInfo } from '../utils/firebaseAi';
+import { queryM84Chatbot, getQuotaInfo, setDevModeOverride } from '../utils/firebaseAi';
+import { findBestMatch } from '../utils/chatbotEngine';
 
 const AVATAR_URL = '/assets/m84-avatar.webp';
 const MAX_CHAR_LIMIT = 200;
 
-// Composant anneau de progression circulaire du nombre de caractères (Twitter/X style)
 const CharacterCountRing = ({ length }) => {
   if (length === 0) return null;
   const radius = 8;
@@ -19,9 +19,9 @@ const CharacterCountRing = ({ length }) => {
 
   let color = 'var(--color-electric-green, #006253)';
   if (ratio >= 0.9) {
-    color = '#EF4444'; // Rouge si > 90%
+    color = '#EF4444';
   } else if (ratio >= 0.75) {
-    color = '#F59E0B'; // Orange si > 75%
+    color = '#F59E0B';
   }
 
   return (
@@ -53,7 +53,6 @@ const CharacterCountRing = ({ length }) => {
   );
 };
 
-// URL Google Apps Script Webhook de collecte
 const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwmTBJNJpOTMdAtVqaPo1qE3vvxoQ9xSI39sRac8J9kYcyPf-zK4tIP4qs4gn6FFWYPpg/exec';
 
 const ChatWidget = () => {
@@ -67,8 +66,7 @@ const ChatWidget = () => {
   const [proactiveDismissed, setProactiveDismissed] = useState(false);
   const [dragConstraints, setDragConstraints] = useState({ left: -250, right: 0, top: -500, bottom: 0 });
 
-  const { lang, t } = useLanguage();
-
+  const { lang } = useLanguage();
   const navigate = useNavigate();
   const [quotaState, setQuotaState] = useState(() => getQuotaInfo());
 
@@ -94,11 +92,13 @@ const ChatWidget = () => {
   const getInitialMessage = (currentLang) => ({
     role: 'model',
     text: currentLang === 'en'
-      ? "Hello! I am M84, Ayoub MOSLIH's virtual assistant. How can I help you?"
-      : "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?",
-    quickReplies: currentLang === 'en'
-      ? ["Services offered", "Recent projects"]
-      : ["Quels sont tes services ?", "Voir les projets"]
+      ? "Hello! I am Agent M84, your guide through Ayoub MOSLIH's portfolio. How may I help you explore his services, projects, or expertise?"
+      : "Bonjour ! Je suis l'Agent M84, votre guide virtuel dans le portfolio d'Ayoub MOSLIH. Comment puis-je vous aider à explorer ses services, ses projets ou son parcours ?",
+    ctas: [
+      { text: currentLang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
+      { text: currentLang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" },
+      { text: currentLang === 'en' ? "Open CV" : "Ouvrir le CV", action: "external", target: "/assets/Ayoub MOSLIH UX-UI.pdf" }
+    ]
   });
 
   const [messages, setMessages] = useState(() => {
@@ -106,12 +106,11 @@ const ChatWidget = () => {
     if (saved) {
       try {
         const { messages: savedMessages, timestamp } = JSON.parse(saved);
-        // Expiration de session: 1 heure (3600000 ms)
         if (new Date().getTime() - timestamp < 3600000) {
           return savedMessages;
         }
       } catch (e) {
-        console.error("Erreur lecture session M84", e);
+        console.error("Erreur lecture session Agent M84", e);
       }
     }
     return [getInitialMessage(lang)];
@@ -151,14 +150,12 @@ const ChatWidget = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Timer 5 secondes pour le message proactif
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!isOpen && !proactiveDismissed) {
         setShowProactivePrompt(true);
       }
     }, 5000);
-
     return () => clearTimeout(timer);
   }, [isOpen, proactiveDismissed]);
 
@@ -173,17 +170,15 @@ const ChatWidget = () => {
     setProactiveDismissed(true);
   };
 
-  // Envoi asynchrone des données vers Google Sheets
   const logInteractionToSheet = (userQueryText, botAnswerText, category) => {
     if (!DEFAULT_WEBHOOK_URL) return;
-
     try {
       fetch(DEFAULT_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           timestamp: new Date().toLocaleString(),
-          type: 'Chatbot M84',
+          type: 'Agent M84',
           userMessage: userQueryText,
           botAnswer: botAnswerText,
           category: category || 'general',
@@ -191,9 +186,7 @@ const ChatWidget = () => {
         }),
         mode: 'no-cors'
       }).catch(err => console.debug('Sheet logging skipped:', err));
-    } catch (e) {
-      // Ignorer l'erreur pour ne pas impacter l'expérience utilisateur
-    }
+    } catch (e) {}
   };
 
   const startLeadCapture = () => {
@@ -201,7 +194,10 @@ const ChatWidget = () => {
     setMessages(prev => [...prev, {
       role: 'model',
       text: lang === 'en' ? "Great! Are you a Professional or an Individual?" : "Super ! Êtes-vous un Professionnel ou un Particulier ?",
-      quickReplies: lang === 'en' ? ["Professional", "Individual"] : ["Professionnel", "Particulier"]
+      ctas: [
+        { text: lang === 'en' ? "Professional" : "Professionnel", action: "lead_reply", target: "Professionnel" },
+        { text: lang === 'en' ? "Individual" : "Particulier", action: "lead_reply", target: "Particulier" }
+      ]
     }]);
   };
 
@@ -230,7 +226,11 @@ const ChatWidget = () => {
 
       setMessages(prev => [...prev, {
         role: 'model',
-        text: successText
+        text: successText,
+        ctas: [
+          { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
+          { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
+        ]
       }]);
 
       if (DEFAULT_WEBHOOK_URL) {
@@ -253,7 +253,6 @@ const ChatWidget = () => {
           }).catch(err => console.debug('Sheet logging skipped:', err));
         } catch (e) {}
       }
-      
       setLeadData({ type: '', name: '', contact: '' });
     }
   };
@@ -266,65 +265,61 @@ const ChatWidget = () => {
     setInput('');
     setIsTyping(true);
 
-    // Si nous sommes dans le flux de capture de leads, on dérive la logique
-    if (leadState !== 'idle') {
-      handleLeadCaptureFlow(query);
-      setIsTyping(false);
-      return;
-    }
-
-    // Recherche via Firebase AI Logic (Gemini API) avec fallback local
-    const match = await queryM84Chatbot(query, messages, lang);
-    if (match.quota) {
-      setQuotaState(match.quota);
-    }
-    
-    if (match.action === "START_LEAD_CAPTURE") {
-      startLeadCapture();
-      setIsTyping(false);
-      return;
-    }
-
-    const newMessages = [
-      {
-        role: 'model',
-        text: match.text,
-        quickReplies: (match.quickReplies || []).slice(0, 2),
-        cta: match.cta || null,
-        category: match.category
+    try {
+      if (leadState !== 'idle') {
+        handleLeadCaptureFlow(query);
+        return;
       }
-    ];
 
-    // Notification préventive à 80-90% du quota IA
-    if (match.quota && match.quota.isWarning) {
+      const previousMode = quotaState.mode;
+      const match = await queryM84Chatbot(query, messages, lang);
+      if (match.quota) {
+        setQuotaState(match.quota);
+      }
+      
+      if (match.action === "START_LEAD_CAPTURE") {
+        startLeadCapture();
+        return;
+      }
+
+      const newMessages = [];
+
+      if (previousMode === 'ai' && match.quota && match.quota.mode === 'local') {
+        newMessages.push({
+          role: 'model',
+          text: lang === 'en'
+            ? "💡 AI Agent credit is temporarily exhausted. It will reset in about 1 hour and full AI mode will automatically return. In the meantime, you are assisted by the Local Agent to continue your digital consultation, discuss your project, or explore collaboration opportunities."
+            : "💡 Le crédit de l’agent IA est temporairement épuisé.\nIl se réinitialise dans environ 1 heure et le mode IA complet reviendra automatiquement.\nEn attendant, vous êtes accompagné par l’agent local pour continuer votre consultation digitale, parler de votre projet ou explorer des pistes de collaboration."
+        });
+      }
+
       newMessages.push({
         role: 'model',
-        text: lang === 'en'
-          ? "💡 Notice: You have 1 AI question remaining. After that, I will automatically transition to Local Assistant Mode (FAQ) to preserve resources."
-          : "💡 Information : Il vous reste 1 question en Mode IA. Ensuite, je basculerai automatiquement en Mode Assistant Local (FAQ) pour préserver les ressources."
+        text: match.text || (lang === 'en' ? "Here is the requested information:" : "Voici les informations demandées :"),
+        ctas: match.ctas || (match.cta ? [match.cta] : []),
+        cards: match.cards || [],
+        category: match.category
       });
-    } else if (match.quota && match.quota.mode === 'local' && match.quota.count >= match.quota.max) {
-      newMessages.push({
+
+      setMessages(prev => [...prev, ...newMessages]);
+      logInteractionToSheet(query, match.text, match.category);
+    } catch (error) {
+      console.error("Erreur lors du traitement de la requête Agent M84:", error);
+      const fallbackLocal = findBestMatch(query, lang);
+      const techNotice = lang === 'en'
+        ? "⚙️ A temporary technical issue occurred with the AI agent. You have been automatically switched to the Local Agent to continue your consultation.\n\n"
+        : "⚙️ Un problème technique temporaire est survenu avec l'agent IA. Vous avez été automatiquement basculé vers l'Agent Local pour continuer votre consultation.\n\n";
+
+      setMessages(prev => [...prev, {
         role: 'model',
-        text: lang === 'en'
-          ? "💡 You are now in Local Assistant Mode. For personalized advice, a custom quote, or direct chat, feel free to contact Ayoub!"
-          : "💡 Vous êtes désormais en Mode Assistant Local. Pour un conseil personnalisé, un devis ou un échange direct, n'hésitez pas !",
-        quickReplies: lang === 'en'
-          ? ["Laissez vos coordonnées", "Services offered"]
-          : ["Laissez vos coordonnées", "Quels sont tes services ?"],
-        cta: {
-          text: lang === 'en' ? "Chat on WhatsApp" : "Discuter sur WhatsApp",
-          action: "external",
-          target: "https://wa.me/212663585065"
-        }
-      });
+        text: techNotice + (fallbackLocal.text || ''),
+        ctas: fallbackLocal.ctas || [],
+        cards: fallbackLocal.cards || [],
+        category: 'local_agent'
+      }]);
+    } finally {
+      setIsTyping(false);
     }
-
-    setMessages(prev => [...prev, ...newMessages]);
-    setIsTyping(false);
-
-    // Collecte discrète en arrière-plan vers Google Sheet
-    logInteractionToSheet(query, match.text, match.category);
   };
 
   const handleSubmit = (e) => {
@@ -332,14 +327,20 @@ const ChatWidget = () => {
     processQuery(input);
   };
 
-  const handleQuickReplyClick = (replyText) => {
-    processQuery(replyText);
-  };
-
   const handleCtaClick = (cta) => {
     if (!cta) return;
 
-    logInteractionToSheet(`[Clic CTA] ${cta.text}`, `Navigation/Lien vers ${cta.target}`, 'cta_click');
+    if (cta.action === 'lead_reply') {
+      processQuery(cta.target);
+      return;
+    }
+
+    if (cta.action === 'start_lead_capture') {
+      startLeadCapture();
+      return;
+    }
+
+    logInteractionToSheet(`[Clic CTA] ${cta.text}`, `Action: ${cta.action} -> ${cta.target}`, 'cta_click');
 
     if (cta.action === 'external' && cta.target) {
       window.open(cta.target, '_blank', 'noopener,noreferrer');
@@ -354,6 +355,12 @@ const ChatWidget = () => {
         }, 300);
       }
     }
+  };
+
+  const toggleDevMode = () => {
+    const nextMode = quotaState.mode === 'ai' ? 'local' : 'ai';
+    setDevModeOverride(nextMode);
+    setQuotaState(getQuotaInfo());
   };
 
   if (location.pathname.startsWith('/project/')) {
@@ -380,10 +387,11 @@ const ChatWidget = () => {
             <div style={styles.chatHeader}>
               <div style={styles.chatHeaderTitle}>
                 <div style={styles.avatarWrapper}>
-                  <img src={AVATAR_URL} alt="M84 Avatar" style={styles.avatarImg} />
+                  <img src={AVATAR_URL} alt="Agent M84 Avatar" style={styles.avatarImg} />
+                  <div style={styles.onlineBadge} />
                 </div>
                 <div>
-                  <h4 style={styles.botName}>M84</h4>
+                  <h4 style={styles.botName}>Agent M84</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
                     <span style={{
                       display: 'flex',
@@ -397,10 +405,58 @@ const ChatWidget = () => {
                       color: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#D97706'
                     }}>
                       {quotaState.mode === 'ai' ? <Bot size={12} color="var(--color-electric-green, #006253)" /> : <Cpu size={12} color="#D97706" />}
-                      {quotaState.mode === 'ai' ? 'Mode IA' : 'Mode Local'}
+                      {quotaState.mode === 'ai' ? 'Agent IA' : 'Agent Local'}
                     </span>
-                    {quotaState.mode === 'ai' && (
-                      <div style={{ width: '42px', height: '4px', backgroundColor: '#EAEAEA', borderRadius: '2px', overflow: 'hidden' }} title={`Crédits IA: ${quotaState.count}/${quotaState.max}`}>
+
+                    {/* Toggle Switch Visuel réservé aux tests en local (masqué en build prod) */}
+                    {import.meta.env.DEV && (
+                      <div
+                        onClick={toggleDevMode}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          cursor: 'pointer',
+                          marginLeft: '4px',
+                          padding: '2px 6px',
+                          borderRadius: '12px',
+                          backgroundColor: '#F3F4F6',
+                          border: '1px solid #E5E7EB'
+                        }}
+                        title="Basculer Mode IA / Mode Local (Dev Only)"
+                      >
+                        <span style={{ fontSize: '0.62rem', fontWeight: 700, color: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#6B7280' }}>
+                          IA
+                        </span>
+                        <div style={{
+                          width: '28px',
+                          height: '16px',
+                          borderRadius: '10px',
+                          backgroundColor: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#9CA3AF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '2px',
+                          transition: 'background-color 0.2s ease',
+                          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.15)'
+                        }}>
+                          <div style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: '#FFFFFF',
+                            transform: quotaState.mode === 'ai' ? 'translateX(12px)' : 'translateX(0px)',
+                            transition: 'transform 0.2s ease',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                          }} />
+                        </div>
+                        <span style={{ fontSize: '0.62rem', fontWeight: 700, color: quotaState.mode === 'local' ? '#D97706' : '#6B7280' }}>
+                          Local
+                        </span>
+                      </div>
+                    )}
+
+                    {quotaState.mode === 'ai' && !quotaState.devOverride && (
+                      <div style={{ width: '36px', height: '4px', backgroundColor: '#EAEAEA', borderRadius: '2px', overflow: 'hidden' }} title={`Crédits IA: ${quotaState.count}/${quotaState.max}`}>
                         <div style={{
                           width: `${(quotaState.count / quotaState.max) * 100}%`,
                           height: '100%',
@@ -427,7 +483,7 @@ const ChatWidget = () => {
             {/* Corps de conversation */}
             <div style={styles.chatBody}>
               {messages.map((msg, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div
                     style={{
                       ...styles.messageWrapper,
@@ -435,7 +491,7 @@ const ChatWidget = () => {
                     }}
                   >
                     {msg.role === 'model' && (
-                      <img src={AVATAR_URL} alt="M84" style={styles.smallAvatarImg} />
+                      <img src={AVATAR_URL} alt="Agent M84" style={styles.smallAvatarImg} />
                     )}
                     <div
                       style={{
@@ -451,16 +507,10 @@ const ChatWidget = () => {
                           <ReactMarkdown
                             components={{
                               strong: ({node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
-                              p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem' }} {...props} />,
-                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px', fontSize: '0.85rem' }} {...props} />,
-                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px', fontSize: '0.85rem' }} {...props} />,
-                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0', fontSize: '0.85rem' }} {...props} />,
-                              h1: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
-                              h2: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
-                              h3: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
-                              h4: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
-                              h5: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
-                              h6: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />
+                              p: ({node, ...props}) => <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem' }} {...props} />,
+                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
+                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
+                              li: ({node, ...props}) => <li style={{ margin: '0 0 3px 0', fontSize: '0.85rem' }} {...props} />
                             }}
                           >
                             {msg.text}
@@ -485,34 +535,61 @@ const ChatWidget = () => {
                     </div>
                   </div>
 
-                  {/* Grouped CTA and Quick Replies for proper wrapping */}
-                  {msg.role === 'model' && (msg.cta || (idx === messages.length - 1 && msg.quickReplies?.length > 0)) && (
-                    <div style={styles.quickRepliesContainer}>
-                      {msg.cta && (
-                        <button
-                          onClick={() => handleCtaClick(msg.cta)}
-                          style={styles.ctaBtn}
-                        >
-                          <span>{msg.cta.text}</span>
-                          {msg.cta.action === 'external' ? (
-                            <ExternalLink size={13} color="var(--color-electric-green, #006253)" />
+                  {/* Affichage des cartes compactes avec miniature d'image sur la gauche */}
+                  {msg.role === 'model' && msg.cards && msg.cards.length > 0 && (
+                    <div style={styles.cardsContainer}>
+                      {msg.cards.map((card, cIdx) => (
+                        <div key={cIdx} style={styles.miniCard}>
+                          {card.image ? (
+                            <img src={card.image} alt={card.title} style={styles.miniCardThumb} />
                           ) : (
-                            <ArrowRight size={13} color="var(--color-electric-green, #006253)" />
+                            <div style={styles.miniCardIconFallback}>
+                              {card.type === 'certif' ? <Award size={18} color="var(--color-electric-green, #006253)" /> : <Briefcase size={18} color="var(--color-electric-green, #006253)" />}
+                            </div>
                           )}
-                        </button>
-                      )}
-                      
-                      {idx === messages.length - 1 && msg.quickReplies && msg.quickReplies.length > 0 && (
-                        msg.quickReplies.slice(0, 3).map((qr, qIdx) => (
+                          <div style={styles.miniCardContent}>
+                            <div style={styles.miniCardHeader}>
+                              <span style={styles.miniCardTitle}>{card.title}</span>
+                              {card.subtitle && <span style={styles.miniCardBadge}>{card.subtitle}</span>}
+                            </div>
+                            {card.desc && <p style={styles.miniCardDesc}>{card.desc}</p>}
+                            {card.url && (
+                              <button
+                                onClick={() => handleCtaClick({ text: card.title, action: card.url.startsWith('http') ? 'external' : 'navigate', target: card.url })}
+                                style={styles.miniCardAction}
+                              >
+                                <span>{lang === 'en' ? 'View project' : 'Voir le projet'}</span>
+                                <ArrowRight size={12} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Affichage des boutons CTAs multiples */}
+                  {msg.role === 'model' && msg.ctas && Array.isArray(msg.ctas) && msg.ctas.length > 0 && (
+                    <div style={styles.quickRepliesContainer}>
+                      {msg.ctas.map((cta, cIdx) => {
+                        if (!cta) return null;
+                        const ctaLabel = typeof cta.text === 'object' ? (cta.text[lang] || cta.text.fr || '') : (cta.text || '');
+                        if (!ctaLabel) return null;
+                        return (
                           <button
-                            key={qIdx}
-                            onClick={() => handleQuickReplyClick(qr)}
-                            style={styles.quickReplyChip}
+                            key={cIdx}
+                            onClick={() => handleCtaClick(cta)}
+                            style={styles.ctaBtn}
                           >
-                            {qr}
+                            <span>{ctaLabel}</span>
+                            {cta.action === 'external' ? (
+                              <ExternalLink size={13} color="var(--color-electric-green, #006253)" />
+                            ) : (
+                              <ArrowRight size={13} color="var(--color-electric-green, #006253)" />
+                            )}
                           </button>
-                        ))
-                      )}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -521,7 +598,7 @@ const ChatWidget = () => {
               {isTyping && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                   <div style={{ ...styles.messageWrapper, justifyContent: 'flex-start' }}>
-                    <img src={AVATAR_URL} alt="M84" style={styles.smallAvatarImg} />
+                    <img src={AVATAR_URL} alt="Agent M84" style={styles.smallAvatarImg} />
                     <div style={{ ...styles.messageBubble, backgroundColor: 'var(--color-surface, #FFFFFF)', color: 'var(--color-text-primary, #111111)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--color-border, #EAEAEA)', padding: '12px 16px' }}>
                       <motion.div style={{ display: 'flex', gap: '4px' }} initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.2 } } }}>
                         {[0, 1, 2].map((i) => (
@@ -536,14 +613,14 @@ const ChatWidget = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Pied de chat / Formulaire */}
+            {/* Formulaire de saisie */}
             <form onSubmit={handleSubmit} style={styles.chatFooter}>
               <input
                 type="text"
                 maxLength={MAX_CHAR_LIMIT}
                 value={input}
                 onChange={(e) => setInput(e.target.value.slice(0, MAX_CHAR_LIMIT))}
-                placeholder={lang === 'en' ? 'Ask a question...' : 'Posez votre question...'}
+                placeholder={lang === 'en' ? 'Ask Agent M84...' : "Posez votre question à l'Agent M84..."}
                 style={styles.input}
               />
               <CharacterCountRing length={input.length} />
@@ -575,7 +652,7 @@ const ChatWidget = () => {
           >
             <div style={styles.proactiveContent}>
               <span style={{ fontSize: '0.82rem', lineHeight: '1.4', color: '#111111', fontWeight: 500 }}>
-                Bonjour ! Je suis votre <strong style={{ color: 'var(--color-electric-green, #006253)' }}>M84</strong>. Comment puis-je vous aider ?
+                Bonjour ! Je suis votre <strong style={{ color: 'var(--color-electric-green, #006253)' }}>Agent M84</strong>. Comment puis-je vous guider ?
               </span>
             </div>
             <button onClick={handleDismissProactive} style={styles.proactiveCloseBtn} aria-label="Fermer">
@@ -586,7 +663,7 @@ const ChatWidget = () => {
         )}
       </AnimatePresence>
 
-      {/* Bouton Flottant FAB avec Tooltip au survol - Draggable */}
+      {/* Bouton Flottant FAB avec Tooltip - Draggable */}
       <motion.div 
         drag 
         dragConstraints={dragConstraints}
@@ -606,7 +683,7 @@ const ChatWidget = () => {
                 <MessageCircle size={13} color="#FFFFFF" />
               </div>
               <span style={styles.hoverTooltipText}>
-                {lang === 'en' ? 'Need help ?' : "Besoin d'aide ?"}
+                {lang === 'en' ? 'Agent M84' : 'Agent M84'}
               </span>
             </motion.div>
           )}
@@ -625,13 +702,13 @@ const ChatWidget = () => {
             }
           }}
           style={styles.fabBtn}
-          aria-label="Ouvrir le chat"
+          aria-label="Ouvrir l'Agent M84"
         >
           {isOpen ? (
             <X size={26} color="#FFFFFF" />
           ) : (
             <div style={styles.fabAvatarWrapper}>
-              <img src={AVATAR_URL} alt="M84" style={styles.fabAvatarImg} />
+              <img src={AVATAR_URL} alt="Agent M84" style={styles.fabAvatarImg} />
             </div>
           )}
         </motion.button>
@@ -703,8 +780,6 @@ const styles = {
     fontFamily: 'var(--font-family, sans-serif)',
     color: '#FFFFFF',
   },
-
-  /* Pop-up proactif 5s */
   proactiveBubble: {
     position: 'fixed',
     bottom: '90px',
@@ -748,14 +823,12 @@ const styles = {
     borderRight: '7px solid transparent',
     borderTop: '7px solid #FFFFFF',
   },
-
-  /* Fenêtre du chat (Compacte: 330px x 460px) */
   chatWindow: {
     position: 'fixed',
     bottom: '90px',
     right: '24px',
-    width: '330px',
-    height: '460px',
+    width: '350px',
+    height: '490px',
     maxHeight: 'calc(100vh - 110px)',
     maxWidth: 'calc(100vw - 32px)',
     backgroundColor: 'var(--color-surface, #FFFFFF)',
@@ -796,7 +869,6 @@ const styles = {
     height: '36px',
     borderRadius: '50%',
     overflow: 'hidden',
-    border: 'none',
   },
   avatarImg: {
     width: '100%',
@@ -819,10 +891,19 @@ const styles = {
     fontWeight: 700,
     color: 'var(--color-text-primary, #111111)',
   },
-  botStatus: {
-    fontSize: '0.85rem',
-    color: 'var(--color-electric-green, #006253)',
-    fontWeight: 500,
+  devToggleBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '3px',
+    fontSize: '0.66rem',
+    fontWeight: 700,
+    padding: '2px 7px',
+    borderRadius: '8px',
+    backgroundColor: '#EFF6FF',
+    border: '1px solid #93C5FD',
+    color: '#1D4ED8',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
   closeBtn: {
     background: 'none',
@@ -855,18 +936,106 @@ const styles = {
     borderRadius: '50%',
     objectFit: 'cover',
     marginTop: '2px',
-    border: 'none',
     flexShrink: 0,
   },
   messageBubble: {
     padding: '8px 12px',
-    fontSize: '0.65rem',
-    maxWidth: '84%',
-    lineHeight: 1.4,
+    fontSize: '0.85rem',
+    maxWidth: '86%',
+    lineHeight: 1.5,
     boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
   },
-
-  /* Style du CTA : Background vert clair, Bordure vert émeraude, Texte vert émeraude */
+  cardsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginLeft: '32px',
+    marginTop: '2px',
+  },
+  miniCard: {
+    backgroundColor: '#FFFFFF',
+    border: '1px solid var(--color-border, #EAEAEA)',
+    borderRadius: '12px',
+    padding: '10px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+  },
+  miniCardThumb: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '8px',
+    objectFit: 'cover',
+    flexShrink: 0,
+    border: '1px solid #EAEAEA'
+  },
+  miniCardIconFallback: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '8px',
+    backgroundColor: 'var(--color-green-light, #e6efee)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0
+  },
+  miniCardContent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    minWidth: 0
+  },
+  miniCardHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '4px',
+    flexWrap: 'wrap'
+  },
+  miniCardTitle: {
+    fontSize: '0.82rem',
+    fontWeight: 700,
+    color: 'var(--color-text-primary, #111111)',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+  miniCardBadge: {
+    fontSize: '0.66rem',
+    fontWeight: 600,
+    backgroundColor: 'var(--color-green-light, #e6efee)',
+    color: 'var(--color-electric-green, #006253)',
+    padding: '2px 6px',
+    borderRadius: '6px',
+    whiteSpace: 'nowrap'
+  },
+  miniCardDesc: {
+    fontSize: '0.74rem',
+    color: 'var(--color-text-secondary, #666666)',
+    margin: 0,
+    lineHeight: 1.35,
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden'
+  },
+  miniCardAction: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    alignSelf: 'flex-start',
+    marginTop: '3px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: 'var(--color-electric-green, #006253)',
+    fontSize: '0.74rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    padding: 0
+  },
   ctaBtn: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -885,20 +1054,9 @@ const styles = {
   quickRepliesContainer: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '5px',
+    gap: '6px',
     marginLeft: '32px',
-    marginTop: '1px',
-  },
-  quickReplyChip: {
-    backgroundColor: 'var(--color-surface, #FFFFFF)',
-    border: '1px solid var(--color-electric-green, #006253)',
-    color: 'var(--color-electric-green, #006253)',
-    borderRadius: '20px',
-    padding: '6px 12px',
-    fontSize: '0.76rem',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    marginTop: '2px',
   },
   chatFooter: {
     padding: '10px 12px',
@@ -914,7 +1072,7 @@ const styles = {
     backgroundColor: 'var(--color-bg, #FAFAFA)',
     padding: '8px 14px',
     borderRadius: '20px',
-    fontSize: '0.96rem',
+    fontSize: '0.88rem',
     outline: 'none',
     color: 'var(--color-text-primary, #111111)',
     fontFamily: 'inherit',

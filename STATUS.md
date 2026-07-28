@@ -43,13 +43,44 @@
 
 ### 7. 🤖 Intégration Firebase AI Logic & Gemini API (Chatbot M84)
 - Création du projet Firebase **`moslih84-consultant`** (App Web `moslih84-web`) et activation du service **Firebase AI Logic**.
-- Module `src/utils/firebaseAi.js` configuré avec `gemini-2.0-flash` et un *System Instruction* complet sur la biographie, les expertises, les projets phares et les coordonnées d'Ayoub Moslih.
+- Module `src/utils/firebaseAi.js` configuré avec `gemini-2.0-flash`.
+- **RAG & Base de Connaissances Dynamique** : Le prompt injecte dynamiquement les données du site (`src/data/projects.js`) pour garantir que l'IA a toujours les informations en temps réel.
+- **Structured Output (JSON)** : Configuration de Gemini pour répondre avec un format JSON strict, permettant d'inclure des "Call To Action" (CTA) intelligents pour guider l'utilisateur.
+- **Routage & UI** :
+  - Interception des CTA pour déclencher une navigation sans rechargement (ex: `/work` ou URLs externes).
+  - Indication de frappe (typing indicator) avec animation de 3 points.
+  - Uniformisation du Markdown (forçage de taille `0.85rem` et interdiction des balises titres).
+  - Mode Agrandir (Maximize) +30% largeur / 80vh hauteur, avec transition fluide (Framer Motion).
 - Architecture hybride avec fallback automatique vers le moteur FAQ local en cas de problème réseau.
+
+### 8. 🤖 Refonte & Alignement de l'Agent M84 (Mode IA & Mode Local)
+- **Positionnement & Rebranding** : Évolution de "chatbot" vers **Agent M84** (*Agent IA* et *Agent Local*).
+- **Base de Connaissances Unifiée (`src/data/knowledgeBase.js`)** : Centralisation des profils, 19 ans d'expérience, clients phares (CGI, OCP, Crédit du Maroc, Carrefour...), top 3 certifs et projets publics.
+- **Bannière de Transition de Quota 💡** :
+  - Message explicite lors de la bascule automatique du mode IA vers le mode Local :
+    > *💡 Le crédit de l’agent IA est temporairement épuisé. Il se réinitialise dans environ 1 heure et le mode IA complet reviendra automatiquement. En attendant, vous êtes accompagné par l’agent local pour continuer votre consultation digitale, parler de votre projet ou explorer des pistes de collaboration.*
+- **Gestion Stricte des 6 Intentions** :
+  1. *Spécialité / Profil* (Synthèse + 3 CTAs)
+  2. *Services* (4 axes + 3 CTAs)
+  3. *Projets / SaaS* (Cartes UI des projets publics + CTA global "Voir plus de projets", **exclusion absolue des projets protégés AES**)
+  4. *CV / Parcours* (Résumé + CTAs Ouvrir/Télécharger/Timeline)
+  5. *Certifications* (Max 3 cartes certifs + CTA global)
+  6. *Contact / Devis / Collaboration* (Orientation consultation & RDV + 3 CTAs)
+- **Recadrage Hors-Sujet & Fallback** :
+  - Recadrage poli en 1 phrase pour les questions non liées au site/services.
+  - Reformulation et suggestions interactives au lieu de réponses d'erreur génériques.
+- **Bouton & Interrupteur Toggle Switch (Dev Only)** :
+  - Intégration d'un **toggle switch visuel interactif** `[IA | Local]` dans le header de l'Agent M84 sur localhost pour basculer instantanément entre l'Agent IA et l'Agent Local lors de vos tests.
+  - Totalement exclu et masqué du bundle de production via `import.meta.env.DEV`.
 
 ---
 
 ## 📋 Tâches / Prochaines Étapes
-- [x] Création du projet Firebase `moslih84-consultant` et provisioning AI Logic.
-- [x] Connexion du Chatbot M84 à l'API Gemini 2.0 Flash via Firebase AI Logic.
-- [x] Validation par tests E2E (5/5 PASSED).
-- [x] Déploiement Git & Vercel (`git push origin main`).
+- [x] Refonte & alignement de l'Agent M84 (Mode IA & Mode Local).
+- [x] Interrupteur Toggle Switch visuel pour les tests en dev.
+- [x] Intégration des images dans les cartes projets UI du chat.
+- [x] Alignement UX pour "Voir ses services" (résumé puces + guidage vers la page).
+- [x] Conditionnement strict de la CTA "Voir la timeline".
+- [x] Validation par tests E2E Playwright (6/6 PASSED).
+- [x] Vérification Build Vite & Oxlint (0 erreur).
+

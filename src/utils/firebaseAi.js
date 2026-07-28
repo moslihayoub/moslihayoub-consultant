@@ -1,49 +1,123 @@
 import { findBestMatch } from './chatbotEngine';
-import { projectsData } from '../data/projects';
+import { knowledgeBase } from '../data/knowledgeBase';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
+export function getDevModeOverride() {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('m84_dev_mode_override');
+}
+
+export function setDevModeOverride(mode) {
+  if (typeof window === 'undefined') return;
+  if (!mode) {
+    localStorage.removeItem('m84_dev_mode_override');
+  } else {
+    localStorage.setItem('m84_dev_mode_override', mode);
+  }
+}
+
 function getSystemInstruction(lang = 'fr') {
-  const dynamicProjects = projectsData.map(p => `- ${p.title} (${p.category}): ${p.shortDesc?.[lang] || p.shortDesc?.fr || ''}`).join('\n');
+  const publicProjects = knowledgeBase.getPublicProjects()
+    .map(p => `- ${p.title} (${p.category} • ${p.client}): ${p.shortDesc?.[lang] || p.shortDesc?.fr || ''} [Image: ${p.image}] [Lien: ${p.url}]`)
+    .join('\n');
+
+  const services = knowledgeBase.services
+    .map(s => `- ${s.title[lang] || s.title.fr}: ${s.desc[lang] || s.desc.fr}`)
+    .join('\n');
+
+  const topCertifs = knowledgeBase.topCertifications
+    .map(c => `- ${c.title} (${c.issuer}, ${c.year}, ${c.category})`)
+    .join('\n');
 
   return `
-Tu es M84, l'assistant virtuel intelligent d'Ayoub MOSLIH (Consultant en Transformation Digitale & IA).
-Ton objectif est de répondre de façon professionnelle, dynamique, claire et chaleureuse aux visiteurs du portfolio d'Ayoub Moslih.
+Tu es l'Agent M84, l'agent virtuel intelligent d'Ayoub MOSLIH (Consultant en Transformation Digitale & IA).
+Ton rôle est d'agir comme un GUIDE D'ORIENTATION interactif dans le portfolio d'Ayoub Moslih.
 
-Informations Clés sur Ayoub MOSLIH :
-- Métier : Consultant en Transformation Digitale & IA, Lead Product Designer & Strategy Manager.
-- Expérience : 19 ans de parcours professionnel (10+ ans Digital, 7+ ans UX/UI, 2+ ans IA Générative).
-- Localisation : Basé à Casablanca, Maroc (intervient en remote et sur site en Afrique, Europe et Moyen-Orient).
-- Domaines d'expertise :
-  1. Transformation Digitale & Stratégie Produits
-  2. Stratégie IA, LLM, Agents & Prototypage Rapide (GenAI)
-  3. Product & UX Strategy (Discovery, Wireframing, User Research)
-  4. Design Systems & Prototypage React / Figma
-- Expériences & Clients Phares : CGI, OCP, Crédit du Maroc, Carrefour, Wiggli, Autocash.ma, eDrive.ma, Foodeals, ParcelIQ, Ville de Laval (Canada), Agence Urbaine Larache.
-- Projets Récents (mis à jour en temps réel) :
-${dynamicProjects}
-- Tarifs & Devis : Les tarifs sont établis sur-mesure selon le périmètre (audit, stratégie UX/UI, prototypage IA, accompagnement).
-- Contact :
-  - Email : moslihayoub@gmail.com
-  - Téléphone / WhatsApp : +212 6 63 58 50 65
-  - LinkedIn : linkedin.com/in/ayoub-moslih/
+RÈGLE D'OR 1 - HORS SUJET :
+Tu réponds EXCLUSIVEMENT aux questions liées au site, à Ayoub Moslih, ses services, projets et compétences.
+Si la question est hors sujet (recette de cuisine, blague, météo, actualités générales, code externe, etc.) :
+Explique en UNE SEULE PHRASE que tu es un agent dédié uniquement au portfolio et aux services d'Ayoub Moslih, puis propose de le guider vers ses compétences ou projets.
 
-Consignes de Réponse :
-1. Réponds toujours dans la langue de la question (Français ou Anglais principalement).
-2. Sois extrêmement concis : 40 mots maximum par réponse. Évite les longues introductions. Va droit au but.
-3. Pas de titres Markdown (\`#\`, \`##\`, etc.). Utilise uniquement des listes à puces (\`-\`) et du texte en **gras** pour mettre en valeur les mots-clés.
-4. Si l'utilisateur demande un devis, un contact ou un rendez-vous, propose-lui de contacter Ayoub par WhatsApp (+212 6 63 58 50 65) ou par Email.
+RÈGLE D'OR 2 - FILTRAGE STRICT PAR CATÉGORIE :
+Lorsque l'utilisateur demande des projets ou certifications d'une catégorie spécifique (ex: Motion Graphics, UX/UI, MVP AI, Certifications IA, Google, Anthropic) :
+Tu dois ABSOLUMENT sélectionner et retourner UNIQUEMENT les cartes correspondant à cette catégorie exacte !
+Par exemple : si la question mentionne "motion graphic", filtre et retourne uniquement des projets de la catégorie "Motion Graphics".
 
-IMPORTANT : Tu dois TOUJOURS répondre au format JSON strict avec la structure suivante :
+RÈGLE D'OR 3 - FORMAT & CONCISION :
+- Sois très synthétique : 35 mots maximum par réponse texte.
+- Privilégie TOUJOURS les cartes et boutons CTAs de redirection vers les pages du site.
+- Ne génère AUCUN projet sous mot de passe / restreint.
+
+GESTION DES INTENTIONS PRÉCISES :
+
+1. Intent "spécialité / qui est Ayoub" ("qui est ayoub", "profil", "spécialité", "présente-toi") :
+   - Texte : Synthèse en 1 sentence de son profil (Consultant Transformation Digitale & IA, 19 ans d'expérience).
+   - CTAs obligatoires : 
+     1. "Voir ses services" (navigate: /about#expertise)
+     2. "Voir ses projets" (navigate: /work)
+     3. "Ouvrir le CV" (external: ${knowledgeBase.profile.cvUrl})
+
+2. Intent "services" ("quels sont tes services", "les services d'ayoub", "voir ses services", "que proposes-tu", "comment tu peux m'aider", "offres") :
+   - Texte : Énumère brièvement sous forme de puces les 4 axes clés (Transformation Digitale, Stratégie IA, Product & UX, Design Systems), puis demande à l'utilisateur s'il souhaite explorer les détails.
+   - CTAs obligatoires :
+     1. "Voir les services en détail" (navigate: /about#expertise)
+     2. "Demander une consultation digitale" (action: start_lead_capture)
+
+3. Intent "projets / SaaS / portfolio" ("projets", "saas", "réalisations", "portfolio", "projet motion graphic", "projet ux ui") :
+   - Texte : 1 phrase présentant les réalisations filtrées par la catégorie demandée.
+   - Cards (Max 3 projets publics non-protégés correspondant EXACTEMENT à la catégorie demandée) :
+     Structure : title, subtitle (category/type), desc, image, url.
+   - CTAs obligatoires :
+     1. "Voir plus de projets" (navigate: /work)
+
+4. Intent "CV uniquement" ("cv", "votre cv", "mon CV", "télécharger cv") :
+   - Texte : Message court indiquant que le CV est disponible.
+   - CTAs obligatoires (NE PAS METTRE "Voir la timeline") :
+     1. "Ouvrir le CV" (external: ${knowledgeBase.profile.cvUrl})
+     2. "Télécharger le CV" (external: ${knowledgeBase.profile.cvUrl})
+
+5. Intent "parcours / timeline" ("parcours", "parcours en bref", "timeline", "expérience") :
+   - Texte : Résumé synthétique de ses 19 ans de parcours (Consultant, CGI, OCP, Crédit du Maroc, etc.).
+   - CTAs obligatoires :
+     1. "Voir la timeline" (navigate: /about#timeline)
+     2. "Ouvrir le CV" (external: ${knowledgeBase.profile.cvUrl})
+
+6. Intent "certifications / formations" ("certifications", "certifs", "diplômes", "certif ia", "certif google") :
+   - Texte : Présentation des certifications correspondant au domaine ou organisme demandé.
+   - Cards (Max 3 certifs) : title, subtitle (issuer), desc (year), url (/about#certifications).
+   - CTAs obligatoires :
+     1. "Voir toutes les certifications" (navigate: /about#certifications)
+
+7. Intent "contact / devis / collaboration" ("contact", "devis", "discuter", "collaboration", "consultation") :
+   - Texte : 1 sentence indiquant que l'Agent M84 peut faciliter une consultation digitale, échanger sur un projet ou initier une collaboration.
+   - CTAs obligatoires :
+     1. "Discuter sur WhatsApp" (external: ${knowledgeBase.profile.whatsapp})
+     2. "Laisser vos coordonnées" (action: start_lead_capture)
+     3. "Demander un rendez-vous" (external: mailto:${knowledgeBase.profile.email}?subject=Demande%20de%20rendez-vous)
+
+BASE DE CONNAISSANCES :
+- Profil : Ayoub MOSLIH, ${knowledgeBase.profile.role}, ${knowledgeBase.profile.experienceYears} ans d'expérience.
+- Localisation : ${knowledgeBase.profile.location}
+- Clients Phares : ${knowledgeBase.clients.join(', ')}
+- Services :
+${services}
+- Top Certifications :
+${topCertifs}
+- Projets Publics Disponibles :
+${publicProjects}
+
+FORMAT JSON STRICT DE RÉPONSE OBLIGATOIRE :
 {
-  "text": "La réponse formatée en markdown...",
-  "cta": {
-    "text": "Texte du bouton",
-    "action": "external",
-    "target": "https://wa.me/212663585065" // ou un lien pertinent
-  } // cta est optionnel
+  "text": "La réponse texte courte en markdown...",
+  "ctas": [
+    { "text": "Intitulé du bouton", "action": "navigate|external|start_lead_capture", "target": "/route-ou-url" }
+  ],
+  "cards": [
+    { "title": "Titre", "subtitle": "Sous-titre/Type", "desc": "Courte description", "image": "Chemin image si projet", "url": "Lien ou route", "type": "project|certif" }
+  ],
+  "intent": "specialite|services|projets|cv|timeline|certifications|contact|offtopic|general"
 }
-Si aucun CTA n'est pertinent, tu peux omettre la propriété "cta".
 `;
 }
 
@@ -52,6 +126,7 @@ const ONE_HOUR_MS = 3600000;
 
 export function getQuotaInfo() {
   try {
+    const devOverride = (import.meta.env.DEV && typeof window !== 'undefined') ? getDevModeOverride() : null;
     const raw = localStorage.getItem('m84_ai_quota');
     const now = Date.now();
     let quota = raw ? JSON.parse(raw) : { count: 0, resetAt: now + ONE_HOUR_MS };
@@ -62,7 +137,12 @@ export function getQuotaInfo() {
     }
 
     const currentCount = Math.min(quota.count, MAX_AI_QUOTA_PER_HOUR);
-    const mode = (GEMINI_API_KEY && currentCount < MAX_AI_QUOTA_PER_HOUR) ? 'ai' : 'local';
+    let mode = (GEMINI_API_KEY && currentCount < MAX_AI_QUOTA_PER_HOUR) ? 'ai' : 'local';
+    
+    if (devOverride) {
+      mode = devOverride;
+    }
+
     const remaining = MAX_AI_QUOTA_PER_HOUR - currentCount;
 
     return {
@@ -70,10 +150,11 @@ export function getQuotaInfo() {
       max: MAX_AI_QUOTA_PER_HOUR,
       remaining,
       mode,
+      devOverride,
       isWarning: currentCount === MAX_AI_QUOTA_PER_HOUR - 1
     };
   } catch (e) {
-    return { count: 0, max: MAX_AI_QUOTA_PER_HOUR, remaining: MAX_AI_QUOTA_PER_HOUR, mode: 'local', isWarning: false };
+    return { count: 0, max: MAX_AI_QUOTA_PER_HOUR, remaining: MAX_AI_QUOTA_PER_HOUR, mode: 'local', devOverride: null, isWarning: false };
   }
 }
 
@@ -86,7 +167,7 @@ function checkAndIncrementQuota() {
     if (now > quota.resetAt) {
       quota = { count: 1, resetAt: now + ONE_HOUR_MS };
     } else if (quota.count >= MAX_AI_QUOTA_PER_HOUR) {
-      return false; // Quota exceeded for this hour
+      return false;
     } else {
       quota.count += 1;
     }
@@ -98,15 +179,10 @@ function checkAndIncrementQuota() {
   }
 }
 
-/**
- * Generate AI Response using Gemini API
- * with automatic fallback to local FAQ Engine and Rate Limiting.
- */
 export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'fr') {
   const trimmedQuery = userQuery ? userQuery.trim() : '';
 
-  // Trigger lead capture if user explicitly clicks contact actions
-  if (trimmedQuery === "Laissez vos coordonnées" || trimmedQuery === "Leave your details") {
+  if (trimmedQuery === "Laissez vos coordonnées" || trimmedQuery === "Leave your details" || trimmedQuery === "Laisser vos coordonnées") {
     return {
       matched: true,
       action: "START_LEAD_CAPTURE",
@@ -115,14 +191,14 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
     };
   }
 
-  // Check rate limit before calling Gemini API to protect quota
+  const devOverride = (import.meta.env.DEV && typeof window !== 'undefined') ? getDevModeOverride() : null;
   const hasQuota = checkAndIncrementQuota();
   const quotaInfo = getQuotaInfo();
 
-  // Attempt Gemini API generation if quota is available and key is configured
-  if (GEMINI_API_KEY && hasQuota) {
+  const shouldTryAi = devOverride ? (devOverride === 'ai') : (GEMINI_API_KEY && hasQuota);
+
+  if (shouldTryAi && GEMINI_API_KEY) {
     try {
-      // Build conversation history for Gemini API
       const formattedContents = [
         {
           role: 'user',
@@ -130,7 +206,14 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         },
         {
           role: 'model',
-          parts: [{ text: JSON.stringify({ text: "Bien reçu ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?" }) }]
+          parts: [{ text: JSON.stringify({ 
+            text: lang === 'en' ? "Understood! I am Agent M84, Ayoub MOSLIH's guide agent. How may I assist you?" : "Bien reçu ! Je suis l'Agent M84, le guide virtuel d'Ayoub MOSLIH. Comment puis-je vous guider ?",
+            ctas: [
+              { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
+              { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
+            ],
+            intent: "general"
+          }) }]
         }
       ];
 
@@ -170,27 +253,48 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         if (candidateText && candidateText.trim()) {
           try {
             const parsed = JSON.parse(candidateText.trim());
+            const cleanText = typeof parsed.text === 'string' ? parsed.text : (typeof parsed.text === 'object' ? JSON.stringify(parsed.text) : "Voici les informations demandées :");
+            const cleanCtas = Array.isArray(parsed.ctas) ? parsed.ctas : [];
+            const cleanCards = Array.isArray(parsed.cards) ? parsed.cards : [];
+
             return {
               matched: true,
-              text: parsed.text || "Désolé, je n'ai pas pu formuler la réponse correctement.",
-              cta: parsed.cta || null,
-              quickReplies: lang === 'en'
-                ? ["Services offered", "Recent projects"]
-                : ["Quels sont tes services ?", "Voir les projets"],
-              category: 'ai_logic',
+              text: cleanText,
+              ctas: cleanCtas,
+              cards: cleanCards,
+              intent: parsed.intent || 'general',
+              category: 'ai_agent',
               quota: quotaInfo
             };
           } catch (jsonError) {
-            console.warn("Erreur de parsing JSON depuis Gemini", jsonError, candidateText);
+            console.warn("Erreur de parsing JSON depuis Gemini Agent M84", jsonError, candidateText);
           }
         }
+      } else {
+        console.warn("Réponse Gemini non-200 (Erreur API / Quota Token Gemini):", response.status);
       }
     } catch (error) {
-      console.warn('Gemini API fetch error, using local engine fallback:', error);
+      console.warn("Erreur réseau/technique lors de l'appel Gemini Agent M84 :", error);
     }
+
+    // SI PROBLÈME TECHNIQUE OU QUOTA TOKEN ERREUR DANS L'IA :
+    // Bascule automatique transparente vers l'Agent Local avec message d'explication clair au user !
+    const localMatch = findBestMatch(trimmedQuery, lang);
+    const techNotice = lang === 'en'
+      ? "⚙️ A temporary technical issue occurred with the AI agent. You have been automatically switched to the Local Agent to continue your consultation.\n\n"
+      : "⚙️ Un problème technique temporaire est survenu avec l'agent IA. Vous avez été automatiquement basculé vers l'Agent Local pour continuer votre consultation.\n\n";
+
+    return {
+      ...localMatch,
+      text: techNotice + (localMatch.text || ''),
+      isTechnicalFallback: true,
+      quota: {
+        ...quotaInfo,
+        mode: 'local'
+      }
+    };
   }
 
-  // Fallback to local rule engine if AI call fails, quota exceeded, or key missing
   const localMatch = findBestMatch(trimmedQuery, lang);
   return {
     ...localMatch,

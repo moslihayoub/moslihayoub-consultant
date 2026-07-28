@@ -3,9 +3,10 @@
     {
       "id": "intro",
       "category": "faq_general",
+      "intent": "specialite",
       "keywords": [
-        "bonjour", "salut", "hello", "coucou", "salam", "slm", "ssalam", "ahlan", "marhaba",
-        "qui", "es", "tu", "m84", "presentation", "assistant", "aide", "chkon", "chkun"
+        "bonjour", "salut", "hello", "coucou", "salam", "slm", "marhaba",
+        "qui", "es", "tu", "m84", "presentation", "agent", "aide", "chkon", "chkun"
       ],
       "questions": [
         "Bonjour",
@@ -15,293 +16,232 @@
         "Comment peux-tu m'aider ?"
       ],
       "answer": {
-        "fr": "Bonjour ! Je suis M84, l'assistant d'Ayoub MOSLIH. Je répondrai à vos questions sur ses services, projets et compétences.",
-        "en": "Hello! I am M84, Ayoub MOSLIH's assistant. I can help you explore his services, projects, and skills."
+        "fr": "Bonjour ! Je suis l'Agent M84, votre guide virtuel dans le portfolio d'Ayoub MOSLIH. Je vous aide à explorer ses services, projets et compétences.",
+        "en": "Hello! I am Agent M84, your virtual guide through Ayoub MOSLIH's portfolio. I help you explore his services, projects, and skills."
       },
-      "quickReplies": [
-        "Ses services",
-        "Voir les projets"
-      ],
-      "cta": {
-        "text": { "fr": "En savoir plus", "en": "Learn more" },
-        "action": "navigate",
-        "target": "/about"
-      }
+      "ctas": [
+        { "text": { "fr": "Voir ses services", "en": "Explore services" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" }
+      ]
     },
     {
       "id": "about_ayoub",
       "category": "about",
+      "intent": "specialite",
       "keywords": [
-        "ayoub", "moslih", "profil", "biographie", "bio", "metier", "role", "consultant",
-        "chkon", "chkun", "chkoun", "tajriba", "khibra", "experience"
+        "ayoub", "moslih", "profil", "specialite", "biographie", "bio", "metier", "role", "consultant",
+        "chkon", "chkun", "chkoun"
       ],
       "questions": [
+        "Quelle est la spécialité d'Ayoub ?",
         "Qui est Ayoub MOSLIH ?",
         "Chkon huwwa Ayoub Moslih ?",
-        "Quel est le profil d'Ayoub ?",
-        "Combien d'années d'expérience a-t-il ?"
+        "Quel est le profil d'Ayoub ?"
       ],
       "answer": {
-        "fr": "Ayoub MOSLIH est Consultant en Transformation Digitale & IA avec 19 ans d'expérience (10+ ans Digital, 7+ ans UX/UI, 2+ ans IA).",
-        "en": "Ayoub MOSLIH is a Digital Transformation & AI Consultant with 19 years of experience (10+ yrs Digital, 7+ yrs UX/UI, 2+ yrs AI)."
+        "fr": "Ayoub MOSLIH est Consultant en Transformation Digitale & IA avec 19 ans d'expérience (10+ ans Digital, 7+ ans UX/UI, 2+ ans IA Générative).",
+        "en": "Ayoub MOSLIH is a Digital Transformation & AI Consultant with 19 years of experience (10+ yrs Digital, 7+ yrs UX/UI, 2+ yrs GenAI)."
       },
-      "quickReplies": [
-        "Ses services",
-        "Me contacter"
-      ],
-      "cta": {
-        "text": { "fr": "Voir sa biographie", "en": "View bio" },
-        "action": "navigate",
-        "target": "/about"
-      }
+      "ctas": [
+        { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+      ]
     },
     {
       "id": "services_overview",
       "category": "services",
+      "intent": "services",
       "keywords": [
-        "service", "services", "prestation", "prestations", "expertise", "offre", "accompagnement",
-        "khadamat", "khedma", "khedmat", "ach", "katdir", "chkatdir", "chno", "katsawb"
+        "service", "services", "prestation", "prestations", "expertise", "offre", "offres", "accompagnement",
+        "khadamat", "khedma", "khedmat", "chkatdir", "chno", "katsawb"
       ],
       "questions": [
-        "Quels sont vos services ?",
-        "Chno huma lkhadamat dialkoum ?",
-        "Ach katdir ?",
-        "Que propose Ayoub ?"
+        "Quels sont tes services ?",
+        "Voir ses services",
+        "Que proposes-tu ?",
+        "Comment peux-tu m'aider ?",
+        "Chno huma lkhadamat dialkoum ?"
       ],
       "answer": {
-        "fr": "Ayoub intervient sur 4 axes : Transformation Digitale, Stratégie IA & LLM, Product & UX Strategy et Design Systems.",
-        "en": "Ayoub provides 4 core services: Digital Transformation, AI Strategy & LLMs, Product & UX Strategy, and Design Systems."
+        "fr": "Ayoub intervient principalement sur 4 expertises clés :\n- **Transformation Digitale** : audit et accompagnement stratégique\n- **Stratégie IA & LLM** : automatisation et prototypes GenAI\n- **Product & UX Strategy** : discovery, recherche et ROI\n- **Design Systems** : industrialisation UI scalable\n\nSouhaitez-vous explorer tous les détails de ses services ?",
+        "en": "Ayoub specializes in 4 core pillars:\n- **Digital Transformation**: audit and strategic guidance\n- **AI Strategy & LLMs**: automation and GenAI prototypes\n- **Product & UX Strategy**: discovery, research, and ROI\n- **Design Systems**: scalable UI industrialization\n\nWould you like to explore full details of his services?"
       },
-      "quickReplies": [
-        "Stratégie IA",
-        "Voir les projets"
-      ],
-      "cta": {
-        "text": { "fr": "Voir les expertises", "en": "Explore expertise" },
-        "action": "navigate",
-        "target": "/about#expertise"
-      }
-    },
-    {
-      "id": "service_ia",
-      "category": "services",
-      "keywords": [
-        "ia", "ai", "intelligence", "artificielle", "llm", "automatisation", "gpt", "prompt",
-        "dhakaa", "isntina3i", "genai", "workflow"
-      ],
-      "questions": [
-        "Proposez-vous des services en IA ?",
-        "Wach katkhdmou b IA ?",
-        "Comment intégrez-vous l'IA ?"
-      ],
-      "answer": {
-        "fr": "Oui, Ayoub intègre l'IA générative (LLM, RAG, agents) pour automatiser vos processus et concevoir des MVP IA rapides.",
-        "en": "Yes, Ayoub integrates Generative AI (LLMs, RAG, agents) to automate processes and build rapid AI MVPs."
-      },
-      "quickReplies": [
-        "Projets MVP IA",
-        "Me contacter"
-      ],
-      "cta": {
-        "text": { "fr": "Voir les projets IA", "en": "Discover AI Projects" },
-        "action": "navigate",
-        "target": "/work"
-      }
+      "ctas": [
+        { "text": { "fr": "Voir les services en détail", "en": "View services in detail" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Demander une consultation digitale", "en": "Request digital consultation" }, "action": "start_lead_capture", "target": "" }
+      ]
     },
     {
       "id": "projects_overview",
       "category": "projects",
+      "intent": "projets",
       "keywords": [
-        "projet", "projets", "realisation", "realisations", "portfolio", "work", "etudes", "cas",
+        "projet", "projets", "saas", "realisation", "realisations", "portfolio", "work", "etudes", "cas",
         "machoari3", "mashari3", "mchari3", "a3mal", "aamal", "clients"
       ],
       "questions": [
-        "Quels sont vos projets récents ?",
-        "Wrena l'mchari3 dialk",
-        "Voir les réalisations",
+        "Quels sont vos projets ?",
+        "Voir ses projets",
+        "SaaS réalisés",
         "Voir les projets",
-        "Avec quels clients avez-vous travaillé ?"
+        "Wrena l'mchari3 dialk"
       ],
       "answer": {
-        "fr": "Ayoub a réalisé des projets majeurs pour Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, eDrive, etc.",
-        "en": "Ayoub has delivered key projects for Autocash.ma, CGI, OCP, Crédit du Maroc, Carrefour, Foodeals, ParcelIQ, eDrive, etc."
+        "fr": "Voici une sélection des projets récents et outils SaaS développés par Ayoub :",
+        "en": "Here is a selection of recent projects and SaaS tools created by Ayoub:"
       },
-      "quickReplies": [
-        "Autocash.ma",
-        "Projet eDrive"
+      "cards": [
+        {
+          "title": "QuickToken UI",
+          "subtitle": "MVP Ai / Design System",
+          "desc": "Générateur intelligent de Design System JSON pour paramétrer vos composants.",
+          "image": "/assets/works/ux-ui/quicktoken.webp",
+          "url": "https://quick-token-ui.vercel.app/",
+          "type": "project"
+        },
+        {
+          "title": "ParcelIQ HR AI",
+          "subtitle": "MVP Ai / SaaS RH",
+          "desc": "Plateforme HR SaaS dédiée à l'analyse de CVs assistée par IA.",
+          "image": "/assets/works/ux-ui/parcelIQ.webp",
+          "url": "https://ai-tool-jade.vercel.app/",
+          "type": "project"
+        },
+        {
+          "title": "Freelance Calculator",
+          "subtitle": "MVP Ai / Outil Financier",
+          "desc": "Outil de devis et calcul de rentabilité sur-mesure pour freelances.",
+          "image": "/assets/works/ux-ui/freelance-calculator.webp",
+          "url": "https://financial-calculator-five-rho.vercel.app/",
+          "type": "project"
+        }
       ],
-      "cta": {
-        "text": { "fr": "Tous les projets", "en": "All projects" },
-        "action": "navigate",
-        "target": "/work"
-      }
+      "ctas": [
+        { "text": { "fr": "Voir plus de projets", "en": "See more projects" }, "action": "navigate", "target": "/work" }
+      ]
     },
     {
-      "id": "project_autocash",
-      "category": "projects",
-      "keywords": [
-        "autocash", "auto", "cash", "vehicule", "voiture", "marketplace", "sayarat"
-      ],
-      "questions": [
-        "Parle-moi du projet Autocash",
-        "C'est quoi Autocash.ma ?",
-        "Projet Autocash"
-      ],
-      "answer": {
-        "fr": "Autocash.ma (2024) : Création de la marketplace couvrant l'achat, la vente et le financement de véhicules d'occasion.",
-        "en": "Autocash.ma (2024): Creation of the marketplace covering the purchase, sale, and financing of used vehicles."
-      },
-      "quickReplies": [
-        "Projet eDrive",
-        "Voir tous les projets"
-      ],
-      "cta": {
-        "text": { "fr": "Voir le site", "en": "View website" },
-        "action": "external",
-        "target": "https://autocash.ma"
-      }
-    },
-    {
-      "id": "project_edrive",
-      "category": "projects",
-      "keywords": [
-        "edrive", "fleet", "management", "flotte", "automobile", "voiture", "b2b"
-      ],
-      "questions": [
-        "Présente le projet eDrive",
-        "C'est quoi eDrive ?",
-        "Projet eDrive"
-      ],
-      "answer": {
-        "fr": "eDrive.ma (2024) : Plateforme B2B de gestion, d'optimisation des coûts et de financement de flottes automobiles.",
-        "en": "eDrive.ma (2024): B2B platform for automotive fleet management, cost optimization, and financing."
-      },
-      "quickReplies": [
-        "Autocash.ma",
-        "Voir tous les projets"
-      ],
-      "cta": {
-        "text": { "fr": "Ouvrir eDrive", "en": "Open eDrive" },
-        "action": "external",
-        "target": "https://edrive.ma/fr/"
-      }
-    },
-    {
-      "id": "skills_overview",
-      "category": "skills",
-      "keywords": [
-        "competence", "competences", "stack", "techno", "technologies", "outils", "figma", "react", "ux", "ui", "design", "agile",
-        "maharat", "adawat", "tools"
-      ],
-      "questions": [
-        "Quelles sont vos compétences ?",
-        "Quelle est votre stack ?",
-        "Wach katkhdm b Figma w React ?",
-        "Quels outils utilisez-vous ?"
-      ],
-      "answer": {
-        "fr": "UX/UI (Discovery, Wireframing, Figma, Design Systems), IA (LLM, Prompting, Prototypage React), et Méthodes Agiles.",
-        "en": "UX/UI (Discovery, Wireframes, Figma, Design Systems), AI (LLM, Prompting, React Prototyping), and Agile methods."
-      },
-      "quickReplies": [
-        "Voir les projets",
-        "Me contacter"
-      ],
-      "cta": {
-        "text": { "fr": "Voir le profil", "en": "View profile" },
-        "action": "navigate",
-        "target": "/about"
-      }
-    },
-    {
-      "id": "experience_timeline",
+      "id": "cv_only",
       "category": "experience",
+      "intent": "cv",
       "keywords": [
-        "experience", "experiences", "parcours", "carriere", "historique", "postes", "cgi", "ocp", "credit", "maroc",
-        "khedma", "tajriba", "khibra", "fin", "khdam"
+        "cv", "curriculum", "resume", "votre cv", "son cv", "telecharger cv", "ouvrir cv"
       ],
       "questions": [
-        "Quel est votre parcours ?",
-        "Fin khdam Ayoub ?",
-        "Où Ayoub a-t-il travaillé ?",
-        "Quelles sont ses expériences passées ?"
+        "Montre-moi son CV",
+        "Le CV d'Ayoub",
+        "votre cv",
+        "Télécharger son CV"
       ],
       "answer": {
-        "fr": "19 ans de parcours : Consultant Digital & IA (2024+), Lead UX/UI chez CGI, OCP, Crédit du Maroc, Wiggli (2019-2023), Directeur Artistique (2017-2019).",
-        "en": "19 years track record: Digital & AI Consultant (2024+), Lead UX/UI at CGI, OCP, Crédit du Maroc (2019-2023), Art Director (2017-2019)."
+        "fr": "Voici le CV officiel d'Ayoub MOSLIH (Consultant Transformation Digitale & IA, 19 ans d'expérience) disponible en consultation ou téléchargement :",
+        "en": "Here is Ayoub MOSLIH's official CV (Digital Transformation & AI Consultant, 19 years experience) available for viewing or download:"
       },
-      "quickReplies": [
-        "Ses compétences",
-        "Prendre contact"
-      ],
-      "cta": {
-        "text": { "fr": "Voir la timeline", "en": "View timeline" },
-        "action": "navigate",
-        "target": "/about#timeline"
-      }
+      "ctas": [
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" },
+        { "text": { "fr": "Télécharger le CV", "en": "Download CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+      ]
     },
     {
-      "id": "contact_info",
-      "category": "contact",
+      "id": "parcours_timeline",
+      "category": "experience",
+      "intent": "timeline",
       "keywords": [
-        "contact", "contacter", "email", "mail", "telephone", "phone", "whatsapp", "linkedin", "rdv", "joindre",
-        "twasal", "nemra", "nmerte", "num", "kifash", "ntwasl", "mailou"
+        "parcours", "timeline", "experience", "experiences", "carriere", "historique", "postes",
+        "khedma", "tajriba", "khibra", "khdam"
+      ],
+      "questions": [
+        "Parcours en bref d'Ayoub",
+        "Quel est son parcours ?",
+        "Voir la timeline",
+        "Expérience d'Ayoub"
+      ],
+      "answer": {
+        "fr": "Ayoub cumule 19 ans de parcours : Consultant Digital & IA (2024+), Lead UX/UI chez CGI, OCP, Crédit du Maroc, Wiggli (2019-2023).",
+        "en": "Ayoub has a 19-year track record: Digital & AI Consultant (2024+), Lead UX/UI at CGI, OCP, Crédit du Maroc (2019-2023)."
+      },
+      "ctas": [
+        { "text": { "fr": "Voir la timeline", "en": "View timeline" }, "action": "navigate", "target": "/about#timeline" },
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+      ]
+    },
+    {
+      "id": "certifications_overview",
+      "category": "certifications",
+      "intent": "certifications",
+      "keywords": [
+        "certification", "certifications", "certifs", "diplome", "diplomes", "formation", "formations", "anthropic", "google", "ibm"
+      ],
+      "questions": [
+        "Quelles sont ses certifications ?",
+        "Certifications",
+        "Diplômes",
+        "Certifs"
+      ],
+      "answer": {
+        "fr": "Ayoub détient plusieurs certifications internationales en IA Générative et UX/UI Design :",
+        "en": "Ayoub holds several international certifications in Generative AI and UX/UI Design:"
+      },
+      "cards": [
+        {
+          "title": "Anthropic Claude & LLM",
+          "subtitle": "Anthropic",
+          "desc": "Certification 2024 - Intelligence Artificielle",
+          "url": "/about#certifications",
+          "type": "certif"
+        },
+        {
+          "title": "Google UX Design",
+          "subtitle": "Google",
+          "desc": "Certificat Professionnel UX/UI 2024",
+          "url": "/about#certifications",
+          "type": "certif"
+        },
+        {
+          "title": "IBM Generative AI & SkillUP",
+          "subtitle": "IBM & SkillUP",
+          "desc": "Certification 2024 - LLM & Prompting",
+          "url": "/about#certifications",
+          "type": "certif"
+        }
+      ],
+      "ctas": [
+        { "text": { "fr": "Voir toutes les certifications", "en": "View all certifications" }, "action": "navigate", "target": "/about#certifications" }
+      ]
+    },
+    {
+      "id": "contact_devis",
+      "category": "contact",
+      "intent": "contact",
+      "keywords": [
+        "contact", "contacter", "devis", "discuter", "collaboration", "consultation", "email", "mail", "telephone", "phone", "whatsapp", "linkedin", "rdv", "joindre",
+        "twasal", "nemra", "nmerte", "num"
       ],
       "questions": [
         "Comment contacter Ayoub ?",
-        "Kifash ntwasel m3a Ayoub ?",
-        "Quel est l'email d'Ayoub ?",
-        "A3tini nemra dial Ayoub"
-      ],
-      "answer": {
-        "fr": "Contactez Ayoub par Email : moslihayoub@gmail.com ou Téléphone / WhatsApp : +212 6 63 58 50 65.",
-        "en": "Reach Ayoub via Email: moslihayoub@gmail.com or Phone / WhatsApp: +212 6 63 58 50 65."
-      },
-      "quickReplies": [
-        "Laissez vos coordonnées",
-        "Ouvrir WhatsApp"
-      ],
-      "cta": {
-        "text": { "fr": "Discuter sur WhatsApp", "en": "Chat on WhatsApp" },
-        "action": "external",
-        "target": "https://wa.me/212663585065"
-      }
-    },
-    {
-      "id": "pricing_availability",
-      "category": "pricing",
-      "keywords": [
-        "tarif", "tarifs", "prix", "devis", "combien", "tjm", "disponibilite", "freelance",
-        "taman", "thaman", "bchhal", "bch7al", "chehal"
-      ],
-      "questions": [
-        "Quels sont vos tarifs ?",
-        "Bchhal katkhdm ?",
-        "Combien coûte une mission ?",
-        "Comment obtenir un devis ?"
-      ],
-      "answer": {
-        "fr": "Les tarifs dépendent du périmètre (audit, UX/UI, stratégie IA). Contactez Ayoub pour obtenir un devis sur-mesure.",
-        "en": "Rates depend on the project scope (audit, UX/UI, AI strategy). Contact Ayoub for a custom quote."
-      },
-      "quickReplies": [
         "Demander un devis",
-        "Discuter sur WhatsApp"
+        "Initiation de collaboration",
+        "Prendre RDV"
       ],
-      "cta": {
-        "text": { "fr": "Demander un devis", "en": "Request quote" },
-        "action": "external",
-        "target": "mailto:moslihayoub@gmail.com?subject=Demande%20de%20devis"
-      }
+      "answer": {
+        "fr": "L'Agent M84 peut vous assister pour planifier une consultation digitale, échanger sur un projet ou initier une collaboration :",
+        "en": "Agent M84 can assist you to schedule a digital consultation, discuss a project, or start a collaboration:"
+      },
+      "ctas": [
+        { "text": { "fr": "Discuter sur WhatsApp", "en": "Chat on WhatsApp" }, "action": "external", "target": "https://wa.me/212663585065" },
+        { "text": { "fr": "Laisser vos coordonnées", "en": "Leave your details" }, "action": "start_lead_capture", "target": "" },
+        { "text": { "fr": "Demander un rendez-vous", "en": "Request an appointment" }, "action": "external", "target": "mailto:moslihayoub@gmail.com?subject=Demande%20de%20rendez-vous" }
+      ]
     }
   ],
   "fallback": {
-    "fr": "Je n'ai pas bien saisi les détails de votre demande, mais je suis là pour vous aider ! Que recherchez-vous exactement ?",
-    "en": "I didn't quite catch that, but I'm here to help! What are you looking for exactly?",
-    "quickReplies": [
-      "Voir les projets",
-      "Quels sont tes services ?",
-      "Laissez vos coordonnées"
+    "fr": "Vous souhaitez en savoir plus sur ses services, ses projets ou son parcours ?",
+    "en": "Would you like to learn more about his services, projects, or background?",
+    "ctas": [
+      { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
+      { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
+      { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
     ]
   }
 }
