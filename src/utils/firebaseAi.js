@@ -51,9 +51,33 @@ Consignes de Réponse :
   console.warn('Firebase AI Logic init warning:', err);
 }
 
+const MAX_AI_QUOTA_PER_HOUR = 8;
+const ONE_HOUR_MS = 3600000;
+
+function checkAndIncrementQuota() {
+  try {
+    const raw = localStorage.getItem('m84_ai_quota');
+    const now = Date.now();
+    let quota = raw ? JSON.parse(raw) : { count: 0, resetAt: now + ONE_HOUR_MS };
+
+    if (now > quota.resetAt) {
+      quota = { count: 1, resetAt: now + ONE_HOUR_MS };
+    } else if (quota.count >= MAX_AI_QUOTA_PER_HOUR) {
+      return false; // Quota exceeded for this hour
+    } else {
+      quota.count += 1;
+    }
+
+    localStorage.setItem('m84_ai_quota', JSON.stringify(quota));
+    return true;
+  } catch (e) {
+    return true; // Fallback to allow if localStorage is disabled
+  }
+}
+
 /**
  * Generate AI Response using Firebase AI Logic (Gemini API)
- * with automatic fallback to local FAQ Engine.
+ * with automatic fallback to local FAQ Engine and Rate Limiting.
  */
 export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'fr') {
   const trimmedQuery = userQuery ? userQuery.trim() : '';
@@ -67,8 +91,11 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
     };
   }
 
-  // Attempt Firebase AI Logic generation
-  if (aiModel) {
+  // Check rate limit before calling Gemini API to protect quota
+  const hasQuota = checkAndIncrementQuota();
+
+  // Attempt Firebase AI Logic generation if quota is available
+  if (aiModel && hasQuota) {
     try {
       // Build chat history for Gemini multi-turn conversation
       const formattedHistory = messagesHistory
@@ -101,6 +128,6 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
     }
   }
 
-  // Fallback to local rule engine if AI call fails or is unavailable
+  // Fallback to local rule engine if AI call fails, quota exceeded, or is unavailable
   return findBestMatch(trimmedQuery, lang);
 }
