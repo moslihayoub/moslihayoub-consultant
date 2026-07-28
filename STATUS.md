@@ -4,7 +4,7 @@
 - **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI
 - **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS.
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/`).
-- **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`) & Google Tag Manager (`GTM-T5W5ZMS7`).
+- **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
 - **Tests** : Playwright E2E (`tests/`) & Oxlint.
 
 ---
