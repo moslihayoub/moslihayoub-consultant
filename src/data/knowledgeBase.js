@@ -12,7 +12,21 @@ export const knowledgeBase = {
     whatsapp: "https://wa.me/212663585065",
     email: "moslihayoub@gmail.com",
     phone: "+212 6 63 58 50 65",
-    linkedin: "https://www.linkedin.com/in/moslih84/"
+    linkedin: "https://www.linkedin.com/in/moslih84/",
+    timeline: [
+      {
+        period: "2024 - Présent",
+        role: "Consultant en Transformation Digitale & IA",
+        context: "Missions en freelance / consulting",
+        desc: "Accompagnement stratégique, audit technologique, prototypage SaaS, intégration IA (LLM, RAG) et automatisation des processus métiers."
+      },
+      {
+        period: "2019 - 2023",
+        role: "Lead UX/UI Designer & Senior Product Designer",
+        context: "CGI, OCP SA, Crédit du Maroc, Wiggli",
+        desc: "Pilotage de stratégies UX, conception de Design Systems complexes, recherche utilisateur et delivery B2B/B2C à forte valeur ajoutée."
+      }
+    ]
   },
   clients: [
     'Autocash.ma', 'CGI', 'OCP SA', 'Crédit du Maroc', 'Carrefour', 

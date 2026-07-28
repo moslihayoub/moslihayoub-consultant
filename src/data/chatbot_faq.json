@@ -149,17 +149,18 @@
       "intent": "timeline",
       "keywords": [
         "parcours", "timeline", "experience", "experiences", "carriere", "historique", "postes",
-        "khedma", "tajriba", "khibra", "khdam"
+        "khedma", "tajriba", "khibra", "khdam", "consultant"
       ],
       "questions": [
         "Parcours en bref d'Ayoub",
         "Quel est son parcours ?",
         "Voir la timeline",
-        "Expérience d'Ayoub"
+        "Expérience d'Ayoub",
+        "Période consultant"
       ],
       "answer": {
-        "fr": "Ayoub cumule 19 ans de parcours : Consultant Digital & IA (2024+), Lead UX/UI chez CGI, OCP, Crédit du Maroc, Wiggli (2019-2023).",
-        "en": "Ayoub has a 19-year track record: Digital & AI Consultant (2024+), Lead UX/UI at CGI, OCP, Crédit du Maroc (2019-2023)."
+        "fr": "Ayoub cumule 19 ans de parcours :\n- **Consultant Digital & IA (2024 - Présent)** : Accompagnement, audit, LLM & automatisation.\n- **Lead UX/UI & Product Designer (2019-2023)** chez CGI, OCP, Crédit du Maroc, Wiggli.",
+        "en": "Ayoub has a 19-year track record:\n- **Digital & AI Consultant (2024 - Present)**: Strategy, audit, LLM & automation.\n- **Lead UX/UI & Product Designer (2019-2023)** at CGI, OCP, Crédit du Maroc, Wiggli."
       },
       "ctas": [
         { "text": { "fr": "Voir la timeline", "en": "View timeline" }, "action": "navigate", "target": "/about#timeline" },

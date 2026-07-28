@@ -99,6 +99,9 @@ GESTION DES INTENTIONS PRÉCISES :
 BASE DE CONNAISSANCES :
 - Profil : Ayoub MOSLIH, ${knowledgeBase.profile.role}, ${knowledgeBase.profile.experienceYears} ans d'expérience.
 - Localisation : ${knowledgeBase.profile.location}
+- Parcours / Expérience : 
+  * 2024 - Présent : Consultant en Transformation Digitale & IA (Accompagnement, Audit, LLM, RAG).
+  * 2019 - 2023 : Lead UX/UI & Product Designer (CGI, OCP SA, Crédit du Maroc, Wiggli).
 - Clients Phares : ${knowledgeBase.clients.join(', ')}
 - Services :
 ${services}
@@ -235,6 +238,14 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
             parts: [{ text: msg.text }]
           });
         }
+      }
+
+      // Vérification vitale : Le formattedContents commence par [user, model]
+      // Il FAUT que le premier message de l'historique soit "user". 
+      // S'il est "model", on fusionne avec la réponse "model" d'introduction pour éviter un crash 400 Bad Request
+      if (normalizedHistory.length > 0 && normalizedHistory[0].role === 'model') {
+        formattedContents[1].parts[0].text += '\n' + normalizedHistory[0].parts[0].text;
+        normalizedHistory.shift(); // On l'enlève car fusionné
       }
 
       formattedContents.push(...normalizedHistory);
