@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'luc
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { findBestMatch } from '../utils/chatbotEngine';
+import { queryM84Chatbot } from '../utils/firebaseAi';
 
 const AVATAR_URL = '/assets/m84-avatar.webp';
 
@@ -209,43 +209,40 @@ const ChatWidget = () => {
     }
   };
 
-  const processQuery = (userQueryText) => {
+  const processQuery = async (userQueryText) => {
     if (!userQueryText || !userQueryText.trim()) return;
     const query = userQueryText.trim();
     
     setMessages(prev => [...prev, { role: 'user', text: query }]);
     setInput('');
 
-    setTimeout(() => {
-      // Si nous sommes dans le flux de capture de leads, on dérive la logique
-      if (leadState !== 'idle') {
-        handleLeadCaptureFlow(query);
-        return;
+    // Si nous sommes dans le flux de capture de leads, on dérive la logique
+    if (leadState !== 'idle') {
+      handleLeadCaptureFlow(query);
+      return;
+    }
+
+    // Recherche via Firebase AI Logic (Gemini API) avec fallback local
+    const match = await queryM84Chatbot(query, messages, lang);
+    
+    if (match.action === "START_LEAD_CAPTURE") {
+      startLeadCapture();
+      return;
+    }
+
+    setMessages(prev => [
+      ...prev,
+      {
+        role: 'model',
+        text: match.text,
+        quickReplies: (match.quickReplies || []).slice(0, 2),
+        cta: match.cta || null,
+        category: match.category
       }
+    ]);
 
-      // Recherche locale instantanée via chatbotEngine
-      const match = findBestMatch(query, lang);
-      
-      if (match.action === "START_LEAD_CAPTURE") {
-        startLeadCapture();
-        return;
-      }
-
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'model',
-          text: match.text,
-          quickReplies: (match.quickReplies || []).slice(0, 2),
-          cta: match.cta || null,
-          category: match.category
-        }
-      ]);
-
-      // Collecte discrète en arrière-plan vers Google Sheet
-      logInteractionToSheet(query, match.text, match.category);
-
-    }, 120);
+    // Collecte discrète en arrière-plan vers Google Sheet
+    logInteractionToSheet(query, match.text, match.category);
   };
 
   const handleSubmit = (e) => {

@@ -41,16 +41,15 @@
   - Le protocole pas à pas pour créer une nouvelle page sans casser le routage ou la PWA.
   - Les standards de performance, de sécurité et le workflow de test/déploiement.
 
-### 6. 🧪 Validation par Tests End-to-End (Playwright)
-- Validation et réussite à **100% (5/5 PASSED)** de la suite de tests E2E Playwright (`npx playwright test`) avec sélecteurs bilingues (FR/EN).
+### 7. 🤖 Intégration Firebase AI Logic & Gemini API (Chatbot M84)
+- Création du projet Firebase **`moslih84-consultant`** (App Web `moslih84-web`) et activation du service **Firebase AI Logic**.
+- Module `src/utils/firebaseAi.js` configuré avec `gemini-2.0-flash` et un *System Instruction* complet sur la biographie, les expertises, les projets phares et les coordonnées d'Ayoub Moslih.
+- Architecture hybride avec fallback automatique vers le moteur FAQ local en cas de problème réseau.
 
 ---
 
 ## 📋 Tâches / Prochaines Étapes
-- [x] Optimisations de performance mobile (LCP, TBT, Three.js chunking).
-- [x] Uniformisation du mot de passe `031984` sur tous les projets protégés.
-- [x] Protection anti-clic droit et long-press sur les vidéos.
-- [x] Refonte UI du ScrollSpy (labels au survol, suppression du fond flou).
-- [x] Création du Skill de méthodologie (`portfolio-methodology/SKILL.md`).
+- [x] Création du projet Firebase `moslih84-consultant` et provisioning AI Logic.
+- [x] Connexion du Chatbot M84 à l'API Gemini 2.0 Flash via Firebase AI Logic.
 - [x] Validation par tests E2E (5/5 PASSED).
 - [x] Déploiement Git & Vercel (`git push origin main`).
