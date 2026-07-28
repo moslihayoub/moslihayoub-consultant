@@ -217,20 +217,27 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         }
       ];
 
-      messagesHistory
+      const rawHistory = messagesHistory
         .filter(m => m.role === 'user' || m.role === 'model')
-        .slice(-4)
-        .forEach(m => {
-          formattedContents.push({
-            role: m.role === 'user' ? 'user' : 'model',
-            parts: [{ text: m.text }]
-          });
-        });
+        .slice(-6); // Prenons un peu plus d'historique pour être sûr
 
-      formattedContents.push({
-        role: 'user',
-        parts: [{ text: trimmedQuery }]
-      });
+      rawHistory.push({ role: 'user', text: trimmedQuery });
+
+      // Normalisation pour Gemini : Les rôles doivent alterner strictement (user -> model -> user)
+      const normalizedHistory = [];
+      for (const msg of rawHistory) {
+        if (normalizedHistory.length > 0 && normalizedHistory[normalizedHistory.length - 1].role === msg.role) {
+          // Si même rôle consécutif, on fusionne le texte
+          normalizedHistory[normalizedHistory.length - 1].parts[0].text += '\n' + msg.text;
+        } else {
+          normalizedHistory.push({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.text }]
+          });
+        }
+      }
+
+      formattedContents.push(...normalizedHistory);
 
       const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent', {
         method: 'POST',
