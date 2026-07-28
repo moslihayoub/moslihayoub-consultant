@@ -1,20 +1,8 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getAI, getGenerativeModel, GoogleAIBackend } from 'firebase/ai';
-import firebaseConfig from '../../firebase-config.json';
 import { findBestMatch } from './chatbotEngine';
 
-// Initialize Firebase App singleton
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
-// Initialize Firebase AI Logic with Google AI Backend
-let aiInstance = null;
-let aiModel = null;
-
-try {
-  aiInstance = getAI(app, { backend: new GoogleAIBackend() });
-  aiModel = getGenerativeModel(aiInstance, {
-    model: 'gemini-2.0-flash',
-    systemInstruction: `
+const M84_SYSTEM_INSTRUCTION = `
 Tu es M84, l'assistant virtuel intelligent d'Ayoub MOSLIH (Consultant en Transformation Digitale & IA).
 Ton objectif est de répondre de façon professionnelle, dynamique, claire et chaleureuse aux visiteurs du portfolio d'Ayoub Moslih.
 
@@ -45,14 +33,37 @@ Consignes de Réponse :
 2. Sois synthétique (2 à 3 phrases max par réponse).
 3. Sois accueillant, précis et met en valeur l'expertise d'Ayoub Moslih.
 4. Si l'utilisateur demande un devis, un contact ou un rendez-vous, propose-lui de contacter Ayoub par WhatsApp (+212 6 63 58 50 65) ou par Email.
-`
-  });
-} catch (err) {
-  console.warn('Firebase AI Logic init warning:', err);
-}
+`;
 
-const MAX_AI_QUOTA_PER_HOUR = 8;
+export const MAX_AI_QUOTA_PER_HOUR = 5;
 const ONE_HOUR_MS = 3600000;
+
+export function getQuotaInfo() {
+  try {
+    const raw = localStorage.getItem('m84_ai_quota');
+    const now = Date.now();
+    let quota = raw ? JSON.parse(raw) : { count: 0, resetAt: now + ONE_HOUR_MS };
+
+    if (now > quota.resetAt) {
+      quota = { count: 0, resetAt: now + ONE_HOUR_MS };
+      localStorage.setItem('m84_ai_quota', JSON.stringify(quota));
+    }
+
+    const currentCount = Math.min(quota.count, MAX_AI_QUOTA_PER_HOUR);
+    const mode = (GEMINI_API_KEY && currentCount < MAX_AI_QUOTA_PER_HOUR) ? 'ai' : 'local';
+    const remaining = MAX_AI_QUOTA_PER_HOUR - currentCount;
+
+    return {
+      count: currentCount,
+      max: MAX_AI_QUOTA_PER_HOUR,
+      remaining,
+      mode,
+      isWarning: currentCount === MAX_AI_QUOTA_PER_HOUR - 1
+    };
+  } catch (e) {
+    return { count: 0, max: MAX_AI_QUOTA_PER_HOUR, remaining: MAX_AI_QUOTA_PER_HOUR, mode: 'local', isWarning: false };
+  }
+}
 
 function checkAndIncrementQuota() {
   try {
@@ -71,12 +82,12 @@ function checkAndIncrementQuota() {
     localStorage.setItem('m84_ai_quota', JSON.stringify(quota));
     return true;
   } catch (e) {
-    return true; // Fallback to allow if localStorage is disabled
+    return true;
   }
 }
 
 /**
- * Generate AI Response using Firebase AI Logic (Gemini API)
+ * Generate AI Response using Gemini API
  * with automatic fallback to local FAQ Engine and Rate Limiting.
  */
 export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'fr') {
@@ -87,47 +98,79 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
     return {
       matched: true,
       action: "START_LEAD_CAPTURE",
-      category: "lead_trigger"
+      category: "lead_trigger",
+      quota: getQuotaInfo()
     };
   }
 
   // Check rate limit before calling Gemini API to protect quota
   const hasQuota = checkAndIncrementQuota();
+  const quotaInfo = getQuotaInfo();
 
-  // Attempt Firebase AI Logic generation if quota is available
-  if (aiModel && hasQuota) {
+  // Attempt Gemini API generation if quota is available and key is configured
+  if (GEMINI_API_KEY && hasQuota) {
     try {
-      // Build chat history for Gemini multi-turn conversation
-      const formattedHistory = messagesHistory
-        .filter(m => m.role === 'user' || m.role === 'model')
-        .slice(-6) // Keep last 6 messages for context
-        .map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.text }]
-        }));
+      // Build conversation history for Gemini API
+      const formattedContents = [
+        {
+          role: 'user',
+          parts: [{ text: M84_SYSTEM_INSTRUCTION }]
+        },
+        {
+          role: 'model',
+          parts: [{ text: "Bien reçu ! Je suis M84, l'assistant d'Ayoub MOSLIH. Comment puis-je vous aider ?" }]
+        }
+      ];
 
-      const chat = aiModel.startChat({
-        history: formattedHistory
+      messagesHistory
+        .filter(m => m.role === 'user' || m.role === 'model')
+        .slice(-4)
+        .forEach(m => {
+          formattedContents.push({
+            role: m.role === 'user' ? 'user' : 'model',
+            parts: [{ text: m.text }]
+          });
+        });
+
+      formattedContents.push({
+        role: 'user',
+        parts: [{ text: trimmedQuery }]
       });
 
-      const result = await chat.sendMessage(trimmedQuery);
-      const responseText = result.response.text();
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': GEMINI_API_KEY
+        },
+        body: JSON.stringify({ contents: formattedContents })
+      });
 
-      if (responseText && responseText.trim()) {
-        return {
-          matched: true,
-          text: responseText.trim(),
-          quickReplies: lang === 'en'
-            ? ["Services offered", "Recent projects"]
-            : ["Quels sont tes services ?", "Voir les projets"],
-          category: 'ai_logic'
-        };
+      if (response.ok) {
+        const data = await response.json();
+        const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (candidateText && candidateText.trim()) {
+          return {
+            matched: true,
+            text: candidateText.trim(),
+            quickReplies: lang === 'en'
+              ? ["Services offered", "Recent projects"]
+              : ["Quels sont tes services ?", "Voir les projets"],
+            category: 'ai_logic',
+            quota: quotaInfo
+          };
+        }
       }
     } catch (error) {
-      console.warn('Firebase AI Logic call error, using local engine fallback:', error);
+      console.warn('Gemini API fetch error, using local engine fallback:', error);
     }
   }
 
-  // Fallback to local rule engine if AI call fails, quota exceeded, or is unavailable
-  return findBestMatch(trimmedQuery, lang);
+  // Fallback to local rule engine if AI call fails, quota exceeded, or key missing
+  const localMatch = findBestMatch(trimmedQuery, lang);
+  return {
+    ...localMatch,
+    quota: quotaInfo
+  };
 }

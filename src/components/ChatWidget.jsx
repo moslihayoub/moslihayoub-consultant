@@ -3,9 +3,54 @@ import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'luc
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { queryM84Chatbot } from '../utils/firebaseAi';
+import { queryM84Chatbot, getQuotaInfo } from '../utils/firebaseAi';
 
 const AVATAR_URL = '/assets/m84-avatar.webp';
+const MAX_CHAR_LIMIT = 200;
+
+// Composant anneau de progression circulaire du nombre de caractères (Twitter/X style)
+const CharacterCountRing = ({ length }) => {
+  if (length === 0) return null;
+  const radius = 8;
+  const circumference = 2 * Math.PI * radius;
+  const ratio = Math.min(length / MAX_CHAR_LIMIT, 1);
+  const strokeDashoffset = circumference * (1 - ratio);
+
+  let color = 'var(--color-electric-green, #006253)';
+  if (ratio >= 0.9) {
+    color = '#EF4444'; // Rouge si > 90%
+  } else if (ratio >= 0.75) {
+    color = '#F59E0B'; // Orange si > 75%
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '4px', flexShrink: 0 }}>
+      <svg width="20" height="20" viewBox="0 0 20 20">
+        <circle
+          cx="10"
+          cy="10"
+          r={radius}
+          fill="none"
+          stroke="#EAEAEA"
+          strokeWidth="2.5"
+        />
+        <circle
+          cx="10"
+          cy="10"
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="2.5"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          transform="rotate(-90 10 10)"
+          style={{ transition: 'stroke-dashoffset 0.15s ease, stroke 0.2s ease' }}
+        />
+      </svg>
+    </div>
+  );
+};
 
 // URL Google Apps Script Webhook de collecte
 const DEFAULT_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwmTBJNJpOTMdAtVqaPo1qE3vvxoQ9xSI39sRac8J9kYcyPf-zK4tIP4qs4gn6FFWYPpg/exec';
@@ -22,6 +67,7 @@ const ChatWidget = () => {
   const { lang, t } = useLanguage();
 
   const navigate = useNavigate();
+  const [quotaState, setQuotaState] = useState(() => getQuotaInfo());
 
   useEffect(() => {
     const updateBounds = () => {
@@ -224,14 +270,16 @@ const ChatWidget = () => {
 
     // Recherche via Firebase AI Logic (Gemini API) avec fallback local
     const match = await queryM84Chatbot(query, messages, lang);
+    if (match.quota) {
+      setQuotaState(match.quota);
+    }
     
     if (match.action === "START_LEAD_CAPTURE") {
       startLeadCapture();
       return;
     }
 
-    setMessages(prev => [
-      ...prev,
+    const newMessages = [
       {
         role: 'model',
         text: match.text,
@@ -239,7 +287,34 @@ const ChatWidget = () => {
         cta: match.cta || null,
         category: match.category
       }
-    ]);
+    ];
+
+    // Notification préventive à 80-90% du quota IA
+    if (match.quota && match.quota.isWarning) {
+      newMessages.push({
+        role: 'model',
+        text: lang === 'en'
+          ? "💡 Notice: You have 1 AI question remaining. After that, I will automatically transition to Local Assistant Mode (FAQ) to preserve resources."
+          : "💡 Information : Il vous reste 1 question en Mode IA. Ensuite, je basculerai automatiquement en Mode Assistant Local (FAQ) pour préserver les ressources."
+      });
+    } else if (match.quota && match.quota.mode === 'local' && match.quota.count >= match.quota.max) {
+      newMessages.push({
+        role: 'model',
+        text: lang === 'en'
+          ? "💡 You are now in Local Assistant Mode. For personalized advice, a custom quote, or direct chat, feel free to contact Ayoub!"
+          : "💡 Vous êtes désormais en Mode Assistant Local. Pour un conseil personnalisé, un devis ou un échange direct, n'hésitez pas !",
+        quickReplies: lang === 'en'
+          ? ["Laissez vos coordonnées", "Services offered"]
+          : ["Laissez vos coordonnées", "Quels sont tes services ?"],
+        cta: {
+          text: lang === 'en' ? "Chat on WhatsApp" : "Discuter sur WhatsApp",
+          action: "external",
+          target: "https://wa.me/212663585065"
+        }
+      });
+    }
+
+    setMessages(prev => [...prev, ...newMessages]);
 
     // Collecte discrète en arrière-plan vers Google Sheet
     logInteractionToSheet(query, match.text, match.category);
@@ -298,9 +373,28 @@ const ChatWidget = () => {
                 </div>
                 <div>
                   <h4 style={styles.botName}>M84</h4>
-                  <span style={styles.botStatus}>
-                    {lang === 'en' ? 'Consultant Assistant' : 'Assistant Consultant'} • 7/24
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                    <span style={{
+                      fontSize: '0.70rem',
+                      fontWeight: 600,
+                      padding: '2px 6px',
+                      borderRadius: '10px',
+                      backgroundColor: quotaState.mode === 'ai' ? 'var(--color-green-light, #e6efee)' : '#FEF3C7',
+                      color: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#D97706'
+                    }}>
+                      {quotaState.mode === 'ai' ? '✨ Mode IA (Gemini)' : '💡 Mode Local (FAQ)'}
+                    </span>
+                    {quotaState.mode === 'ai' && (
+                      <div style={{ width: '42px', height: '4px', backgroundColor: '#EAEAEA', borderRadius: '2px', overflow: 'hidden' }} title={`Crédits IA: ${quotaState.count}/${quotaState.max}`}>
+                        <div style={{
+                          width: `${(quotaState.count / quotaState.max) * 100}%`,
+                          height: '100%',
+                          backgroundColor: quotaState.count >= 4 ? '#F59E0B' : 'var(--color-electric-green, #006253)',
+                          transition: 'width 0.3s ease'
+                        }} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -389,11 +483,13 @@ const ChatWidget = () => {
             <form onSubmit={handleSubmit} style={styles.chatFooter}>
               <input
                 type="text"
+                maxLength={MAX_CHAR_LIMIT}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => setInput(e.target.value.slice(0, MAX_CHAR_LIMIT))}
                 placeholder={lang === 'en' ? 'Ask a question...' : 'Posez votre question...'}
                 style={styles.input}
               />
+              <CharacterCountRing length={input.length} />
               <button
                 type="submit"
                 disabled={!input.trim()}

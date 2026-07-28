@@ -44,4 +44,33 @@ test.describe('Portfolio E2E Tests', () => {
     const modalHeading = page.locator('h3', { hasText: /Accès Restreint|Restricted Access/i });
     await expect(modalHeading).toBeVisible();
   });
+
+  test('chatbot widget should open, accept user query and display response', async ({ page }) => {
+    await page.goto('/');
+    
+    // Click on FAB button to open chat
+    const fabButton = page.locator('button[aria-label="Ouvrir le chat"]');
+    await expect(fabButton).toBeVisible();
+    await fabButton.click();
+    
+    // Check that chat window opened
+    const botName = page.locator('h4', { hasText: 'M84' });
+    await expect(botName).toBeVisible();
+    
+    // Find input and type a query
+    const chatInput = page.locator('input[placeholder*="question"]');
+    await expect(chatInput).toBeVisible();
+    await chatInput.fill('Quels sont tes services ?');
+    
+    // Submit the query
+    await chatInput.press('Enter');
+    
+    // Check that user message appears in chat
+    const userMessage = page.locator('p', { hasText: 'Quels sont tes services ?' });
+    await expect(userMessage).toBeVisible();
+    
+    // Wait for M84 response to appear
+    const modelResponse = page.locator('p', { hasText: /Transformation Digitale|services|Ayoub/i }).first();
+    await expect(modelResponse).toBeVisible({ timeout: 10000 });
+  });
 });
