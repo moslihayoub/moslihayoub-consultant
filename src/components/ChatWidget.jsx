@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { queryM84Chatbot, getQuotaInfo } from '../utils/firebaseAi';
@@ -429,18 +430,34 @@ const ChatWidget = () => {
                         border: msg.role === 'model' ? '1px solid var(--color-border, #EAEAEA)' : 'none'
                       }}
                     >
-                      {msg.text.split('\n').map((line, lIdx) => (
-                        <p
-                          key={lIdx}
-                          style={{
-                            margin: lIdx > 0 ? '3px 0 0 0' : 0,
-                            color: msg.role === 'user' ? '#FFFFFF' : 'inherit',
-                            fontWeight: msg.role === 'user' ? 500 : 400
-                          }}
-                        >
-                          {line}
-                        </p>
-                      ))}
+                      {msg.role === 'model' ? (
+                        <div style={{ color: 'inherit', fontSize: '0.90rem', lineHeight: '1.5' }}>
+                          <ReactMarkdown
+                            components={{
+                              strong: ({node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
+                              p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0' }} {...props} />,
+                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
+                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
+                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0' }} {...props} />
+                            }}
+                          >
+                            {msg.text}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        msg.text.split('\n').map((line, lIdx) => (
+                          <p
+                            key={lIdx}
+                            style={{
+                              margin: lIdx > 0 ? '3px 0 0 0' : 0,
+                              color: msg.role === 'user' ? '#FFFFFF' : 'inherit',
+                              fontWeight: msg.role === 'user' ? 500 : 400
+                            }}
+                          >
+                            {line}
+                          </p>
+                        ))
+                      )}
                     </div>
                   </div>
 
