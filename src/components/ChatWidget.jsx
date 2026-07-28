@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw, Bot, Maximize2, Minimize2 } from 'lucide-react';
+import { MessageCircle, X, Send, ExternalLink, ArrowRight, RotateCcw, Bot, Maximize2, Minimize2, Cpu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -390,7 +390,7 @@ const ChatWidget = () => {
                       backgroundColor: quotaState.mode === 'ai' ? 'var(--color-green-light, #e6efee)' : '#FEF3C7',
                       color: quotaState.mode === 'ai' ? 'var(--color-electric-green, #006253)' : '#D97706'
                     }}>
-                      <Bot size={12} color={quotaState.mode === 'ai' ? "var(--color-electric-green, #006253)" : "#D97706"} />
+                      {quotaState.mode === 'ai' ? <Bot size={12} color="var(--color-electric-green, #006253)" /> : <Cpu size={12} color="#D97706" />}
                       {quotaState.mode === 'ai' ? 'Mode IA' : 'Mode Local'}
                     </span>
                     {quotaState.mode === 'ai' && (
@@ -451,7 +451,13 @@ const ChatWidget = () => {
                               p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0' }} {...props} />,
                               ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
                               ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
-                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0' }} {...props} />
+                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0' }} {...props} />,
+                              h1: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
+                              h2: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
+                              h3: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
+                              h4: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
+                              h5: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
+                              h6: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />
                             }}
                           >
                             {msg.text}
