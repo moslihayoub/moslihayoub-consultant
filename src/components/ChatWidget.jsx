@@ -61,6 +61,7 @@ const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showProactivePrompt, setShowProactivePrompt] = useState(false);
   const [proactiveDismissed, setProactiveDismissed] = useState(false);
@@ -263,10 +264,12 @@ const ChatWidget = () => {
     
     setMessages(prev => [...prev, { role: 'user', text: query }]);
     setInput('');
+    setIsTyping(true);
 
     // Si nous sommes dans le flux de capture de leads, on dérive la logique
     if (leadState !== 'idle') {
       handleLeadCaptureFlow(query);
+      setIsTyping(false);
       return;
     }
 
@@ -278,6 +281,7 @@ const ChatWidget = () => {
     
     if (match.action === "START_LEAD_CAPTURE") {
       startLeadCapture();
+      setIsTyping(false);
       return;
     }
 
@@ -317,6 +321,7 @@ const ChatWidget = () => {
     }
 
     setMessages(prev => [...prev, ...newMessages]);
+    setIsTyping(false);
 
     // Collecte discrète en arrière-plan vers Google Sheet
     logInteractionToSheet(query, match.text, match.category);
@@ -360,13 +365,14 @@ const ChatWidget = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            layout
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             style={{
               ...(isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow),
-              ...(isMaximized && !isMobile ? { height: '80vh' } : {})
+              ...(isMaximized && !isMobile ? { height: '80vh', width: '430px' } : {})
             }}
             className="glass-panel"
           >
@@ -445,16 +451,16 @@ const ChatWidget = () => {
                           <ReactMarkdown
                             components={{
                               strong: ({node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
-                              p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0' }} {...props} />,
-                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
-                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
-                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0' }} {...props} />,
-                              h1: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
-                              h2: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
-                              h3: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
-                              h4: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
-                              h5: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />,
-                              h6: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)' }} {...props} />
+                              p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem' }} {...props} />,
+                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px', fontSize: '0.85rem' }} {...props} />,
+                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px', fontSize: '0.85rem' }} {...props} />,
+                              li: ({node, ...props}) => <li style={{ margin: '0 0 4px 0', fontSize: '0.85rem' }} {...props} />,
+                              h1: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
+                              h2: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
+                              h3: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
+                              h4: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
+                              h5: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />,
+                              h6: ({node, ...props}) => <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--color-electric-green, #006253)', fontSize: '0.85rem' }} {...props} />
                             }}
                           >
                             {msg.text}
@@ -511,6 +517,22 @@ const ChatWidget = () => {
                   )}
                 </div>
               ))}
+              
+              {isTyping && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <div style={{ ...styles.messageWrapper, justifyContent: 'flex-start' }}>
+                    <img src={AVATAR_URL} alt="M84" style={styles.smallAvatarImg} />
+                    <div style={{ ...styles.messageBubble, backgroundColor: 'var(--color-surface, #FFFFFF)', color: 'var(--color-text-primary, #111111)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--color-border, #EAEAEA)', padding: '12px 16px' }}>
+                      <motion.div style={{ display: 'flex', gap: '4px' }} initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.2 } } }}>
+                        {[0, 1, 2].map((i) => (
+                          <motion.div key={i} variants={{ hidden: { y: 0 }, visible: { y: [-2, 2, -2], transition: { repeat: Infinity, duration: 0.6 } } }} style={{ width: '6px', height: '6px', backgroundColor: '#999', borderRadius: '50%' }} />
+                        ))}
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
