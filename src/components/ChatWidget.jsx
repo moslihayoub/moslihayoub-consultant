@@ -284,7 +284,7 @@ const ChatWidget = () => {
 
       const newMessages = [];
 
-      if (previousMode === 'ai' && match.quota && match.quota.mode === 'local') {
+      if (previousMode === 'ai' && match.quota && match.quota.mode === 'local' && !match.isTechnicalFallback) {
         newMessages.push({
           role: 'model',
           text: lang === 'en'
