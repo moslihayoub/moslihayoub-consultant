@@ -366,7 +366,7 @@ const ChatWidget = () => {
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             style={{
               ...(isMobile ? { ...styles.chatWindow, ...styles.chatWindowMobile } : styles.chatWindow),
-              ...(isMaximized && !isMobile ? { width: '80vw', height: '80vh', bottom: '10vh', right: '10vw' } : {})
+              ...(isMaximized && !isMobile ? { height: '80vh' } : {})
             }}
             className="glass-panel"
           >
@@ -415,9 +415,6 @@ const ChatWidget = () => {
                     {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                   </button>
                 )}
-                <button onClick={() => setIsOpen(false)} style={styles.closeBtn} aria-label="Fermer le chat">
-                  <X size={18} />
-                </button>
               </div>
             </div>
 
@@ -444,7 +441,7 @@ const ChatWidget = () => {
                       }}
                     >
                       {msg.role === 'model' ? (
-                        <div style={{ color: 'inherit', fontSize: '0.90rem', lineHeight: '1.5' }}>
+                        <div style={{ color: 'inherit', fontSize: '0.85rem', lineHeight: '1.6' }}>
                           <ReactMarkdown
                             components={{
                               strong: ({node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
@@ -470,7 +467,9 @@ const ChatWidget = () => {
                             style={{
                               margin: lIdx > 0 ? '3px 0 0 0' : 0,
                               color: msg.role === 'user' ? '#FFFFFF' : 'inherit',
-                              fontWeight: msg.role === 'user' ? 500 : 400
+                              fontWeight: msg.role === 'user' ? 500 : 400,
+                              fontSize: '0.85rem',
+                              lineHeight: '1.5'
                             }}
                           >
                             {line}
