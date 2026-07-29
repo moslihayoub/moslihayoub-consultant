@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
-import { Mail, Clock, CheckCircle2, Trash2, Search, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Mail, Clock, CheckCircle2, Trash2, Search, MoreVertical, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import ExportButton from './ExportButton';
 
 const CrmLeadsManager = () => {
   const [leads, setLeads] = useState([]);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
   // Filters
   const [search, setSearch] = useState('');
@@ -111,8 +112,21 @@ const CrmLeadsManager = () => {
   return (
     <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
       <style>{`
+        .animated-backdrop { animation: fadeIn 0.3s ease-out; }
+        .animated-drawer-right { animation: slideInRight 0.3s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
         @media (max-width: 768px) {
           .manager-container { padding: 14px !important; margin-bottom: 0 !important; }
+          .crm-header-wrapper { gap: 8px !important; }
+          
+          .filter-drawer { width: 100% !important; animation: slideUp 0.3s ease-out !important; border-radius: 20px 20px 0 0 !important; height: auto !important; position: fixed !important; bottom: 0; top: auto !important; }
+          .filter-btn-main { padding: 10px !important; justify-content: center !important; width: 40px; }
+          .filter-btn-text { display: none !important; }
+          
           .lead-card { flex-direction: column !important; padding: 16px !important; }
           .lead-actions { border-left: none !important; border-top: 1px solid #e2e8f0 !important; padding-left: 0 !important; padding-top: 16px !important; margin-top: 16px !important; width: 100% !important; justify-content: flex-end !important; }
           .lead-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
@@ -129,6 +143,7 @@ const CrmLeadsManager = () => {
             box-shadow: 0 -4px 12px rgba(0,0,0,0.1) !important;
             z-index: 100 !important;
             transform: translateY(0) !important;
+            animation: slideUp 0.3s ease-out !important;
           }
           .action-dropdown-backdrop {
             display: block !important;
@@ -136,6 +151,7 @@ const CrmLeadsManager = () => {
             inset: 0;
             background: rgba(0,0,0,0.5);
             z-index: 99;
+            animation: fadeIn 0.3s ease-out;
           }
         }
       `}</style>
@@ -146,8 +162,24 @@ const CrmLeadsManager = () => {
             <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', color: '#006253' }}>CRM Leads</h2>
             <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Messages du chatbot/formulaire.</p>
           </div>
-          
-          <div className="desktop-export">
+        </div>
+        
+        <div className="search-filter-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <input 
+              type="text" 
+              placeholder="Rechercher..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ width: '100%', padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '14px', height: '40px' }}
+            />
+          </div>
+          <button className="filter-btn-main" onClick={() => setIsMobileFilterOpen(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '8px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#0f172a', cursor: 'pointer', fontWeight: '500', height: '40px' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <span className="filter-btn-text">Filtres</span>
+          </button>
+          <div className="crm-export-wrapper">
             <ExportButton 
               data={filteredLeads} 
               filename="M84_Leads_CRM" 
@@ -162,34 +194,25 @@ const CrmLeadsManager = () => {
             />
           </div>
         </div>
-        
-        <div className="search-filter-row" style={{ display: 'flex', gap: '12px' }}>
-          <div style={{ position: 'relative', flex: 1 }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-            <input 
-              type="text" 
-              placeholder="Rechercher..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '100%', padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '14px', height: '40px' }}
-            />
-          </div>
-          <div className="filter-icon-wrapper" style={{ position: 'relative' }}>
-            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ width: '100%', padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px', height: '40px', cursor: 'pointer', appearance: 'none' }}>
+      </div>
+
+      {isMobileFilterOpen && (
+        <div className="animated-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 120, display: 'flex', justifyContent: 'flex-end' }} onClick={() => setIsMobileFilterOpen(false)}>
+          <div className="filter-drawer animated-drawer-right" style={{ background: 'white', width: '320px', height: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '-4px 0 15px rgba(0,0,0,0.1)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+              <h3 style={{ margin: 0, color: '#006253', fontSize: '16px' }}>Filtres (Statut)</h3>
+              <button onClick={() => setIsMobileFilterOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Statut du message</label>
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px', outline: 'none' }}>
               <option value="">Tous les statuts</option>
               <option value="unread">Non lus</option>
               <option value="read">Lus</option>
             </select>
-            <div className="filter-icon-svg" style={{ display: 'none' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-            </div>
-            <style>{`
-              @media (min-width: 769px) { .filter-icon-wrapper select { appearance: auto; } }
-              @media (max-width: 768px) { .filter-icon-svg { display: block !important; } }
-            `}</style>
+            <button onClick={() => setIsMobileFilterOpen(false)} style={{ marginTop: 'auto', padding: '12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Appliquer</button>
           </div>
         </div>
-      </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>Chargement des messages...</div>

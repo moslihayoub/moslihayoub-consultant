@@ -212,7 +212,7 @@ const ProjectsManager = () => {
           </div>
         </div>
         
-        <div className="search-filter-row" style={{ display: 'flex', gap: '8px' }}>
+        <div className="search-filter-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input 

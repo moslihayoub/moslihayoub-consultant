@@ -143,20 +143,21 @@ const ExportButton = ({ data, filename, columns }) => {
         <ChevronDown size={16} color="#64748b" className="export-btn-chevron" />
       </button>
 
+      <style>{`
+        @media (max-width: 768px) { 
+          .mobile-drawer-handle { display: block !important; }
+          .export-btn-main { padding: 10px !important; justify-content: center !important; width: 40px; }
+          .export-btn-text { display: none !important; }
+          .export-btn-chevron { display: none !important; }
+        }
+      `}</style>
+
       {isOpen && (
         <>
           <div className="export-backdrop" onClick={() => setIsOpen(false)}></div>
           <div className="export-dropdown">
             <div style={{ padding: '4px' }}>
               <div className="mobile-drawer-handle" style={{ width: '40px', height: '4px', background: '#e2e8f0', borderRadius: '2px', margin: '0 auto 16px auto', display: 'none' }}></div>
-              <style>{`
-                @media (max-width: 768px) { 
-                  .mobile-drawer-handle { display: block !important; }
-                  .export-btn-main { padding: 10px !important; justify-content: center !important; }
-                  .export-btn-text { display: none !important; }
-                  .export-btn-chevron { display: none !important; }
-                }
-              `}</style>
               
               <button 
                 onClick={handleExportExcel}
