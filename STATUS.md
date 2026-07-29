@@ -73,14 +73,23 @@
   - Intégration d'un **toggle switch visuel interactif** `[IA | Local]` dans le header de l'Agent M84 sur localhost pour basculer instantanément entre l'Agent IA et l'Agent Local lors de vos tests.
   - Totalement exclu et masqué du bundle de production via `import.meta.env.DEV`.
 
+### 9. 📱 UI/UX & Responsive Design (Admin Dashboard)
+- **Refonte Mobile-First** : Optimisation des layouts sur `AdminDashboard`, `ProjectsManager`, `CrmLeadsManager` et `AiConfigManager`.
+- **Composants Dynamiques (Drawers)** : Remplacement des menus déroulants d'actions et d'export par des tiroirs animés en bas d'écran (`slideUp`) pour une ergonomie fluide sur mobile.
+- **Floating Action Button (FAB)** : Ajout d'un bouton flottant pour ajouter des projets rapidement sur smartphone.
+- **Fluidité & Animations** : Intégration de micro-interactions (`fadeIn`, `slideInRight`) pour adoucir l'apparition des modales et arrière-plans.
+- **Correction de l'Espace Vide** : Réajustement des `padding` (14px) et retrait de la restriction de hauteur sur les grilles mobiles pour utiliser l'intégralité de l'écran.
+- **Identité Visuelle** : Titres principaux en vert (`#006253`), et tableaux gardés lisibles avec leurs en-têtes neutres.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
 - [x] Refonte & alignement de l'Agent M84 (Mode IA & Mode Local).
 - [x] Interrupteur Toggle Switch visuel pour les tests en dev.
 - [x] Intégration des images dans les cartes projets UI du chat.
-- [x] Alignement UX pour "Voir ses services" (résumé puces + guidage vers la page).
-- [x] Conditionnement strict de la CTA "Voir la timeline".
-- [x] Validation par tests E2E Playwright (6/6 PASSED).
-- [x] Vérification Build Vite & Oxlint (0 erreur).
+- [x] Alignement UX pour "Voir ses services".
+- [x] Optimisation de l'Admin Dashboard (Responsive Mobile, Tiroirs, FAB, Animations).
+- [x] Validation par tests E2E Playwright.
+- [x] Vérification Build Vite & Oxlint.
+- [ ] Déploiement Vercel.
 

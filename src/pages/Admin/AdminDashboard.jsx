@@ -68,7 +68,7 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc', color: '#0f172a', fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ display: 'flex', height: '100vh', background: '#f8fafc', color: '#0f172a', fontFamily: 'system-ui, sans-serif' }}>
       
       {/* Responsive Styles */}
       <style>{`
@@ -125,10 +125,13 @@ const AdminDashboard = () => {
             transform: translateX(0);
           }
           .admin-main {
-            padding: 24px 16px;
+            padding: 14px 14px 0 14px;
           }
           .mobile-header {
             display: flex;
+            position: sticky;
+            top: 0;
+            z-index: 40;
           }
           .desktop-toggle-btn {
             display: none;
@@ -191,7 +194,7 @@ const AdminDashboard = () => {
         <main className="admin-main">
           <header style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h1 style={{ fontSize: '32px', margin: '0 0 8px 0', fontWeight: 'bold' }}>Bienvenue, Ayoub.</h1>
+              <h1 style={{ fontSize: '32px', margin: '0 0 8px 0', fontWeight: 'bold', color: '#0f172a' }}>Bienvenue, Ayoub.</h1>
               <p style={{ margin: 0, color: '#64748b' }}>Gestion simplifiée de votre portfolio M84.</p>
             </div>
           </header>
@@ -199,15 +202,15 @@ const AdminDashboard = () => {
           {activeTab === 'overview' && (
             <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '32px' }}>
-                <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <div className="manager-container" style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                   <h3 style={{ margin: '0 0 16px 0', color: '#64748b', fontSize: '14px', fontWeight: '600', textTransform: 'uppercase' }}>Projets Actifs</h3>
                   <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#0f172a' }}>14</div>
                 </div>
-                <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <div className="manager-container" style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                   <h3 style={{ margin: '0 0 16px 0', color: '#64748b', fontSize: '14px', fontWeight: '600', textTransform: 'uppercase' }}>Leads Générés</h3>
                   <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#0f172a' }}>51</div>
                 </div>
-                <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <div className="manager-container" style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                   <h3 style={{ margin: '0 0 16px 0', color: '#64748b', fontSize: '14px', fontWeight: '600', textTransform: 'uppercase' }}>Agent M84</h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.2)' }}></div>
@@ -219,16 +222,19 @@ const AdminDashboard = () => {
               <div className="dashboard-charts" style={{ display: 'grid', gap: '24px' }}>
                 <style>{`
                   .dashboard-charts { grid-template-columns: 1fr 1fr; }
-                  @media (max-width: 768px) { .dashboard-charts { grid-template-columns: 1fr; } }
+                  @media (max-width: 768px) { 
+                    .dashboard-charts { grid-template-columns: 1fr; } 
+                    .manager-container { padding: 14px !important; margin-bottom: 0 !important; }
+                  }
                 `}</style>
-                <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                  <h3 style={{ margin: '0 0 24px 0', color: '#0f172a', fontSize: '16px', fontWeight: '600' }}>Trafic (7 derniers jours)</h3>
+                <div className="manager-container" style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                  <h3 style={{ margin: '0 0 24px 0', color: '#006253', fontSize: '16px', fontWeight: '600' }}>Trafic (7 derniers jours)</h3>
                   <div style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {loadingTraffic ? (
                       <span style={{ color: '#94a3b8' }}>Chargement des données Analytics...</span>
                     ) : (
                       <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={trafficData}>
+                        <LineChart data={trafficData} margin={{ top: 5, right: 0, left: -25, bottom: 5 }}>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                           <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
                           <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dx={-10} />
@@ -243,11 +249,11 @@ const AdminDashboard = () => {
                   </div>
                 </div>
                 
-                <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                  <h3 style={{ margin: '0 0 24px 0', color: '#0f172a', fontSize: '16px', fontWeight: '600' }}>Acquisition de Leads (2026)</h3>
+                <div className="manager-container" style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                  <h3 style={{ margin: '0 0 24px 0', color: '#006253', fontSize: '16px', fontWeight: '600' }}>Acquisition de Leads (2026)</h3>
                   <div style={{ height: '300px' }}>
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={mockLeadsData}>
+                      <BarChart data={mockLeadsData} margin={{ top: 5, right: 0, left: -25, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
                         <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dx={-10} />

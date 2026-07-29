@@ -37,7 +37,11 @@ src/
 │   ├── Home.jsx                # Page d'accueil (Hero Marquee, Recent Work, Timeline)
 │   ├── Work.jsx                # Galerie filtrable par catégorie
 │   ├── About.jsx               # Parcours, compétences, widget X/Twitter
-│   └── ProjectDetail.jsx       # Page de détail dynamique (/project/:id)
+│   ├── ProjectDetail.jsx       # Page de détail dynamique (/project/:id)
+│   └── Admin/                  # Back-office et Tableaux de bord
+│       ├── AdminDashboard.jsx  # Hub principal d'administration
+│       ├── ProjectsManager.jsx # Gestion CMS des projets
+│       └── CrmLeadsManager.jsx # Boîte de réception CRM / Leads
 ├── index.css            # Design System, variables CSS (oklch) et styles globaux
 public/
 └── assets/              # Médias statiques (Galerie Hero & Projets en WebP)

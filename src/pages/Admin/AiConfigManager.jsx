@@ -57,33 +57,33 @@ const AiConfigManager = () => {
   };
 
   return (
-    <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '12px', color: '#8b5cf6' }}>
-            <Bot size={24} />
-          </div>
+    <div className="ai-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .ai-container { padding: 14px !important; }
+          .ai-header-container { flex-wrap: wrap; gap: 12px; }
+          .ai-reload-btn span { display: none; }
+          .ai-reload-btn { padding: 8px !important; }
+          .ai-title-group { flex: 1; }
+        }
+      `}</style>
+      <div className="ai-header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+        <div className="ai-title-group" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px 0', fontSize: '20px' }}>Configuration Agent IA</h2>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Personnalisez le comportement du Chatbot M84 sur le site.</p>
+            <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', color: '#006253' }}>Configuration Agent IA</h2>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Ces instructions seront injectées dans le contexte du Chatbot à chaque interaction. Décrivez précisément le ton, le rôle et les connaissances de l'assistant.</p>
           </div>
         </div>
         <button 
+          className="ai-reload-btn"
           onClick={fetchPrompt}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', fontWeight: '500', flexShrink: 0 }}
         >
-          <RefreshCcw size={16} /> Recharger
+          <RefreshCcw size={16} /> <span>Recharger</span>
         </button>
       </div>
 
       <div style={{ marginBottom: '24px' }}>
-        <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '8px' }}>
-          Prompt Système Principal (Instructions)
-        </label>
-        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#64748b' }}>
-          Ces instructions seront injectées dans le contexte du Chatbot à chaque interaction. Décrivez précisément le ton, le rôle et les connaissances de l'assistant.
-        </p>
-        
         {loading ? (
           <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
             <span style={{ color: '#94a3b8' }}>Chargement du prompt...</span>

@@ -24,6 +24,8 @@ const ProjectsManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   useEffect(() => {
     const local = localStorage.getItem('m84_projects_mock');
     if (local) {
@@ -35,7 +37,7 @@ const ProjectsManager = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.dropdown-container')) {
+      if (!event.target.closest('.dropdown-container') && !event.target.closest('.mobile-drawer')) {
         setOpenDropdownId(null);
       }
     };
@@ -132,13 +134,13 @@ const ProjectsManager = () => {
 
   if (editingId) {
     return (
-      <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+      <div className="manager-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
           <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#10b981' }}>{editingId === 'new' ? 'Nouveau Projet' : 'Éditer Projet'}</h2>
           <button onClick={() => setEditingId(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}><X /></button>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
           <div>
             <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: '#64748b' }}>Titre</label>
             <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '8px' }} />
@@ -199,76 +201,142 @@ const ProjectsManager = () => {
   }
 
   return (
-    <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+    <div className="manager-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+      <div className="projects-header-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: '20px', color: '#006253' }}>Gestion des Projets</h2>
+          <div className="desktop-export-add" style={{ display: 'flex', gap: '12px' }}>
+            <button className="add-btn-desktop" onClick={startNew} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
+              <Plus size={16} /> Ajouter
+            </button>
+          </div>
+        </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <h2 style={{ margin: 0, fontSize: '20px' }}>Gestion des Projets</h2>
-          <div style={{ position: 'relative' }}>
+        <div className="search-filter-row" style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ position: 'relative', flex: 1 }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input 
               type="text" 
               placeholder="Rechercher..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', width: '220px', fontSize: '14px' }}
+              style={{ padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', width: '100%', boxSizing: 'border-box', fontSize: '14px', height: '40px' }}
+            />
+          </div>
+          <button className="filter-btn-main" onClick={() => setIsMobileFilterOpen(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '8px 16px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#0f172a', cursor: 'pointer', fontWeight: '500', height: '40px' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <span className="filter-btn-text">Filtres</span>
+          </button>
+          <div className="projects-export-wrapper">
+            <ExportButton 
+              data={filteredProjects} 
+              filename="M84_Projets" 
+              columns={[
+                { header: 'Titre', key: 'title' },
+                { header: 'Catégorie', key: 'category' },
+                { header: 'Client', key: 'client' },
+                { header: 'Année', key: 'year' },
+                { header: 'Lien', key: 'link' }
+              ]} 
             />
           </div>
         </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
-            <option value="">Toutes catégories</option>
-            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-          
-          <select value={filterYear} onChange={e => setFilterYear(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
-            <option value="">Toutes années</option>
-            {yearsAvailable.map(y => <option key={y} value={y}>{y}</option>)}
-          </select>
-          
-          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
-            <option value="">Tous statuts</option>
-            <option value="public">Public</option>
-            <option value="private">Privé</option>
-          </select>
-
-          <ExportButton 
-            data={filteredProjects} 
-            filename="M84_Projets" 
-            columns={[
-              { header: 'Titre', key: 'title' },
-              { header: 'Catégorie', key: 'category' },
-              { header: 'Client', key: 'client' },
-              { header: 'Année', key: 'year' },
-              { header: 'Lien', key: 'link' }
-            ]} 
-          />
-          <button onClick={startNew} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
-            <Plus size={16} /> Ajouter
-          </button>
-        </div>
       </div>
 
+      <button className="add-fab-mobile" onClick={startNew} style={{ display: 'none', position: 'fixed', bottom: '24px', right: '24px', width: '56px', height: '56px', borderRadius: '50%', background: '#10b981', color: 'white', border: 'none', boxShadow: '0 4px 12px rgba(16,185,129,0.4)', zIndex: 90, alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+        <Plus size={24} />
+      </button>
+
+      {isMobileFilterOpen && (
+        <div className="animated-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 120, display: 'flex', justifyContent: 'flex-end' }} onClick={() => setIsMobileFilterOpen(false)}>
+          <div className="filter-drawer animated-drawer-right" style={{ background: 'white', width: '320px', height: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '-4px 0 15px rgba(0,0,0,0.1)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+              <h3 style={{ margin: 0, color: '#006253', fontSize: '16px' }}>Filtres</h3>
+              <button onClick={() => setIsMobileFilterOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Catégorie</label>
+            <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px' }}>
+              <option value="">Toutes catégories</option>
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Année</label>
+            <select value={filterYear} onChange={e => setFilterYear(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px' }}>
+              <option value="">Toutes années</option>
+              {yearsAvailable.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+            <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Statut</label>
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px' }}>
+              <option value="">Tous statuts</option>
+              <option value="public">Public</option>
+              <option value="private">Privé</option>
+            </select>
+            <button onClick={() => setIsMobileFilterOpen(false)} style={{ marginTop: 'auto', padding: '12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Appliquer</button>
+          </div>
+        </div>
+      )}
+
       <style>{`
+        .table-scroll-container { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 250px); border: 1px solid #f1f5f9; border-radius: 8px; }
+        
+        .animated-backdrop { animation: fadeIn 0.3s ease-out; }
+        .animated-drawer-right { animation: slideInRight 0.3s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
         @media (max-width: 768px) {
+          .manager-container { padding: 14px !important; margin-bottom: 0 !important; }
+          .filter-drawer { width: 100% !important; animation: slideUp 0.3s ease-out !important; border-radius: 20px 20px 0 0 !important; height: auto !important; position: fixed !important; bottom: 0; top: auto !important; }
+          .desktop-export-add { width: auto; margin-top: 0; }
+          .desktop-export-add .add-btn-desktop { display: none !important; }
+          .add-fab-mobile { display: flex !important; }
+          .projects-header-wrapper { gap: 8px !important; }
+          .table-scroll-container { max-height: none !important; border: none !important; padding-bottom: 80px; }
+          
+          .filter-btn-main { padding: 10px !important; }
+          .filter-btn-text { display: none !important; }
+          
           .responsive-table thead { display: none; }
           .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; box-sizing: border-box; }
-          .responsive-table tr { margin-bottom: 16px; border: 1px solid #e2e8f0 !important; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .responsive-table tr { margin-bottom: 16px; border: 1px solid #e2e8f0 !important; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; background: white; }
           .responsive-table td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 !important; border: none !important; }
-          .responsive-table td::before { content: attr(data-label); font-weight: 600; color: #10b981; font-size: 13px; margin-right: 16px; }
+          .responsive-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 13px; margin-right: 16px; }
+          
+          .action-dropdown-menu {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            width: 100% !important;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 24px 16px !important;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1) !important;
+            z-index: 100 !important;
+            transform: translateY(0) !important;
+            animation: slideUp 0.3s ease-out !important;
+          }
+          .action-dropdown-backdrop {
+            display: block !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            animation: fadeIn 0.3s ease-out;
+          }
         }
       `}</style>
-      <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '55vh', border: '1px solid #f1f5f9', borderRadius: '8px' }}>
+      <div className="table-scroll-container">
         <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', position: 'relative' }}>
           <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 5, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
-              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Projet</th>
-              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Visuel</th>
-              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Catégorie</th>
-              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Année</th>
-              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Statut</th>
-              <th style={{ padding: '16px 8px', textAlign: 'right', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Actions</th>
+              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Projet</th>
+              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Visuel</th>
+              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Catégorie</th>
+              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Année</th>
+              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Statut</th>
+              <th style={{ padding: '16px 8px', textAlign: 'right', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -313,19 +381,22 @@ const ProjectsManager = () => {
                     <MoreVertical size={18} />
                   </button>
                   {openDropdownId === p.id && (
-                    <div style={{ position: 'absolute', right: '30px', top: '16px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', zIndex: 10, minWidth: '120px', padding: '4px', textAlign: 'left' }}>
-                      {p.url && (
-                        <a href={p.url} target="_blank" rel="noreferrer" onClick={() => setOpenDropdownId(null)} style={{ width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#0f172a', textDecoration: 'none', boxSizing: 'border-box' }}>
-                          <Eye size={16} /> Voir
-                        </a>
-                      )}
-                      <button onClick={() => { startEdit(p); setOpenDropdownId(null); }} style={{ width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#0f172a', boxSizing: 'border-box' }}>
-                        <Edit2 size={16} /> Modifier
-                      </button>
-                      <button onClick={() => { handleDelete(p.id); setOpenDropdownId(null); }} style={{ width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#ef4444', boxSizing: 'border-box' }}>
-                        <Trash2 size={16} /> Supprimer
-                      </button>
-                    </div>
+                    <>
+                      <div className="action-dropdown-backdrop" onClick={(e) => { e.stopPropagation(); setOpenDropdownId(null); }} style={{ display: 'none' }}></div>
+                      <div className="action-dropdown-menu" style={{ position: 'absolute', right: '30px', top: '16px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', zIndex: 110, minWidth: '120px', padding: '4px', textAlign: 'left' }}>
+                        {p.url && (
+                          <a href={p.url} target="_blank" rel="noreferrer" onClick={() => setOpenDropdownId(null)} style={{ width: '100%', padding: '12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', color: '#0f172a', textDecoration: 'none', boxSizing: 'border-box' }}>
+                            <Eye size={18} /> Voir
+                          </a>
+                        )}
+                        <button onClick={() => { startEdit(p); setOpenDropdownId(null); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', color: '#0f172a', boxSizing: 'border-box' }}>
+                          <Edit2 size={18} /> Modifier
+                        </button>
+                        <button onClick={() => { handleDelete(p.id); setOpenDropdownId(null); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', color: '#ef4444', boxSizing: 'border-box' }}>
+                          <Trash2 size={18} /> Supprimer
+                        </button>
+                      </div>
+                    </>
                   )}
                 </td>
               </tr>

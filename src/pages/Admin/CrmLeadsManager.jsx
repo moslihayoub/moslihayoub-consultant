@@ -112,50 +112,82 @@ const CrmLeadsManager = () => {
     <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
       <style>{`
         @media (max-width: 768px) {
+          .manager-container { padding: 14px !important; margin-bottom: 0 !important; }
           .lead-card { flex-direction: column !important; padding: 16px !important; }
           .lead-actions { border-left: none !important; border-top: 1px solid #e2e8f0 !important; padding-left: 0 !important; padding-top: 16px !important; margin-top: 16px !important; width: 100% !important; justify-content: flex-end !important; }
           .lead-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+          
+          .action-dropdown-menu {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            width: 100% !important;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 24px 16px !important;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1) !important;
+            z-index: 100 !important;
+            transform: translateY(0) !important;
+          }
+          .action-dropdown-backdrop {
+            display: block !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+          }
         }
       `}</style>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+      <div className="crm-header-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px 0', fontSize: '20px' }}>CRM Leads</h2>
+            <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', color: '#006253' }}>CRM Leads</h2>
             <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>Messages du chatbot/formulaire.</p>
           </div>
-          <div style={{ position: 'relative' }}>
+          
+          <div className="desktop-export">
+            <ExportButton 
+              data={filteredLeads} 
+              filename="M84_Leads_CRM" 
+              columns={[
+                { header: 'Date', key: 'createdAt.seconds' },
+                { header: 'Nom', key: 'name' },
+                { header: 'Email', key: 'email' },
+                { header: 'Téléphone', key: 'phone' },
+                { header: 'Message', key: 'message' },
+                { header: 'Statut', key: 'status' }
+              ]} 
+            />
+          </div>
+        </div>
+        
+        <div className="search-filter-row" style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ position: 'relative', flex: 1 }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input 
               type="text" 
               placeholder="Rechercher..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '220px', padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '14px' }}
+              style={{ width: '100%', padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', boxSizing: 'border-box', outline: 'none', fontSize: '14px', height: '40px' }}
             />
           </div>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
-            <option value="">Tous les statuts</option>
-            <option value="unread">Non lus</option>
-            <option value="read">Lus</option>
-          </select>
-
-          <ExportButton 
-            data={filteredLeads} 
-            filename="M84_Leads_CRM" 
-            columns={[
-              { header: 'Date', key: 'createdAt.seconds' },
-              { header: 'Nom', key: 'name' },
-              { header: 'Email', key: 'email' },
-              { header: 'Téléphone', key: 'phone' },
-              { header: 'Message', key: 'message' },
-              { header: 'Statut', key: 'status' }
-            ]} 
-          />
+          <div className="filter-icon-wrapper" style={{ position: 'relative' }}>
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ width: '100%', padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px', height: '40px', cursor: 'pointer', appearance: 'none' }}>
+              <option value="">Tous les statuts</option>
+              <option value="unread">Non lus</option>
+              <option value="read">Lus</option>
+            </select>
+            <div className="filter-icon-svg" style={{ display: 'none' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </div>
+            <style>{`
+              @media (min-width: 769px) { .filter-icon-wrapper select { appearance: auto; } }
+              @media (max-width: 768px) { .filter-icon-svg { display: block !important; } }
+            `}</style>
+          </div>
         </div>
       </div>
 
@@ -205,14 +237,17 @@ const CrmLeadsManager = () => {
                     <MoreVertical size={20} />
                   </button>
                   {openDropdownId === lead.id && (
-                    <div style={{ position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '8px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', zIndex: 10, minWidth: '180px', padding: '4px' }}>
-                      <button onClick={() => { toggleStatus(lead); setOpenDropdownId(null); }} style={{ width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#0f172a', boxSizing: 'border-box', borderRadius: '4px' }} onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                        <CheckCircle2 size={16} /> {lead.status === 'read' ? 'Marquer non lu' : 'Marquer comme lu'}
-                      </button>
-                      <button onClick={() => { deleteLead(lead.id); setOpenDropdownId(null); }} style={{ width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#ef4444', boxSizing: 'border-box', borderRadius: '4px' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                        <Trash2 size={16} /> Supprimer
-                      </button>
-                    </div>
+                    <>
+                      <div className="action-dropdown-backdrop" onClick={(e) => { e.stopPropagation(); setOpenDropdownId(null); }} style={{ display: 'none' }}></div>
+                      <div className="action-dropdown-menu" style={{ position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: '8px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', zIndex: 110, minWidth: '180px', padding: '4px' }}>
+                        <button onClick={() => { toggleStatus(lead); setOpenDropdownId(null); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', color: '#0f172a', boxSizing: 'border-box', borderRadius: '4px' }} onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                          <CheckCircle2 size={18} /> {lead.status === 'read' ? 'Marquer non lu' : 'Marquer comme lu'}
+                        </button>
+                        <button onClick={() => { deleteLead(lead.id); setOpenDropdownId(null); }} style={{ width: '100%', padding: '12px', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', color: '#ef4444', boxSizing: 'border-box', borderRadius: '4px' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                          <Trash2 size={18} /> Supprimer
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
