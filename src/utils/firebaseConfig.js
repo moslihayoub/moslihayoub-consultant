@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,19 +12,16 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-let app, auth, db;
+let app, auth, db, storage;
 
 try {
-  if (firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your_firebase_api_key') {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-  } else {
-    console.warn("Firebase config is missing. Firebase services are disabled.");
-  }
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
 } catch (error) {
-  console.error("Firebase init error:", error);
+  console.error("Firebase Initialization Error:", error);
 }
 
-export { app, auth, db };
+export { app, auth, db, storage };
 export const ADMIN_WHITELIST = ['moslihayoub@gmail.com'];

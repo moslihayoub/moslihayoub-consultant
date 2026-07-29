@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { queryM84Chatbot, getQuotaInfo, setDevModeOverride } from '../utils/firebaseAi';
 import { findBestMatch } from '../utils/chatbotEngine';
+import { db } from '../utils/firebaseConfig';
 
 const AVATAR_URL = '/assets/m84-avatar.webp';
 const MAX_CHAR_LIMIT = 200;
@@ -253,6 +254,25 @@ const ChatWidget = () => {
           }).catch(err => console.debug('Sheet logging skipped:', err));
         } catch (e) {}
       }
+
+      // Enregistrement du lead dans Firestore
+      try {
+        if (db) {
+          import('firebase/firestore').then(({ addDoc, collection }) => {
+            addDoc(collection(db, 'leads'), {
+              name: leadData.name || 'Inconnu',
+              email: finalContact, // Utilise le contact comme email/tel
+              message: `Lead capturé via Chatbot. Type: ${leadData.type || 'Non spécifié'}`,
+              status: 'unread',
+              createdAt: new Date(),
+              source: 'chatbot'
+            });
+          });
+        }
+      } catch (firestoreErr) {
+        console.error("Erreur Firestore leads:", firestoreErr);
+      }
+
       setLeadData({ type: '', name: '', contact: '' });
     }
   };

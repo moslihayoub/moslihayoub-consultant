@@ -1,38 +1,28 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, ADMIN_WHITELIST } from '../../utils/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { Lock, LogIn, AlertCircle } from 'lucide-react';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    if (!ADMIN_WHITELIST.includes(email)) {
-      setError("Accès refusé : Adresse email non autorisée.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      if (!auth) {
-        throw new Error("Firebase Auth n'est pas configuré.");
+    setTimeout(() => {
+      if (username === 'moslih84' && password === '031984') {
+        localStorage.setItem('m84_admin_token', 'authenticated_admin_moslih');
+        navigate('/admin/dashboard');
+      } else {
+        setError("Identifiant ou mot de passe incorrect.");
+        setLoading(false);
       }
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/admin/dashboard');
-    } catch (err) {
-      setError(err.message || "Identifiants incorrects ou problème de connexion.");
-    } finally {
-      setLoading(false);
-    }
+    }, 800); // Simulate network delay
   };
 
   return (
@@ -55,14 +45,14 @@ const AdminLogin = () => {
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Email autorisé</label>
+            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Identifiant autorisé</label>
             <input 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre@email.com"
+              type="text" 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Identifiant"
               required
-              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s' }}
+              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }}
               onFocus={(e) => e.target.style.borderColor = '#38bdf8'}
               onBlur={(e) => e.target.style.borderColor = '#334155'}
             />
@@ -76,7 +66,7 @@ const AdminLogin = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s' }}
+              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }}
               onFocus={(e) => e.target.style.borderColor = '#38bdf8'}
               onBlur={(e) => e.target.style.borderColor = '#334155'}
             />

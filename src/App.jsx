@@ -76,25 +76,49 @@ const AnimatedRoutes = () => {
   );
 };
 
+function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {!isAdminRoute && <CustomCursor />}
+      
+      {/* Restore default cursor for Backoffice */}
+      {isAdminRoute && (
+        <style>{`
+          body, a, button, input, textarea, select { cursor: auto !important; }
+          a, button { cursor: pointer !important; }
+          input, textarea { cursor: text !important; }
+        `}</style>
+      )}
+
+      {!isAdminRoute && <Navbar />}
+      
+      <main style={{ flex: 1 }}>
+        <AnimatedRoutes />
+      </main>
+
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <ScrollSpy />}
+      
+      {!isAdminRoute && (
+        <Suspense fallback={null}>
+          <ChatWidget />
+        </Suspense>
+      )}
+      {!isAdminRoute && <CookieBanner />}
+      <PwaInstallPrompt />
+    </div>
+  );
+}
+
 function App() {
   return (
     <LanguageProvider>
       <Router>
         <ScrollToTop />
-        <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-          <CustomCursor />
-          <Navbar />
-          <main style={{ flex: 1 }}>
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-          <ScrollSpy />
-          <Suspense fallback={null}>
-            <ChatWidget />
-          </Suspense>
-          <CookieBanner />
-          <PwaInstallPrompt />
-        </div>
+        <AppContent />
       </Router>
     </LanguageProvider>
   );

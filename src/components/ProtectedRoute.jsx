@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, ADMIN_WHITELIST } from '../utils/firebaseConfig';
 
 const ProtectedRoute = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth) {
-      setLoading(false);
-      return;
+    const token = localStorage.getItem('m84_admin_token');
+    if (token === 'authenticated_admin_moslih') {
+      setIsAuthenticated(true);
     }
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -28,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!user || !ADMIN_WHITELIST.includes(user.email)) {
+  if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;
   }
 

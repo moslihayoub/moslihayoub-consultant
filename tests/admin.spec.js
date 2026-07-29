@@ -13,9 +13,9 @@ test.describe('Admin Dashboard Access Control', () => {
     await expect(loginHeader).toBeVisible();
 
     // Verify inputs exist
-    const emailInput = page.locator('input[type="email"]');
+    const usernameInput = page.locator('input[type="text"]');
     const passwordInput = page.locator('input[type="password"]');
-    await expect(emailInput).toBeVisible();
+    await expect(usernameInput).toBeVisible();
     await expect(passwordInput).toBeVisible();
   });
 
@@ -23,14 +23,14 @@ test.describe('Admin Dashboard Access Control', () => {
     await page.goto('/admin/login');
 
     // Fill with an unauthorized email
-    await page.fill('input[type="email"]', 'hacker@anonymous.com');
+    await page.fill('input[type="text"]', 'hacker');
     await page.fill('input[type="password"]', 'wrongpassword123');
     
     // Submit form
     await page.click('button[type="submit"]');
 
     // Verify the whitelist error message is displayed
-    const errorMessage = page.locator('text=Accès refusé : Adresse email non autorisée.');
+    const errorMessage = page.locator('text=Identifiant ou mot de passe incorrect.');
     await expect(errorMessage).toBeVisible();
   });
 });
