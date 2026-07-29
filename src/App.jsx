@@ -14,9 +14,13 @@ import './index.css';
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
-// const XPost = lazy(() => import('./pages/XPost'));
 const ChatWidget = lazy(() => import('./components/ChatWidget'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+
+// Admin Routes
+const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
+const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -40,19 +44,34 @@ import ErrorBoundary from './components/ErrorBoundary';
 const AnimatedRoutes = () => {
   const location = useLocation();
   
+  // Do not animate transitions for admin routes to avoid layout shifting
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
     <ErrorBoundary>
-      <AnimatePresence mode="wait">
+      {isAdminRoute ? (
         <Suspense fallback={<PageSkeleton />}>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/about" element={<About />} />
-            {/* <Route path="/xpost" element={<XPost />} /> */}
-            <Route path="/project/:id" element={<ProjectDetail />} />
+          <Routes location={location} key="admin">
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
           </Routes>
         </Suspense>
-      </AnimatePresence>
+      ) : (
+        <AnimatePresence mode="wait">
+          <Suspense fallback={<PageSkeleton />}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/work" element={<Work />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
+            </Routes>
+          </Suspense>
+        </AnimatePresence>
+      )}
     </ErrorBoundary>
   );
 };
