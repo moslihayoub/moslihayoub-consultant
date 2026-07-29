@@ -113,12 +113,13 @@ const AdminDashboard = () => {
         }
         @media (max-width: 768px) {
           .admin-sidebar {
-            width: 280px;
+            width: 100vw;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             transform: translateX(-100%);
+            z-index: 100;
           }
           .admin-sidebar.open {
             transform: translateX(0);
@@ -156,7 +157,7 @@ const AdminDashboard = () => {
           </button>
           <style>{`@media (max-width: 768px) { .mobile-close-btn { display: block !important; } }`}</style>
         </div>
-        <nav style={{ flex: 1, padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <nav style={{ flex: 1, padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {navButton('overview', <LayoutDashboard size={20} />, "Vue d'ensemble")}
           {navButton('projects', <Database size={20} />, "Projets (CRUD)")}
           {navButton('leads', <Users size={20} />, "CRM Leads")}
@@ -215,7 +216,11 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div className="dashboard-charts" style={{ display: 'grid', gap: '24px' }}>
+                <style>{`
+                  .dashboard-charts { grid-template-columns: 1fr 1fr; }
+                  @media (max-width: 768px) { .dashboard-charts { grid-template-columns: 1fr; } }
+                `}</style>
                 <div style={{ background: 'white', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
                   <h3 style={{ margin: '0 0 24px 0', color: '#0f172a', fontSize: '16px', fontWeight: '600' }}>Trafic (7 derniers jours)</h3>
                   <div style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

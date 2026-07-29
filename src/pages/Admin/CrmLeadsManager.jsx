@@ -36,7 +36,17 @@ const CrmLeadsManager = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown-container')) {
+        setOpenDropdownId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const toggleStatus = async (lead) => {
@@ -79,13 +89,20 @@ const CrmLeadsManager = () => {
 
   return (
     <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .lead-card { flex-direction: column !important; padding: 16px !important; }
+          .lead-actions { border-left: none !important; border-top: 1px solid #e2e8f0 !important; padding-left: 0 !important; padding-top: 16px !important; margin-top: 16px !important; width: 100% !important; justify-content: flex-end !important; }
+          .lead-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+        }
+      `}</style>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h2 style={{ margin: '0 0 8px 0', fontSize: '20px' }}>CRM - Capture de Leads</h2>
           <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Messages provenant du chatbot et du formulaire de contact.</p>
         </div>
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <div style={{ position: 'relative', width: '300px' }}>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', width: '300px', maxWidth: '100%' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input 
               type="text" 
@@ -120,13 +137,13 @@ const CrmLeadsManager = () => {
       ) : (
         <div style={{ display: 'grid', gap: '16px' }}>
           {filteredLeads.map((lead) => (
-            <div key={lead.id} style={{ display: 'flex', gap: '20px', padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px', background: lead.status === 'read' ? '#f8fafc' : 'white', transition: 'all 0.2s', position: 'relative', overflow: 'hidden' }}>
+            <div key={lead.id} className="lead-card" style={{ display: 'flex', gap: '20px', padding: '24px', border: '1px solid #e2e8f0', borderRadius: '12px', background: lead.status === 'read' ? '#f8fafc' : 'white', transition: 'all 0.2s', position: 'relative', overflow: 'hidden' }}>
               {lead.status !== 'read' && <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: '#38bdf8' }}></div>}
               
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <div className="lead-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div>
-                    <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: lead.status === 'read' ? '500' : '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: lead.status === 'read' ? '500' : '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       {lead.name || 'Anonyme'}
                       {lead.source === 'chatbot' ? (
                         <span style={{ fontSize: '11px', padding: '2px 8px', background: '#ede9fe', color: '#8b5cf6', borderRadius: '12px', fontWeight: '600' }}>Chatbot</span>
@@ -145,7 +162,7 @@ const CrmLeadsManager = () => {
                 </div>
               </div>
               
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', borderLeft: '1px solid #e2e8f0', paddingLeft: '20px', minWidth: '60px' }}>
+              <div className="dropdown-container lead-actions" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', borderLeft: '1px solid #e2e8f0', paddingLeft: '20px', minWidth: '60px' }}>
                 <button 
                   onClick={() => setOpenDropdownId(openDropdownId === lead.id ? null : lead.id)}
                   style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '8px', borderRadius: '50%', transition: 'background 0.2s' }}

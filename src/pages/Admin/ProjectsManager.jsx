@@ -24,6 +24,16 @@ const ProjectsManager = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown-container')) {
+        setOpenDropdownId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSave = () => {
     let updated;
     if (editingId === 'new') {
@@ -200,8 +210,17 @@ const ProjectsManager = () => {
         </div>
       </div>
 
+      <style>{`
+        @media (max-width: 768px) {
+          .responsive-table thead { display: none; }
+          .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; box-sizing: border-box; }
+          .responsive-table tr { margin-bottom: 16px; border: 1px solid #e2e8f0 !important; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .responsive-table td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 !important; border: none !important; }
+          .responsive-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 13px; margin-right: 16px; }
+        }
+      `}</style>
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+        <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
               <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Projet</th>
@@ -215,13 +234,13 @@ const ProjectsManager = () => {
           <tbody>
             {filteredProjects.map(p => (
               <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td style={{ padding: '16px 8px', fontWeight: '500', color: '#0f172a' }}>
+                <td data-label="Projet" style={{ padding: '16px 8px', fontWeight: '500', color: '#0f172a' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Folder size={16} color="#94a3b8" />
                     {p.title}
                   </div>
                 </td>
-                <td style={{ padding: '16px 8px' }}>
+                <td data-label="Visuel" style={{ padding: '16px 8px' }}>
                   {p.image ? (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <img src={p.image} alt={p.title} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #e2e8f0' }} />
@@ -230,23 +249,23 @@ const ProjectsManager = () => {
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#94a3b8', fontSize: '12px' }}><ImageIcon size={14} /> Aucune</span>
                   )}
                 </td>
-                <td style={{ padding: '16px 8px', color: '#64748b' }}>
+                <td data-label="Catégorie" style={{ padding: '16px 8px', color: '#64748b' }}>
                   <span style={{ background: '#f1f5f9', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                     <Tag size={12} /> {p.category}
                   </span>
                 </td>
-                <td style={{ padding: '16px 8px', color: '#64748b' }}>
+                <td data-label="Année" style={{ padding: '16px 8px', color: '#64748b' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Calendar size={14} /> {p.year}
                   </div>
                 </td>
-                <td style={{ padding: '16px 8px' }}>
+                <td data-label="Statut" style={{ padding: '16px 8px' }}>
                   {p.isProtected 
                     ? <span style={{ color: '#ef4444', fontSize: '12px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}><Lock size={14} /> Privé</span>
                     : <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}><Globe size={14} /> Public</span>
                   }
                 </td>
-                <td style={{ padding: '16px 8px', textAlign: 'right', position: 'relative' }}>
+                <td className="dropdown-container" data-label="Actions" style={{ padding: '16px 8px', textAlign: 'right', position: 'relative' }}>
                   <button 
                     onClick={() => setOpenDropdownId(openDropdownId === p.id ? null : p.id)}
                     style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}
