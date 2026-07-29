@@ -57,7 +57,7 @@ const AiConfigManager = () => {
   };
 
   return (
-    <div className="ai-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+    <div className="ai-container manager-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
       <style>{`
         @media (max-width: 768px) {
           .ai-container { padding: 14px !important; }

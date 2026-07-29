@@ -110,7 +110,7 @@ const CrmLeadsManager = () => {
   };
 
   return (
-    <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+    <div className="manager-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
       <style>{`
         .animated-backdrop { animation: fadeIn 0.3s ease-out; }
         .animated-drawer-right { animation: slideInRight 0.3s ease-out; }
