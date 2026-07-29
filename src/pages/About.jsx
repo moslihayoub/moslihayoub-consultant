@@ -177,7 +177,7 @@ export default function About() {
 
               <div className="hero-cta-container-stacked" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', paddingBottom: '16px' }}>
                 <TiltWrapper>
-                  <a href="/assets/Ayoub MOSLIH UX-UI.pdf" download className="btn-primary hover-trigger">
+                  <a href="/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" download className="btn-primary hover-trigger">
                     <Download size={18} /> {t('home_section3_download')}
                   </a>
                 </TiltWrapper>

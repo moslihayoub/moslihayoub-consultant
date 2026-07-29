@@ -8,7 +8,7 @@ export const knowledgeBase = {
     experienceYears: 19,
     breakdown: "10+ ans Digital, 7+ ans UX/UI, 2+ ans IA Générative (LLM & Agents)",
     location: "Casablanca, Maroc (Interventions sur site et en Remote : Afrique, Europe, Moyen-Orient)",
-    cvUrl: "/assets/Ayoub MOSLIH UX-UI.pdf",
+    cvUrl: "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf",
     whatsapp: "https://wa.me/212663585065",
     email: "moslihayoub@gmail.com",
     phone: "+212 6 63 58 50 65",

@@ -45,7 +45,7 @@
       "ctas": [
         { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
         { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
-        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" }
       ]
     },
     {
@@ -139,8 +139,8 @@
         "en": "Here is Ayoub MOSLIH's official CV (Digital Transformation & AI Consultant, 19 years experience) available for viewing or download:"
       },
       "ctas": [
-        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" },
-        { "text": { "fr": "Télécharger le CV", "en": "Download CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" },
+        { "text": { "fr": "Télécharger le CV", "en": "Download CV" }, "action": "external", "target": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" }
       ]
     },
     {
@@ -164,7 +164,7 @@
       },
       "ctas": [
         { "text": { "fr": "Voir la timeline", "en": "View timeline" }, "action": "navigate", "target": "/about#timeline" },
-        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+        { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" }
       ]
     },
     {
@@ -242,7 +242,7 @@
     "ctas": [
       { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
       { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
-      { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/assets/Ayoub MOSLIH UX-UI.pdf" }
+      { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" }
     ]
   }
 }

@@ -97,7 +97,7 @@ const ChatWidget = () => {
     ctas: [
       { text: currentLang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
       { text: currentLang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" },
-      { text: currentLang === 'en' ? "Open CV" : "Ouvrir le CV", action: "external", target: "/assets/Ayoub MOSLIH UX-UI.pdf" }
+      { text: currentLang === 'en' ? "Open CV" : "Ouvrir le CV", action: "external", target: "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf" }
     ]
   });
 
