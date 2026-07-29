@@ -84,7 +84,7 @@ const AdminDashboard = () => {
         }
         .admin-main {
           flex: 1;
-          padding: 48px;
+          padding: 24px;
           overflow-y: auto;
           width: 100%;
         }

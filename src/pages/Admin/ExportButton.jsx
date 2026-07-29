@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, FileText, FileSpreadsheet, ChevronDown } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -6,6 +6,16 @@ import 'jspdf-autotable';
 
 const ExportButton = ({ data, filename, columns }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.export-container')) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleExportExcel = () => {
     // Transformer les données pour correspondre aux colonnes
@@ -62,7 +72,7 @@ const ExportButton = ({ data, filename, columns }) => {
   };
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div className="export-container" style={{ position: 'relative', display: 'inline-block' }}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
         style={{

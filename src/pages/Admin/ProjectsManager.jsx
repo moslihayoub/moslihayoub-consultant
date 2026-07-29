@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { projectsData as initialData } from '../../data/projects';
-import { Edit2, Trash2, Plus, Save, X, Upload, Search, Folder, Tag, Calendar, Lock, Globe, Image as ImageIcon, Eye, MoreVertical } from 'lucide-react';
+import { Edit2, Trash2, Plus, Save, X, Upload, Search, Folder, Tag, Calendar, Lock, Globe, Image as ImageIcon, Eye, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebaseConfig';
 import ExportButton from './ExportButton';
@@ -13,7 +13,16 @@ const ProjectsManager = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(null);
   const [uploading, setUploading] = useState(false);
+  
+  // Filters
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterYear, setFilterYear] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     const local = localStorage.getItem('m84_projects_mock');
@@ -33,6 +42,11 @@ const ProjectsManager = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterCategory, filterYear, filterStatus]);
 
   const handleSave = () => {
     let updated;
@@ -100,11 +114,21 @@ const ProjectsManager = () => {
     }
   };
 
-  const filteredProjects = projects.filter(p => 
-    p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.client?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProjects = projects.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.client?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = filterCategory ? p.category === filterCategory : true;
+    const matchesYear = filterYear ? p.year === filterYear : true;
+    const matchesStatus = filterStatus === 'private' ? p.isProtected : filterStatus === 'public' ? !p.isProtected : true;
+    
+    return matchesSearch && matchesCategory && matchesYear && matchesStatus;
+  });
+
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+  const currentProjects = filteredProjects.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const yearsAvailable = Array.from(new Set(projects.map(p => p.year))).sort().reverse();
 
   if (editingId) {
     return (
@@ -176,37 +200,53 @@ const ProjectsManager = () => {
 
   return (
     <div style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ margin: 0, fontSize: '20px' }}>Gestion des Projets</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <h2 style={{ margin: 0, fontSize: '20px' }}>Gestion des Projets</h2>
           <div style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input 
               type="text" 
-              placeholder="Filtrer les projets..." 
+              placeholder="Rechercher..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ padding: '10px 10px 10px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', width: '250px' }}
+              style={{ padding: '8px 10px 8px 40px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', width: '220px', fontSize: '14px' }}
             />
           </div>
+        </div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
+            <option value="">Toutes catégories</option>
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
           
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <ExportButton 
-              data={filteredProjects} 
-              filename="M84_Projets" 
-              columns={[
-                { header: 'Titre', key: 'title' },
-                { header: 'Catégorie', key: 'category' },
-                { header: 'Client', key: 'client' },
-                { header: 'Année', key: 'year' },
-                { header: 'Lien', key: 'link' }
-              ]} 
-            />
-            <button onClick={startNew} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
-              <Plus size={18} /> Ajouter
-            </button>
-          </div>
+          <select value={filterYear} onChange={e => setFilterYear(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
+            <option value="">Toutes années</option>
+            {yearsAvailable.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+          
+          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '8px', border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none', background: 'white', color: '#64748b', fontSize: '14px' }}>
+            <option value="">Tous statuts</option>
+            <option value="public">Public</option>
+            <option value="private">Privé</option>
+          </select>
+
+          <ExportButton 
+            data={filteredProjects} 
+            filename="M84_Projets" 
+            columns={[
+              { header: 'Titre', key: 'title' },
+              { header: 'Catégorie', key: 'category' },
+              { header: 'Client', key: 'client' },
+              { header: 'Année', key: 'year' },
+              { header: 'Lien', key: 'link' }
+            ]} 
+          />
+          <button onClick={startNew} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
+            <Plus size={16} /> Ajouter
+          </button>
         </div>
       </div>
 
@@ -216,23 +256,23 @@ const ProjectsManager = () => {
           .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; box-sizing: border-box; }
           .responsive-table tr { margin-bottom: 16px; border: 1px solid #e2e8f0 !important; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
           .responsive-table td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 !important; border: none !important; }
-          .responsive-table td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 13px; margin-right: 16px; }
+          .responsive-table td::before { content: attr(data-label); font-weight: 600; color: #10b981; font-size: 13px; margin-right: 16px; }
         }
       `}</style>
-      <div style={{ overflowX: 'auto' }}>
-        <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
+      <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '55vh', border: '1px solid #f1f5f9', borderRadius: '8px' }}>
+        <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', position: 'relative' }}>
+          <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 5, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
-              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Projet</th>
-              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Visuel</th>
-              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Catégorie</th>
-              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Année</th>
-              <th style={{ padding: '16px 8px', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Statut</th>
-              <th style={{ padding: '16px 8px', textAlign: 'right', color: '#64748b', fontSize: '14px', fontWeight: '600' }}>Actions</th>
+              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Projet</th>
+              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Visuel</th>
+              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Catégorie</th>
+              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Année</th>
+              <th style={{ padding: '16px 8px', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Statut</th>
+              <th style={{ padding: '16px 8px', textAlign: 'right', color: '#10b981', fontSize: '14px', fontWeight: '600' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredProjects.map(p => (
+            {currentProjects.map(p => (
               <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                 <td data-label="Projet" style={{ padding: '16px 8px', fontWeight: '500', color: '#0f172a' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -290,7 +330,7 @@ const ProjectsManager = () => {
                 </td>
               </tr>
             ))}
-            {filteredProjects.length === 0 && (
+            {currentProjects.length === 0 && (
               <tr>
                 <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: '#64748b' }}>Aucun projet trouvé.</td>
               </tr>
@@ -298,6 +338,30 @@ const ProjectsManager = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px', marginTop: '24px' }}>
+          <span style={{ fontSize: '14px', color: '#64748b' }}>Page {currentPage} sur {totalPages}</span>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', borderRadius: '8px', border: '1px solid #e2e8f0', background: 'white', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', color: currentPage === 1 ? '#cbd5e1' : '#0f172a' }}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button 
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', borderRadius: '8px', border: '1px solid #e2e8f0', background: 'white', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', color: currentPage === totalPages ? '#cbd5e1' : '#0f172a' }}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
