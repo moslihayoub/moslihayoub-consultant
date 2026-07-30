@@ -16,8 +16,8 @@
         "Comment peux-tu m'aider ?"
       ],
       "answer": {
-        "fr": "Bonjour ! Je suis l'Agent M84, votre guide virtuel dans le portfolio d'Ayoub MOSLIH. Je vous aide à explorer ses services, projets et compétences.",
-        "en": "Hello! I am Agent M84, your virtual guide through Ayoub MOSLIH's portfolio. I help you explore his services, projects, and skills."
+        "fr": "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\\nComment puis-je vous aider aujourd'hui ?",
+        "en": "Hello! I am Agent M84, Ayoub MOSLIH's virtual assistant.\\nHow can I help you today?"
       },
       "ctas": [
         { "text": { "fr": "Voir ses services", "en": "Explore services" }, "action": "navigate", "target": "/about#expertise" },
@@ -159,8 +159,8 @@
         "Période consultant"
       ],
       "answer": {
-        "fr": "Ayoub cumule 19 ans de parcours :\n- **Consultant Digital & IA (2024 - Présent)** : Accompagnement, audit, LLM & automatisation.\n- **Lead UX/UI & Product Designer (2019-2023)** chez CGI, OCP, Crédit du Maroc, Wiggli.",
-        "en": "Ayoub has a 19-year track record:\n- **Digital & AI Consultant (2024 - Present)**: Strategy, audit, LLM & automation.\n- **Lead UX/UI & Product Designer (2019-2023)** at CGI, OCP, Crédit du Maroc, Wiggli."
+        "fr": "Ayoub cumule 19 ans de parcours :\n- **Consultant Digital & IA (2024 - Présent)** : Autocash, JSEI Capital, HBM (LLM, automatisation, audit).\n- **Lead UX/UI & Product Designer (2014-2023)** chez CGI, OCP, Crédit du Maroc, Wiggli, Futur Digital.",
+        "en": "Ayoub has a 19-year track record:\n- **Digital & AI Consultant (2024 - Present)**: Autocash, JSEI Capital, HBM (LLM, automation, audit).\n- **Lead UX/UI & Product Designer (2014-2023)** at CGI, OCP, Crédit du Maroc, Wiggli, Futur Digital."
       },
       "ctas": [
         { "text": { "fr": "Voir la timeline", "en": "View timeline" }, "action": "navigate", "target": "/about#timeline" },
@@ -226,8 +226,8 @@
         "Prendre RDV"
       ],
       "answer": {
-        "fr": "L'Agent M84 peut vous assister pour planifier une consultation digitale, échanger sur un projet ou initier une collaboration :",
-        "en": "Agent M84 can assist you to schedule a digital consultation, discuss a project, or start a collaboration:"
+        "fr": "L'Agent M84 peut vous assister pour planifier une consultation digitale ou initier une collaboration B2B. Chaque projet étant sur-mesure, Ayoub ne fournit pas de devis direct. Laissez vos coordonnées :",
+        "en": "Agent M84 can assist you to schedule a digital consultation or start a B2B collaboration. Each project is tailor-made, so Ayoub does not provide direct quotes. Leave your details:"
       },
       "ctas": [
         { "text": { "fr": "Discuter sur WhatsApp", "en": "Chat on WhatsApp" }, "action": "external", "target": "https://wa.me/212663585065" },

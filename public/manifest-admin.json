@@ -1,0 +1,17 @@
+{
+  "name": "M84 Admin",
+  "short_name": "M84 Admin",
+  "description": "Backoffice de gestion du portfolio d'Ayoub MOSLIH",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "start_url": "/admin/dashboard",
+  "icons": [
+    {
+      "src": "/admin-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

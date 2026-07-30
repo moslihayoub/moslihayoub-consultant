@@ -10,6 +10,8 @@ import PwaInstallPrompt from './components/PwaInstallPrompt';
 
 import { LanguageProvider } from './contexts/LanguageContext';
 import './index.css';
+import { db } from './utils/firebaseConfig';
+import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
@@ -81,6 +83,43 @@ function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
+  useEffect(() => {
+    if (!isAdminRoute && !sessionStorage.getItem('m84_visited')) {
+      const trackVisit = async () => {
+        try {
+          if (!db) return;
+          sessionStorage.setItem('m84_visited', 'true');
+          const today = new Date().toISOString().split('T')[0];
+          const docRef = doc(db, 'analytics', today);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            await updateDoc(docRef, { visites: increment(1) });
+          } else {
+            await setDoc(docRef, { visites: 1, date: today, name: today.slice(5) }); // name: MM-DD for chart
+          }
+        } catch (e) {
+          console.warn("Analytics error:", e);
+        }
+      };
+      trackVisit();
+    }
+  }, [isAdminRoute]);
+
+  useEffect(() => {
+    let manifestLink = document.querySelector('link[rel="manifest"]');
+    if (!manifestLink) {
+      manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      document.head.appendChild(manifestLink);
+    }
+    if (isAdminRoute) {
+      manifestLink.href = '/manifest-admin.json';
+    } else {
+      // The default VitePWA manifest
+      manifestLink.href = '/manifest.webmanifest'; 
+    }
+  }, [isAdminRoute]);
+
   return (
     <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {!isAdminRoute && <CustomCursor />}
@@ -109,7 +148,7 @@ function AppContent() {
         </Suspense>
       )}
       {!isAdminRoute && <CookieBanner />}
-      <PwaInstallPrompt />
+      <PwaInstallPrompt isAdminRoute={isAdminRoute} />
     </div>
   );
 }

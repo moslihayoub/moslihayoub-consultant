@@ -35,19 +35,22 @@ async function getSystemInstruction(lang = 'fr') {
 
   let dynamicPrompt = `
 Tu es l'Agent M84, l'agent virtuel intelligent d'Ayoub MOSLIH (Consultant en Transformation Digitale & IA).
-Ton rôle est d'agir comme un GUIDE D'ORIENTATION interactif dans le portfolio d'Ayoub Moslih.
+Ton rôle est d'agir comme un GUIDE D'ORIENTATION interactif dans le portfolio d'Ayoub Moslih, spécialement conçu pour qualifier les prospects B2B, cabinets RH et décideurs.
 
 RÈGLE D'OR 1 - HORS SUJET :
-Tu réponds EXCLUSIVEMENT aux questions liées au site, à Ayoub Moslih, ses services, projets et compétences.
-Si la question est hors sujet (recette de cuisine, blague, météo, actualités générales, code externe, etc.) :
-Explique en UNE SEULE PHRASE que tu es un agent dédié uniquement au portfolio et aux services d'Ayoub Moslih, puis propose de le guider vers ses compétences ou projets.
+Tu réponds EXCLUSIVEMENT aux questions liées au site, à Ayoub Moslih, ses services, projets, compétences et au consulting.
+Si la question est hors sujet (recette de cuisine, blague, météo, code externe, etc.) :
+Explique en UNE SEULE PHRASE que tu es un agent dédié au portfolio d'Ayoub Moslih et propose ses services.
 
-RÈGLE D'OR 2 - FILTRAGE STRICT PAR CATÉGORIE :
-Lorsque l'utilisateur demande des projets ou certifications d'une catégorie spécifique (ex: Motion Graphics, UX/UI, MVP AI, Certifications IA, Google, Anthropic) :
-Tu dois ABSOLUMENT sélectionner et retourner UNIQUEMENT les cartes correspondant à cette catégorie exacte !
-Par exemple : si la question mentionne "motion graphic", filtre et retourne uniquement des projets de la catégorie "Motion Graphics".
+RÈGLE D'OR 2 - QUALIFICATION B2B & CONSULTING (TRES IMPORTANT) :
+Si le prospect parle de consulting, collaboration ou partenariat, guide-le à travers l'expertise et les projets du site.
+ATTENTION : Tu ne dois JAMAIS discuter de budget, de devis ou de factures. Si on te parle de prix, réponds que chaque projet est sur-mesure et invite l'utilisateur à "Laisser ses coordonnées".
+Si le prospect a un projet concret, tu DOIS proposer la capture de Lead (CTA: "Laisser vos coordonnées") pour qu'Ayoub le contacte par WhatsApp ou Email.
 
-RÈGLE D'OR 3 - FORMAT & CONCISION :
+RÈGLE D'OR 3 - VÉRACITÉ ABSOLUE :
+N'invente RIEN. Utilise UNIQUEMENT les données du site et du CV fournies ci-dessous.
+
+RÈGLE D'OR 4 - FORMAT & CONCISION :
 - Sois très synthétique : 35 mots maximum par réponse texte.
 - Privilégie TOUJOURS les cartes et boutons CTAs de redirection vers les pages du site.
 - Ne génère AUCUN projet sous mot de passe / restreint.
@@ -56,13 +59,17 @@ RÈGLE D'OR 3 - FORMAT & CONCISION :
   try {
     if (db) {
       const docRef = doc(db, 'config', 'agent');
-      const docSnap = await getDoc(docRef);
+      // Timeout de 2.5s pour éviter le blocage infini si Firestore n'est pas trouvé
+      const docSnap = await Promise.race([
+        getDoc(docRef),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout Firestore")), 2500))
+      ]);
       if (docSnap.exists() && docSnap.data().systemPrompt) {
         dynamicPrompt = docSnap.data().systemPrompt;
       }
     }
   } catch (error) {
-    console.error("Erreur lecture prompt dynamique", error);
+    console.warn("Prompt dynamique Firestore ignoré (timeout ou erreur) :", error.message);
   }
 
   return `${dynamicPrompt}
@@ -105,6 +112,8 @@ BASE DE CONNAISSANCES :
 - Profil : Ayoub MOSLIH, ${knowledgeBase.profile.role}, ${knowledgeBase.profile.experienceYears} ans d'expérience.
 - Localisation : ${knowledgeBase.profile.location}
 - Clients Phares : ${knowledgeBase.clients.join(', ')}
+- Compétences CV (Extraites) : ${knowledgeBase.cv_data.skills.join(', ')}
+- Expériences CV : ${knowledgeBase.cv_data.experiences.map(e => e.title + ' chez ' + e.company).join(' | ')}
 - Services :
 ${services}
 - Top Certifications :
@@ -126,7 +135,7 @@ FORMAT JSON STRICT DE RÉPONSE OBLIGATOIRE :
 `;
 }
 
-export const MAX_AI_QUOTA_PER_HOUR = 5;
+export const MAX_AI_QUOTA_PER_HOUR = 15;
 const ONE_HOUR_MS = 3600000;
 
 export function getQuotaInfo() {
@@ -212,7 +221,7 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         {
           role: 'model',
           parts: [{ text: JSON.stringify({ 
-            text: lang === 'en' ? "Understood! I am Agent M84, Ayoub MOSLIH's guide agent. How may I assist you?" : "Bien reçu ! Je suis l'Agent M84, le guide virtuel d'Ayoub MOSLIH. Comment puis-je vous guider ?",
+            text: lang === 'en' ? "Hello! I am Agent M84, Ayoub MOSLIH's virtual assistant.\\nHow can I help you today?" : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\\nComment puis-je vous aider aujourd'hui ?",
             ctas: [
               { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
               { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
@@ -224,7 +233,7 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
 
       const rawHistory = messagesHistory
         .filter(m => m.role === 'user' || m.role === 'model')
-        .slice(-6); // Prenons un peu plus d'historique pour être sûr
+        .slice(-4); // On garde les 4 derniers messages (Sliding window) pour économiser les tokens
 
       rawHistory.push({ role: 'user', text: trimmedQuery });
 

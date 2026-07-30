@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { projectsData as initialData } from '../../data/projects';
-import { Edit2, Trash2, Plus, Save, X, Upload, Search, Folder, Tag, Calendar, Lock, Globe, Image as ImageIcon, Eye, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit2, Trash2, Plus, Save, X, Upload, Search, Folder, Tag, Calendar, Lock, Globe, Image as ImageIcon, Eye, MoreVertical, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebaseConfig';
 import ExportButton from './ExportButton';
@@ -344,8 +344,11 @@ const ProjectsManager = () => {
               <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                 <td data-label="Projet" style={{ padding: '16px 8px', fontWeight: '500', color: '#0f172a' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Folder size={16} color="#94a3b8" />
-                    {p.title}
+                    <Folder size={16} color="#94a3b8" style={{ flexShrink: 0 }} />
+                    <div style={{ maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {p.title}
+                    </div>
+                    <Info size={14} color="#10b981" onClick={() => alert(p.title)} title={p.title} style={{ cursor: 'pointer', flexShrink: 0 }} />
                   </div>
                 </td>
                 <td data-label="Visuel" style={{ padding: '16px 8px' }}>

@@ -92,5 +92,32 @@ export const knowledgeBase = {
         image: p.image,
         url: p.url
       }));
+  },
+  cv_data: {
+    skills: [
+      "Intelligence artificielle (IA)", "Automation Audit UX/UI", "UX/UI & Heuristic Audits", "Design Systems",
+      "Mobile-First Design (Figma)", "No-Code (Figma Make, Webflow)", "Architecture de solutions IA",
+      "Prompt Engineering avancé", "Orchestration de workflows agentiques", "Project Management (Agile)", "Leadership d'équipe"
+    ],
+    experiences: [
+      { title: "Product Designer / UX/UI", company: "AUTOCASH", dates: "avril 2024 - Present", desc: "AI & Digital Transformation: Architecture de l'écosystème 360° (Back-office, App Mobile Experts, Marketplace). UX Audit & Strategy. Process Automation." },
+      { title: "Consultant UX/UI Designer", company: "JSEI CAPITAL MARKET", dates: "juillet 2023", desc: "App Mobile M-Commerce (YooDooGood). Audit heuristique, wireframes, Design System." },
+      { title: "Consultant Digital designer", company: "HBM COMMUNICATION", dates: "février 2023", desc: "Transformation digitale, méthodes Sprint Design et Agile." },
+      { title: "Consultant UX/UI Designer", company: "CGI", dates: "février 2022 - janvier 2023", desc: "Plateforme d’urbanisme Ville De Laval Canada. UX Research, stakeholders, wireframes, prototypes." },
+      { title: "UX/UI Designer", company: "WIGGLI", dates: "avril 2021 - janvier 2022", desc: "UX Research plateforme ATS Wiggli.io. Design System, prototypes." },
+      { title: "UX/UI Designer", company: "STIBITS", dates: "septembre 2020 - décembre 2020", desc: "App Stibits Wallet Blockchain. Design System, Atomic design." },
+      { title: "Consultant UX/UI Designer", company: "OCP SA", dates: "novembre 2019 - avril 2020", desc: "UX Research Plateforme BIG DATA OCP. Tests d’utilisabilité." },
+      { title: "Consultant UI Designer", company: "CREDIT DU MAROC", dates: "octobre 2019 - novembre 2019", desc: "UI Design intranet CDM. Design système Kit UI." },
+      { title: "Directeur artistique", company: "TNC", dates: "2017 - 2019", desc: "Interfaces utilisateur, stratégie artistique, création vidéo 2D." },
+      { title: "Graphiste / Teamleader", company: "FUTUR DIGITAL", dates: "2014 - 2017", desc: "UI pour SaaS, CRM, Web. Gestion de projets Agile." }
+    ],
+    certifications: [
+      { title: "Claude Code in Action - CLI Automation & Software Debugging", issuer: "Anthropic" },
+      { title: "Claude with the Anthropic API – Prompt Engineering, RAG", issuer: "Anthropic" },
+      { title: "Google Prompting Essentials", issuer: "Google" },
+      { title: "Gemini Certified Educator", issuer: "Google for Education" },
+      { title: "Generative AI for Product Managers", issuer: "SkillUp" },
+      { title: "Foundations of Project Management", issuer: "Google" }
+    ]
   }
 };
