@@ -130,6 +130,8 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
    - `ProtectedProjectModal.jsx` prend le mot de passe utilisateur et déchiffre l'URL dynamiquement.
 3. **Protection des Vidéos / Making-Of** :
    - Les vidéos YouTube intégrées utilisent un overlay CSS transparent pour empêcher le clic droit / extraction directe.
+4. **Firebase Security Rules & Fallback Data** :
+   - Les lectures Firestore (Admin) sont protégées. L'application `AdminDashboard` implémente un pattern de fallback (`try/catch`) : si les règles de sécurité bloquent la requête (absence de Firebase Auth), les composants injectent statiquement les données par défaut (issues du CSV) pour garantir que l'UI ne se brise jamais.
 
 ---
 

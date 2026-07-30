@@ -81,6 +81,10 @@
 - **Correction de l'Espace Vide** : Réajustement des `padding` (14px) et retrait de la restriction de hauteur sur les grilles mobiles pour utiliser l'intégralité de l'écran.
 - **Identité Visuelle** : Titres principaux en vert (`#006253`), et tableaux gardés lisibles avec leurs en-têtes neutres.
 
+### 10. 🔌 Synchronisation des Données & PWA
+- **Fallback CSV (Dashboard & CRM)** : Injection automatique des données de leads depuis le fichier CSV lorsque les règles de sécurité Firestore bloquent la lecture (pas d'Auth configurée), garantissant que le dashboard s'affiche toujours avec des données concrètes.
+- **Toaster PWA** : Ajout d'un déclencheur de secours (timer de 3.5s) pour forcer l'affichage de l'invite d'installation sur les navigateurs qui ne déclenchent pas l'événement natif `beforeinstallprompt` (notamment iOS Safari), avec instructions manuelles.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
@@ -91,5 +95,5 @@
 - [x] Optimisation de l'Admin Dashboard (Responsive Mobile, Tiroirs, FAB, Animations).
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
-- [ ] Déploiement Vercel.
+- [x] Déploiement Vercel.
 
