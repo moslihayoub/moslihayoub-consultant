@@ -161,7 +161,6 @@ const AdminDashboard = () => {
           .desktop-toggle-btn:hover {
             background: #475569;
           }
-        }
         @media (max-width: 768px) {
           .admin-sidebar {
             display: none !important;
