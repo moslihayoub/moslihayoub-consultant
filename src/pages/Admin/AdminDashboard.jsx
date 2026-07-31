@@ -143,23 +143,24 @@ const AdminDashboard = () => {
           overflow-y: auto;
           width: 100%;
         }
-          align-items: center;
-          justify-content: space-between;
-        }
-        .desktop-toggle-btn {
-          background: rgba(255,255,255,0.1);
-          border: none;
-          color: white;
-          cursor: pointer;
-          border-radius: 8px;
-          padding: 6px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background 0.2s;
-        }
-        .desktop-toggle-btn:hover {
-          background: rgba(255,255,255,0.2);
+          .admin-sidebar.open {
+            transform: translateX(0);
+          }
+          .desktop-toggle-btn {
+            background: #334155;
+            border: none;
+            color: white;
+            padding: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+          }
+          .desktop-toggle-btn:hover {
+            background: #475569;
+          }
         }
         @media (max-width: 768px) {
           .admin-sidebar {
@@ -220,7 +221,7 @@ const AdminDashboard = () => {
           border-radius: 8px;
         }
         .mobile-nav-btn.active {
-          color: #10b981;
+          color: white;
         }
       `}</style>
 

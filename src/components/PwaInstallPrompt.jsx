@@ -9,6 +9,9 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
   const { t, lang } = useLanguage();
 
   useEffect(() => {
+    // If dismissed permanently, don't show it again
+    if (localStorage.getItem('m84_pwa_dismissed')) return;
+
     let fired = false;
     const handler = (e) => {
       fired = true;
@@ -36,6 +39,7 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
   }, []);
 
   const handleInstallClick = async () => {
+    localStorage.setItem('m84_pwa_dismissed', 'true');
     if (!deferredPrompt) {
       alert(lang === 'fr' 
         ? "Pour installer l'application, appuyez sur l'icône de partage ⍗ (iOS) ou sur le menu ⋮ (Android/Chrome) puis choisissez 'Ajouter sur l'écran d'accueil'." 
@@ -55,6 +59,7 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
   };
 
   const handleClose = () => {
+    localStorage.setItem('m84_pwa_dismissed', 'true');
     setIsVisible(false);
   };
 
