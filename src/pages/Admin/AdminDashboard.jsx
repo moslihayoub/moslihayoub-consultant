@@ -8,6 +8,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { collection, getDocs, query, orderBy, limit, doc, setDoc, addDoc } from 'firebase/firestore';
 import { app, db } from '../../utils/firebaseConfig';
+import { fallbackLeads } from '../../data/fallbackLeads';
 
 
 const AdminDashboard = () => {
@@ -78,15 +79,23 @@ const AdminDashboard = () => {
 
       // 2. Fetch Leads
       const leadsSnap = await getDocs(collection(db, 'leads'));
-      setTotalLeads(leadsSnap.size);
+      
+      let leadsList = [];
+      leadsSnap.forEach(doc => leadsList.push(doc.data()));
+      
+      if (leadsList.length === 0) {
+        setTotalLeads(fallbackLeads.length);
+        leadsList = fallbackLeads;
+      } else {
+        setTotalLeads(leadsSnap.size);
+      }
       
       const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
       const leadsCountByMonth = {};
-      leadsSnap.forEach(doc => {
-        const data = doc.data();
+      leadsList.forEach(data => {
         let m = 'Récents';
         if (data.createdAt) {
-           const d = new Date(data.createdAt);
+           const d = data.createdAt?.toMillis ? new Date(data.createdAt.toMillis()) : new Date(data.createdAt);
            if (!isNaN(d)) m = months[d.getMonth()];
         }
         leadsCountByMonth[m] = (leadsCountByMonth[m] || 0) + 1;
@@ -98,9 +107,9 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Erreur Firestore :', error);
       // Fallback CSV Data if Firestore is locked
-      setTotalLeads(4);
-      setLeadsData([{ name: '07-24', leads: 4 }]);
-      setTrafficData([{ name: '07-24', visites: 15 }]);
+      setTotalLeads(fallbackLeads.length);
+      setLeadsData([{ name: 'Juil', leads: fallbackLeads.length }]);
+      setTrafficData([{ name: 'Récents', visites: 15 }]);
       setLoadingTraffic(false);
     } finally {
       setLoadingTraffic(false);
