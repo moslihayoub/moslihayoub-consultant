@@ -3,6 +3,7 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/fire
 import { db } from '../../utils/firebaseConfig';
 import { Mail, Clock, CheckCircle2, Trash2, Search, MoreVertical, ChevronLeft, ChevronRight, X, User, Phone, Briefcase, MessageSquare } from 'lucide-react';
 import ExportButton from './ExportButton';
+import { fallbackLeads } from '../../data/fallbackLeads';
 
 const CrmLeadsManager = () => {
   const [leads, setLeads] = useState([]);
@@ -43,12 +44,7 @@ const CrmLeadsManager = () => {
     }, (error) => {
       console.error("Erreur lecture leads:", error);
       // Fallback CSV Data if Firestore is locked
-      setLeads([
-        { id: '1', name: 'aziz', email: '663565856', message: 'Lead via Chatbot (fr). Type: Professionnel', status: 'nouveau', createdAt: '2026-07-24T12:00:00.000Z', source: 'chatbot' },
-        { id: '2', name: 'ayman', email: '663585858', message: 'Lead via Chatbot (en). Type: Professional', status: 'qualifier', createdAt: '2026-07-24T12:05:00.000Z', source: 'chatbot' },
-        { id: '3', name: 'Bssila', email: 'Non renseigné', message: 'Lead via Chatbot (fr). Type: Autre', status: 'non_aboutie', createdAt: '2026-07-24T12:10:00.000Z', source: 'chatbot' },
-        { id: '4', name: 'amine', email: 'Non renseigné', message: 'Lead via Chatbot (fr). Type: Autre', status: 'nouveau', createdAt: '2026-07-24T12:15:00.000Z', source: 'chatbot' }
-      ]);
+      setLeads(fallbackLeads);
       setLoading(false);
     });
 
@@ -418,9 +414,30 @@ const CrmLeadsManager = () => {
                 <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <MessageSquare size={16} /> Historique / Message
                 </h4>
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', color: '#334155', fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
-                  {selectedLead.message}
-                </div>
+                
+                {selectedLead.history && selectedLead.history.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {selectedLead.history.map((msg, index) => (
+                      <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* User Message */}
+                        <div style={{ alignSelf: 'flex-end', background: '#006253', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 0 16px', maxWidth: '85%', fontSize: '14px', lineHeight: '1.5' }}>
+                          {msg.leadMsg}
+                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)', textAlign: 'right', marginTop: '4px' }}>
+                            {msg.date.split(',')[0]}
+                          </div>
+                        </div>
+                        {/* Bot Message */}
+                        <div style={{ alignSelf: 'flex-start', background: '#f1f5f9', color: '#334155', padding: '12px 16px', borderRadius: '16px 16px 16px 0', maxWidth: '85%', fontSize: '14px', lineHeight: '1.5', border: '1px solid #e2e8f0' }}>
+                          {msg.botMsg}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', color: '#334155', fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
+                    {selectedLead.message}
+                  </div>
+                )}
               </div>
 
             </div>
