@@ -130,12 +130,24 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
    - `ProtectedProjectModal.jsx` prend le mot de passe utilisateur et déchiffre l'URL dynamiquement.
 3. **Protection des Vidéos / Making-Of** :
    - Les vidéos YouTube intégrées utilisent un overlay CSS transparent pour empêcher le clic droit / extraction directe.
-4. **Firebase Security Rules & Fallback Data** :
-   - Les lectures Firestore (Admin) sont protégées. L'application `AdminDashboard` implémente un pattern de fallback (`try/catch`) : si les règles de sécurité bloquent la requête (absence de Firebase Auth), les composants injectent statiquement les données par défaut (issues du CSV) pour garantir que l'UI ne se brise jamais.
+4. **Firebase Security Rules & Fallback Data Extensif** :
+   - Les lectures Firestore (Admin) sont protégées. L'application (`AdminDashboard`, `CrmLeadsManager`) implémente un pattern de fallback (`try/catch` ET contrôle de collection vide `leadsData.length === 0`) : si les règles bloquent la requête (absence de Firebase Auth) ou si la base est totalement vierge, les composants injectent statiquement les données par défaut (issues du parsing CSV `src/data/fallbackLeads.js`) pour garantir que l'UI, les graphiques et le tableau de bord affichent toujours des statistiques et informations concrètes.
 
 ---
 
-## 🧪 5. Protocole de Test & Déploiement Strict
+## 📱 5. PWA (Progressive Web App) & Expérience Mobile
+
+1. **Prompt d'Installation Personnalisé** :
+   - Safari iOS ne déclenchant pas l'événement `beforeinstallprompt`, le composant `PwaInstallPrompt` utilise un minuteur (3.5s) pour forcer l'affichage du toaster.
+   - Si le navigateur bloque l'installation native, un fallback UI affiche les instructions au sein du toaster ("Appuyez sur l'icône de partage..."), sans jamais recourir à des popups système (`alert()`).
+2. **Double Détection** :
+   - Toujours vérifier le statut `window.matchMedia('(display-mode: standalone)').matches` et `window.navigator.standalone` au montage pour ne pas ennuyer un utilisateur ayant déjà installé la PWA.
+3. **Séparation Logique** :
+   - Les contextes d'installation doivent rester indépendants selon le périmètre (Portfolio Front vs Backoffice Admin). On utilise des clés de localStorage distinctes (`m84_pwa_dismissed_portfolio` et `m84_pwa_dismissed_admin`).
+
+---
+
+## 🧪 6. Protocole de Test & Déploiement Strict
 
 Après chaque modification ou ajout de page :
 

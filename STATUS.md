@@ -81,9 +81,14 @@
 - **Correction de l'Espace Vide** : Réajustement des `padding` (14px) et retrait de la restriction de hauteur sur les grilles mobiles pour utiliser l'intégralité de l'écran.
 - **Identité Visuelle** : Titres principaux en vert (`#006253`), et tableaux gardés lisibles avec leurs en-têtes neutres.
 
-### 10. 🔌 Synchronisation des Données & PWA
-- **Fallback CSV (Dashboard & CRM)** : Injection automatique des données de leads depuis le fichier CSV lorsque les règles de sécurité Firestore bloquent la lecture (pas d'Auth configurée), garantissant que le dashboard s'affiche toujours avec des données concrètes.
-- **Toaster PWA** : Ajout d'un déclencheur de secours (timer de 3.5s) pour forcer l'affichage de l'invite d'installation sur les navigateurs qui ne déclenchent pas l'événement natif `beforeinstallprompt` (notamment iOS Safari), avec instructions manuelles.
+### 10. 🔌 Synchronisation des Données, CRM & PWA
+- **Fallback CSV Complet (Dashboard & CRM)** : Injection automatique des données de leads depuis le fichier CSV lorsque les règles de sécurité Firestore bloquent la lecture ou que la base est vide. Le dashboard affiche toujours des statistiques concrètes (graphiques par mois) et le CRM liste les contacts.
+- **Modale CRM Historique de Conversation** : En cliquant sur un lead dans le Back-office, une modale affiche l'historique complet de la discussion entre l'utilisateur et le Chatbot avant la capture de l'email, avec une UI de bulles de chat (type WhatsApp/Messenger).
+- **Toaster PWA Intelligent** :
+  - Déclencheur de secours (timer de 3.5s) pour afficher l'invite d'installation sur les navigateurs sans `beforeinstallprompt` (iOS Safari).
+  - Suppression de l'alerte native `alert()` sur iOS, remplacée par des instructions d'installation UI (`Appuyez sur l'icône de partage...`) qui s'affichent directement à l'intérieur du toaster.
+  - Tracking d'installation séparé via clés `localStorage` distinctes pour le Portfolio (`m84_pwa_dismissed_portfolio`) et le Backoffice (`m84_pwa_dismissed_admin`), afin que l'un ne masque pas l'autre.
+  - Détection automatique du mode `standalone` pour masquer définitivement l'invite si l'app est déjà installée.
 
 ---
 
@@ -93,6 +98,8 @@
 - [x] Intégration des images dans les cartes projets UI du chat.
 - [x] Alignement UX pour "Voir ses services".
 - [x] Optimisation de l'Admin Dashboard (Responsive Mobile, Tiroirs, FAB, Animations).
+- [x] Affichage de l'historique complet de discussion Chatbot (UI Bulles de chat) dans la modale CRM Lead.
+- [x] Refonte de l'installation PWA (Custom UI iOS, Détection standalone, Séparation Portfolio/Admin).
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Déploiement Vercel.
