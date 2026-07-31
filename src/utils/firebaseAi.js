@@ -221,7 +221,7 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
         {
           role: 'model',
           parts: [{ text: JSON.stringify({ 
-            text: lang === 'en' ? "Hello! I am Agent M84, Ayoub MOSLIH's virtual assistant.\\nHow can I help you today?" : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\\nComment puis-je vous aider aujourd'hui ?",
+            text: lang === 'en' ? "Hello! I am Agent M84, Ayoub MOSLIH's virtual assistant.\nHow can I help you today?" : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\nComment puis-je vous aider aujourd'hui ?",
             ctas: [
               { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
               { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }

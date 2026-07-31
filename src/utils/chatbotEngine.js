@@ -239,7 +239,7 @@ export function findBestMatch(userQuery, lang = 'fr') {
         matched: true,
         text: currentLang === 'en'
           ? "I am Agent M84, dedicated solely to Ayoub MOSLIH's portfolio and services. How can I guide you regarding his projects or expertise?"
-          : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\\nComment puis-je vous aider aujourd'hui ?",
+          : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\nComment puis-je vous aider aujourd'hui ?",
         ctas: [
           { text: currentLang === 'en' ? "View Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
           { text: currentLang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }

@@ -276,11 +276,45 @@ const ProjectsManager = () => {
       )}
 
       <style>{`
-        .table-scroll-container { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 250px); border: 1px solid #f1f5f9; border-radius: 8px; }
+        .table-scroll-container { overflow-x: auto; border: 1px solid #f1f5f9; border-radius: 8px; }
         
         .animated-backdrop { animation: fadeIn 0.3s ease-out; }
         .animated-drawer-right { animation: slideInRight 0.3s ease-out; }
         
+        .custom-tooltip {
+          visibility: hidden;
+          background-color: #334155;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 6px 10px;
+          position: absolute;
+          z-index: 10;
+          bottom: 125%;
+          left: 50%;
+          transform: translateX(-50%);
+          opacity: 0;
+          transition: opacity 0.2s;
+          white-space: nowrap;
+          font-size: 12px;
+          font-weight: 500;
+          pointer-events: none;
+        }
+        .custom-tooltip::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: #334155 transparent transparent transparent;
+        }
+        .tooltip-container:hover .custom-tooltip {
+          visibility: visible;
+          opacity: 1;
+        }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -348,7 +382,10 @@ const ProjectsManager = () => {
                     <div style={{ maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {p.title}
                     </div>
-                    <Info size={14} color="#10b981" onClick={() => alert(p.title)} title={p.title} style={{ cursor: 'pointer', flexShrink: 0 }} />
+                    <div className="tooltip-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <Info size={14} color="#10b981" style={{ cursor: 'pointer', flexShrink: 0 }} />
+                      <span className="custom-tooltip">{p.title}</span>
+                    </div>
                   </div>
                 </td>
                 <td data-label="Visuel" style={{ padding: '16px 8px' }}>

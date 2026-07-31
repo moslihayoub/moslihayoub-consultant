@@ -39,7 +39,11 @@ const CrmLeadsManager = () => {
         const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (new Date(b.createdAt).getTime() || 0);
         return dateB - dateA;
       });
-      setLeads(leadsData);
+      if (leadsData.length === 0) {
+        setLeads(fallbackLeads);
+      } else {
+        setLeads(leadsData);
+      }
       setLoading(false);
     }, (error) => {
       console.error("Erreur lecture leads:", error);
