@@ -6,11 +6,19 @@ import { useLanguage } from '../contexts/LanguageContext';
 const PwaInstallPrompt = ({ isAdminRoute }) => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [showIosInstructions, setShowIosInstructions] = useState(false);
   const { t, lang } = useLanguage();
+
+  const storageKey = isAdminRoute ? 'm84_pwa_dismissed_admin' : 'm84_pwa_dismissed_portfolio';
 
   useEffect(() => {
     // If dismissed permanently, don't show it again
-    if (localStorage.getItem('m84_pwa_dismissed')) return;
+    if (localStorage.getItem(storageKey)) return;
+    
+    // Don't show prompt if app is running in standalone mode (already installed and opened)
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+      return;
+    }
 
     let fired = false;
     const handler = (e) => {
@@ -28,6 +36,8 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
     // Fallback for iOS / Safari or when beforeinstallprompt doesn't fire
     const timer = setTimeout(() => {
       if (!fired && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator.standalone) {
+        // If it's admin route, maybe we don't even show the fallback to avoid annoying them? 
+        // We'll show it but they can dismiss it.
         setIsVisible(true);
       }
     }, 3500);
@@ -36,15 +46,13 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
       window.removeEventListener('beforeinstallprompt', handler);
       clearTimeout(timer);
     };
-  }, []);
+  }, [storageKey]);
 
   const handleInstallClick = async () => {
-    localStorage.setItem('m84_pwa_dismissed', 'true');
+    localStorage.setItem(storageKey, 'true');
     if (!deferredPrompt) {
-      alert(lang === 'fr' 
-        ? "Pour installer l'application, appuyez sur l'icône de partage ⍗ (iOS) ou sur le menu ⋮ (Android/Chrome) puis choisissez 'Ajouter sur l'écran d'accueil'." 
-        : "To install the app, tap the share icon ⍗ (iOS) or the menu ⋮ (Android/Chrome) and select 'Add to Home Screen'.");
-      setIsVisible(false);
+      // Show custom iOS instructions instead of native alert
+      setShowIosInstructions(true);
       return;
     }
     // Hide our user interface that shows our A2HS button
@@ -59,8 +67,9 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
   };
 
   const handleClose = () => {
-    localStorage.setItem('m84_pwa_dismissed', 'true');
+    localStorage.setItem(storageKey, 'true');
     setIsVisible(false);
+    setShowIosInstructions(false);
   };
 
   return (
@@ -93,26 +102,40 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
             <X size={16} />
           </button>
           <div style={styles.content}>
-            <div style={styles.iconContainer}>
-              <img src={isAdminRoute ? "/admin-icon.svg" : "/favicon.svg"} alt="App Icon" style={styles.icon} />
-            </div>
-            <div style={styles.textContainer}>
-              <h4 style={styles.title}>
-                {isAdminRoute 
-                  ? 'M84 Admin' 
-                  : (lang === 'fr' ? 'Ayoub MOSLIH - Portfolio' : 'Ayoub MOSLIH - Portfolio')}
-              </h4>
-              <p style={styles.desc}>
-                {isAdminRoute 
-                  ? (lang === 'fr' ? 'Installez le Backoffice pour gérer vos leads.' : 'Install the Backoffice to manage leads.')
-                  : (lang === 'fr' ? 'Installez l\'application pour explorer mes projets.' : 'Install the app to explore my projects.')}
-              </p>
-            </div>
+            {showIosInstructions ? (
+              <div style={{ padding: '8px 0', textAlign: 'center' }}>
+                <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: '1.5', margin: 0 }}>
+                  {lang === 'fr' 
+                    ? "Pour installer, appuyez sur l'icône de partage ⍗ (iOS) ou sur le menu ⋮ (Chrome) puis choisissez 'Ajouter sur l'écran d'accueil'." 
+                    : "To install, tap the share icon ⍗ (iOS) or the menu ⋮ (Chrome) and select 'Add to Home Screen'."}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div style={styles.iconContainer}>
+                  <img src={isAdminRoute ? "/admin-icon.svg" : "/favicon.svg"} alt="App Icon" style={styles.icon} />
+                </div>
+                <div style={styles.textContainer}>
+                  <h4 style={styles.title}>
+                    {isAdminRoute 
+                      ? 'M84 Admin' 
+                      : (lang === 'fr' ? 'Ayoub MOSLIH - Portfolio' : 'Ayoub MOSLIH - Portfolio')}
+                  </h4>
+                  <p style={styles.desc}>
+                    {isAdminRoute 
+                      ? (lang === 'fr' ? 'Installez le Backoffice pour y accéder plus rapidement.' : 'Install the Backoffice for faster access.')
+                      : (lang === 'fr' ? 'Installez l\'application pour explorer mes projets.' : 'Install the app to explore my projects.')}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-          <button onClick={handleInstallClick} className="btn-primary hover-trigger" style={styles.installBtn}>
-            <Download size={16} />
-            {lang === 'fr' ? 'Installer' : 'Install'}
-          </button>
+          {!showIosInstructions && (
+            <button onClick={handleInstallClick} className="btn-primary hover-trigger" style={styles.installBtn}>
+              <Download size={16} />
+              {lang === 'fr' ? 'Installer' : 'Install'}
+            </button>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
