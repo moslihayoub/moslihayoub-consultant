@@ -30,61 +30,86 @@ const AdminDashboard = () => {
     }
   }, [activeTab]);
 
+  const [filterStartMonth, setFilterStartMonth] = useState('');
+  const [filterEndMonth, setFilterEndMonth] = useState('');
+  const [allLeadsList, setAllLeadsList] = useState([]);
+  const [allTrafficList, setAllTrafficList] = useState([]);
+
   const fetchData = async () => {
     setLoadingTraffic(true);
     try {
       if (!db) return;
 
       // 1. Fetch Traffic
-      const trafficQ = query(collection(db, 'analytics'), orderBy('date', 'desc'), limit(7));
+      const trafficQ = query(collection(db, 'analytics'), orderBy('date', 'desc'), limit(30)); // Plus de jours pour filtrer
       const trafficSnap = await getDocs(trafficQ);
       const tData = [];
       trafficSnap.forEach(doc => tData.push(doc.data()));
       tData.reverse(); // Chronological
-      if (tData.length > 0) {
-        setTrafficData(tData);
-      } else {
-        setTrafficData([{ name: 'Aucune', visites: 0 }]);
-      }
+      setAllTrafficList(tData);
 
       // 2. Fetch Leads
       const leadsSnap = await getDocs(collection(db, 'leads'));
-      
       let leadsList = [];
       leadsSnap.forEach(doc => leadsList.push(doc.data()));
       
       if (leadsList.length === 0) {
-        setTotalLeads(fallbackLeads.length);
         leadsList = fallbackLeads;
-      } else {
-        setTotalLeads(leadsSnap.size);
       }
-      
-      const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-      const leadsCountByMonth = {};
-      leadsList.forEach(data => {
-        let m = 'Récents';
-        if (data.createdAt) {
-           const d = data.createdAt?.toMillis ? new Date(data.createdAt.toMillis()) : new Date(data.createdAt);
-           if (!isNaN(d)) m = months[d.getMonth()];
-        }
-        leadsCountByMonth[m] = (leadsCountByMonth[m] || 0) + 1;
-      });
-      
-      const lData = Object.keys(leadsCountByMonth).map(k => ({ name: k, leads: leadsCountByMonth[k] }));
-      setLeadsData(lData.length > 0 ? lData : [{ name: 'Aucun', leads: 0 }]);
-
+      setAllLeadsList(leadsList);
     } catch (error) {
       console.error('Erreur Firestore :', error);
-      // Fallback CSV Data if Firestore is locked
-      setTotalLeads(fallbackLeads.length);
-      setLeadsData([{ name: 'Juil', leads: fallbackLeads.length }]);
-      setTrafficData([{ name: 'Récents', visites: 15 }]);
-      setLoadingTraffic(false);
+      setAllLeadsList(fallbackLeads);
+      setAllTrafficList([{ name: 'Récents', visites: 15, date: '2026-07-24' }]);
     } finally {
       setLoadingTraffic(false);
     }
   };
+
+  // Recalculer les données quand les filtres changent
+  useEffect(() => {
+    // Filtrage des leads
+    let filteredLeads = [...allLeadsList];
+    let filteredTraffic = [...allTrafficList];
+
+    if (filterStartMonth) {
+      const start = new Date(filterStartMonth + '-01T00:00:00');
+      filteredLeads = filteredLeads.filter(l => {
+        const d = l.createdAt?.toMillis ? new Date(l.createdAt.toMillis()) : new Date(l.createdAt);
+        return d >= start;
+      });
+      filteredTraffic = filteredTraffic.filter(t => new Date(t.date) >= start);
+    }
+    if (filterEndMonth) {
+      const end = new Date(filterEndMonth + '-01T00:00:00');
+      end.setMonth(end.getMonth() + 1); // Jusqu'à la fin du mois
+      filteredLeads = filteredLeads.filter(l => {
+        const d = l.createdAt?.toMillis ? new Date(l.createdAt.toMillis()) : new Date(l.createdAt);
+        return d < end;
+      });
+      filteredTraffic = filteredTraffic.filter(t => new Date(t.date) < end);
+    }
+
+    setTotalLeads(filteredLeads.length);
+
+    // Group leads by month
+    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+    const leadsCountByMonth = {};
+    filteredLeads.forEach(data => {
+      let m = 'Récents';
+      if (data.createdAt) {
+         const d = data.createdAt?.toMillis ? new Date(data.createdAt.toMillis()) : new Date(data.createdAt);
+         if (!isNaN(d)) m = months[d.getMonth()];
+      }
+      leadsCountByMonth[m] = (leadsCountByMonth[m] || 0) + 1;
+    });
+    const lData = Object.keys(leadsCountByMonth).map(k => ({ name: k, leads: leadsCountByMonth[k] }));
+    setLeadsData(lData.length > 0 ? lData : [{ name: 'Aucun', leads: 0 }]);
+
+    // Set Traffic
+    setTrafficData(filteredTraffic.length > 0 ? filteredTraffic : [{ name: 'Aucune', visites: 0 }]);
+
+  }, [allLeadsList, allTrafficList, filterStartMonth, filterEndMonth]);
 
   const handleLogout = () => {
     localStorage.removeItem('m84_admin_token');
@@ -252,6 +277,38 @@ const AdminDashboard = () => {
               <h1 style={{ fontSize: '32px', margin: '0 0 8px 0', fontWeight: 'bold', color: '#0f172a' }}>Bienvenue, Ayoub.</h1>
               <p style={{ margin: 0, color: '#64748b' }}>Gestion simplifiée de votre portfolio M84.</p>
             </div>
+            
+            {activeTab === 'overview' && (
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                  <span style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>Du</span>
+                  <input 
+                    type="month" 
+                    value={filterStartMonth}
+                    onChange={e => setFilterStartMonth(e.target.value)}
+                    style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', color: '#0f172a', fontFamily: 'inherit' }}
+                  />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                  <span style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>Au</span>
+                  <input 
+                    type="month" 
+                    value={filterEndMonth}
+                    onChange={e => setFilterEndMonth(e.target.value)}
+                    style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', color: '#0f172a', fontFamily: 'inherit' }}
+                  />
+                </div>
+                {(filterStartMonth || filterEndMonth) && (
+                  <button 
+                    onClick={() => { setFilterStartMonth(''); setFilterEndMonth(''); }}
+                    style={{ background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+                    title="Réinitialiser"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            )}
           </header>
 
           {activeTab === 'overview' && (
