@@ -22,37 +22,7 @@ const AdminDashboard = () => {
   const [loadingTraffic, setLoadingTraffic] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
 
-  // Auto-import CSV data once
-  useEffect(() => {
-    const importCsvData = async () => {
-      if (localStorage.getItem('m84_csv_imported')) return;
-      try {
-        console.log("Importing CSV Leads...");
-        const csvLeads = [
-          { name: 'aziz', phone: '663565856', type: 'Professionnel', lang: 'fr', date: '2026-07-24T12:00:00.000Z' },
-          { name: 'ayman', phone: '663585858', type: 'Professional', lang: 'en', date: '2026-07-24T12:05:00.000Z' },
-          { name: 'Bssila', phone: 'Non renseigné', type: 'Autre', lang: 'fr', date: '2026-07-24T12:10:00.000Z' },
-          { name: 'amine', phone: 'Non renseigné', type: 'Autre', lang: 'fr', date: '2026-07-24T12:15:00.000Z' }
-        ];
-        for (const l of csvLeads) {
-          await addDoc(collection(db, 'leads'), {
-            name: l.name,
-            email: l.phone,
-            message: `Lead via Chatbot (${l.lang}). Type: ${l.type}`,
-            createdAt: new Date(l.date),
-            status: 'unread',
-            source: 'chatbot'
-          });
-        }
-        await setDoc(doc(db, 'analytics', '2026-07-24'), { visites: 15, date: '2026-07-24', name: '07-24' }, { merge: true });
-        localStorage.setItem('m84_csv_imported', 'true');
-        console.log("CSV Import terminé !");
-      } catch (e) {
-        console.error("Erreur import CSV:", e);
-      }
-    };
-    importCsvData();
-  }, []);
+  // Auto-import CSV data disabled to prevent duplicates
 
   useEffect(() => {
     if (activeTab === 'overview') {

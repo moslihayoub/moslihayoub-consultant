@@ -16,6 +16,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
     
+    // Configuration de l'agent (System Prompt)
+    match /config/{docId} {
+      allow read, write: if true;
+    }
+    
     // Par défaut, bloque tout le reste pour la sécurité
     match /{document=**} {
       allow read, write: if false;

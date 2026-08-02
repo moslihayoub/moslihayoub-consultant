@@ -259,10 +259,14 @@ const ChatWidget = () => {
       try {
         if (db) {
           import('firebase/firestore').then(({ addDoc, collection }) => {
+            const historyText = messages
+              .map(m => `${m.role === 'user' ? 'Visiteur' : 'Agent'}: ${m.text}`)
+              .join('\n');
+              
             addDoc(collection(db, 'leads'), {
               name: leadData.name || 'Inconnu',
-              email: finalContact, // Utilise le contact comme email/tel
-              message: `Lead capturé via Chatbot. Type: ${leadData.type || 'Non spécifié'}`,
+              email: finalContact,
+              message: `Lead capturé via Chatbot. Type: ${leadData.type || 'Non spécifié'}\n\n--- Historique ---\n${historyText}`,
               status: 'unread',
               createdAt: new Date(),
               source: 'chatbot'
