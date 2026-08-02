@@ -15,6 +15,8 @@ const CrmLeadsManager = () => {
   // Filters
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState(''); 
+  const [filterStartMonth, setFilterStartMonth] = useState('');
+  const [filterEndMonth, setFilterEndMonth] = useState('');
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,7 +70,7 @@ const CrmLeadsManager = () => {
   // Reset page to 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, filterStatus]);
+  }, [search, filterStatus, filterStartMonth, filterEndMonth]);
 
   const updateLeadStatus = async (leadId, newStatus) => {
     try {
@@ -112,8 +114,24 @@ const CrmLeadsManager = () => {
     if (filterStatus) {
       matchesStatus = l.status === filterStatus || (filterStatus === 'nouveau' && (!l.status || l.status === 'unread'));
     }
+    
+    let matchesDate = true;
+    if (l.createdAt) {
+      const d = l.createdAt?.toMillis ? new Date(l.createdAt.toMillis()) : new Date(l.createdAt);
+      if (!isNaN(d.getTime())) {
+        if (filterStartMonth) {
+          const start = new Date(filterStartMonth + '-01T00:00:00');
+          if (d < start) matchesDate = false;
+        }
+        if (filterEndMonth) {
+          const end = new Date(filterEndMonth + '-01T00:00:00');
+          end.setMonth(end.getMonth() + 1); // Jusqu'à la fin du mois
+          if (d >= end) matchesDate = false;
+        }
+      }
+    }
 
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
@@ -215,16 +233,51 @@ const CrmLeadsManager = () => {
         <div className="animated-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 120, display: 'flex', justifyContent: 'flex-end' }} onClick={() => setIsMobileFilterOpen(false)}>
           <div className="filter-drawer animated-drawer-right" style={{ background: 'white', width: '320px', height: '100%', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '-4px 0 15px rgba(0,0,0,0.1)' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
-              <h3 style={{ margin: 0, color: '#006253', fontSize: '16px' }}>Filtres (Statut)</h3>
+              <h3 style={{ margin: 0, color: '#006253', fontSize: '16px' }}>Filtres</h3>
               <button onClick={() => setIsMobileFilterOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
             </div>
-            <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Statut du lead</label>
-            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px', outline: 'none' }}>
-              <option value="">Tous les statuts</option>
-              <option value="nouveau">Nouveau</option>
-              <option value="qualifier">Qualifié</option>
-              <option value="non_aboutie">Non abouti</option>
-            </select>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Statut du lead</label>
+              <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px', outline: 'none' }}>
+                <option value="">Tous les statuts</option>
+                <option value="nouveau">Nouveau</option>
+                <option value="qualifier">Qualifié</option>
+                <option value="non_aboutie">Non abouti</option>
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Du (Année-Mois)</label>
+              <input 
+                type="month" 
+                value={filterStartMonth}
+                onChange={e => setFilterStartMonth(e.target.value)}
+                style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px', outline: 'none', fontFamily: 'inherit' }}
+              />
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '14px', fontWeight: '500', color: '#64748b' }}>Au (Année-Mois)</label>
+              <input 
+                type="month" 
+                value={filterEndMonth}
+                onChange={e => setFilterEndMonth(e.target.value)}
+                style={{ padding: '10px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white', height: '40px', outline: 'none', fontFamily: 'inherit' }}
+              />
+            </div>
+            
+            <button 
+              onClick={() => {
+                setFilterStatus('');
+                setFilterStartMonth('');
+                setFilterEndMonth('');
+              }} 
+              style={{ padding: '10px', background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0', borderRadius: '8px', fontWeight: '500', cursor: 'pointer', marginTop: '8px' }}
+            >
+              Réinitialiser les filtres
+            </button>
+
             <button onClick={() => setIsMobileFilterOpen(false)} style={{ marginTop: 'auto', padding: '12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Appliquer</button>
           </div>
         </div>
