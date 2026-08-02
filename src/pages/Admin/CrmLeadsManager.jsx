@@ -154,6 +154,74 @@ const CrmLeadsManager = () => {
     return <span style={{ padding: '4px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>{s}</span>;
   };
 
+  const renderMessageContent = (messageStr) => {
+    if (!messageStr) return null;
+    if (messageStr.includes('--- Historique ---')) {
+      const parts = messageStr.split('--- Historique ---');
+      const intro = parts[0].trim();
+      const historyStr = parts[1].trim();
+      const lines = historyStr.split('\n');
+      
+      const bubbles = [];
+      let currentRole = null;
+      let currentText = [];
+
+      lines.forEach(line => {
+        if (line.startsWith('Agent:') || line.startsWith('Visiteur:')) {
+          if (currentRole) {
+            bubbles.push({ role: currentRole, text: currentText.join('\n') });
+          }
+          currentRole = line.startsWith('Agent:') ? 'model' : 'user';
+          currentText = [line.replace(/^(Agent|Visiteur):\s*/, '')];
+        } else {
+          if (currentRole) {
+            currentText.push(line);
+          }
+        }
+      });
+      if (currentRole) {
+        bubbles.push({ role: currentRole, text: currentText.join('\n') });
+      }
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {intro && (
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', color: '#334155', fontSize: '14px', fontWeight: '500' }}>
+              {intro}
+            </div>
+          )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            {bubbles.map((msg, idx) => (
+              <div key={idx} style={{ 
+                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', 
+                background: msg.role === 'user' ? '#006253' : 'white', 
+                color: msg.role === 'user' ? 'white' : '#334155', 
+                padding: '12px 16px', 
+                borderRadius: msg.role === 'user' ? '16px 16px 0 16px' : '16px 16px 16px 0', 
+                maxWidth: '85%', 
+                fontSize: '14px', 
+                lineHeight: '1.5',
+                border: msg.role === 'user' ? 'none' : '1px solid #e2e8f0',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+              }}>
+                <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: msg.role === 'user' ? '#a7f3d0' : '#94a3b8' }}>
+                  {msg.role === 'user' ? 'Visiteur' : 'Agent M84'}
+                </div>
+                <div style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', color: '#334155', fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
+        {messageStr}
+      </div>
+    );
+  };
+
   return (
     <div className="manager-container" style={{ background: 'white', padding: '32px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', position: 'relative', overflow: 'hidden' }}>
       <style>{`
@@ -472,29 +540,7 @@ const CrmLeadsManager = () => {
                   <MessageSquare size={16} /> Historique / Message
                 </h4>
                 
-                {selectedLead.history && selectedLead.history.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {selectedLead.history.map((msg, index) => (
-                      <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {/* User Message */}
-                        <div style={{ alignSelf: 'flex-end', background: '#006253', color: 'white', padding: '12px 16px', borderRadius: '16px 16px 0 16px', maxWidth: '85%', fontSize: '14px', lineHeight: '1.5' }}>
-                          {msg.leadMsg}
-                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)', textAlign: 'right', marginTop: '4px' }}>
-                            {msg.date.split(',')[0]}
-                          </div>
-                        </div>
-                        {/* Bot Message */}
-                        <div style={{ alignSelf: 'flex-start', background: '#f1f5f9', color: '#334155', padding: '12px 16px', borderRadius: '16px 16px 16px 0', maxWidth: '85%', fontSize: '14px', lineHeight: '1.5', border: '1px solid #e2e8f0' }}>
-                          {msg.botMsg}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', color: '#334155', fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
-                    {selectedLead.message}
-                  </div>
-                )}
+                {renderMessageContent(selectedLead.message)}
               </div>
 
             </div>

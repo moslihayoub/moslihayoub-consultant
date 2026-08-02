@@ -93,8 +93,8 @@ const ChatWidget = () => {
   const getInitialMessage = (currentLang) => ({
     role: 'model',
     text: currentLang === 'en'
-      ? "Hello! I am Agent M84, your guide through Ayoub MOSLIH's portfolio. How may I help you explore his services, projects, or expertise?"
-      : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\nComment puis-je vous aider aujourd'hui ?",
+      ? "Hello! I am Agent M84, the AI assistant of Ayoub MOSLIH - Product Designer / Manager AI. How may I help you explore his services, projects, or expertise today?"
+      : "Bonjour ! Je suis l'Agent M84, l'assistant IA de Ayoub MOSLIH - Product Designer / Manager AI. Comment puis-je vous aider à explorer ses services, ses projets ou ses expertises aujourd'hui ?",
     ctas: [
       { text: currentLang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
       { text: currentLang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" },

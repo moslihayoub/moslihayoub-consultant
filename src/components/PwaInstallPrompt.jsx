@@ -33,18 +33,8 @@ const PwaInstallPrompt = ({ isAdminRoute }) => {
 
     window.addEventListener('beforeinstallprompt', handler);
 
-    // Fallback for iOS / Safari or when beforeinstallprompt doesn't fire
-    const timer = setTimeout(() => {
-      if (!fired && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator.standalone) {
-        // If it's admin route, maybe we don't even show the fallback to avoid annoying them? 
-        // We'll show it but they can dismiss it.
-        setIsVisible(true);
-      }
-    }, 3500);
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
-      clearTimeout(timer);
     };
   }, [storageKey]);
 
