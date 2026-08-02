@@ -25,6 +25,19 @@ const CustomCursor = () => {
   const [cursorState, setCursorState] = useState('default');
   const [icon, setIcon] = useState(null);
   const [isPointerFine, setIsPointerFine] = useState(true);
+  const [hasA11yPrefs, setHasA11yPrefs] = useState(false);
+
+  useEffect(() => {
+    // ♿ A11Y : Vérifie si l'utilisateur a des préférences système pour l'accessibilité
+    const mqlA11y = window.matchMedia('(prefers-reduced-motion: reduce), (prefers-contrast: more)');
+    setHasA11yPrefs(mqlA11y.matches);
+
+    const handler = (e) => setHasA11yPrefs(e.matches);
+    if (mqlA11y.addEventListener) {
+      mqlA11y.addEventListener('change', handler);
+      return () => mqlA11y.removeEventListener('change', handler);
+    }
+  }, []);
 
   useEffect(() => {
     // Check if the device has a fine pointer (like a mouse)
@@ -98,7 +111,8 @@ const CustomCursor = () => {
   const iconColor =
     cursorState === 'hover' ? 'var(--color-electric-green)' : '#FFF';
 
-  if (!isPointerFine) return null;
+  // ♿ A11Y : Ne pas afficher le CustomCursor si l'utilisateur n'a pas de souris fine OU s'il a des préférences d'accessibilité
+  if (!isPointerFine || hasA11yPrefs) return null;
 
   return (
     <>

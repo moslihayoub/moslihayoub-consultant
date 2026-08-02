@@ -56,6 +56,22 @@ body {
   }
 }
 
+/* ♿ A11Y : Rétablit le curseur natif si l'utilisateur a des besoins d'accessibilité */
+@media (prefers-reduced-motion: reduce), (prefers-contrast: more), (forced-colors: active) {
+  body, input, textarea, select {
+    cursor: auto !important;
+  }
+  a, button {
+    cursor: pointer !important;
+  }
+}
+
+/* ♿ A11Y : Assure un anneau de focus bien visible pour la navigation au clavier */
+:focus-visible {
+  outline: 2px solid var(--color-electric-green) !important;
+  outline-offset: 3px !important;
+}
+
 a {
   color: inherit;
   text-decoration: none;
