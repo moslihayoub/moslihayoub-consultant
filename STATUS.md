@@ -92,7 +92,7 @@
 
 ### 11. ⚙️ Tableau de bord, Filtres et Optimisations UX (Admin)
 - **Filtres par dates ("Du/Au")** : Implémentation du composant natif de calendrier sur les pages `Vue d'ensemble` et `CRM Leads`. Les données (Trafic, Nouveaux Leads) sont filtrées dynamiquement en fonction de la plage de dates sélectionnée.
-- **Détails CRM (Historique de Chat)** : Parsage de la chaîne de texte de l'historique complet pour générer une interface conversationnelle (bulles de chat Agent/Visiteur) à l'intérieur de la modale de détails CRM.
+- **Détails CRM (Historique de Chat)** : Développement d'un parseur robuste basé sur des expressions régulières (Regex : `/(Utilisateur|Agent) : /g`) pour découper proprement la chaîne de texte de l'historique complet, gérant ainsi les messages multi-lignes sans erreur. L'interface génère dynamiquement des bulles de chat (bleues pour l'Utilisateur, vertes pour l'Agent) à l'intérieur de la modale de détails CRM.
 - **Toaster PWA** : Suppression du `setTimeout` forçant l'affichage du toaster iOS/Fallback sur ordinateur. Le toaster n'apparaît désormais que sur mobile lors du déclenchement natif de l'événement `beforeinstallprompt`, garantissant une installation `prompt()` 100% native.
 - **Gestion Configuration IA** : L'interface `AiConfigManager` permet la sauvegarde d'un *system prompt* personnalisé directement dans Firestore (collection `config`, document `agent`). Ce prompt est utilisé en priorité par l'Agent M84 s'il existe, écrasant le prompt par défaut de l'application.
 
