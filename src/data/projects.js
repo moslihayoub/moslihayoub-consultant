@@ -34,7 +34,7 @@ export const projectsData = [
     },
     image: '/assets/works/ux-ui/autocash-appsourcing.webp',
     isProtected: true,
-    url: 'U2FsdGVkX1/kbriGfq6lsQSN9OlsooAJunT9bIUXms9pkMl5/FXttVElml4cnlHnfVwcM/ywJ9ufLbsf21nIbw=='
+    url: 'U2FsdGVkX1+OdWvP21FgUFRbEC4HvrMGkQgnaZK9DRaeBv4ecFP1XVEWbEcFpSWVg8cPdqh4LeZSE7GSh5ik7w=='
   },
   {
     id: 'nexastay',
