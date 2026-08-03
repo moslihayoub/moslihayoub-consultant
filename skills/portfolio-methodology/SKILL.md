@@ -138,8 +138,9 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 ## 📱 5. PWA (Progressive Web App) & Expérience Mobile
 
 1. **Prompt d'Installation Personnalisé** :
-   - Safari iOS ne déclenchant pas l'événement `beforeinstallprompt`, le composant `PwaInstallPrompt` utilise un minuteur (3.5s) pour forcer l'affichage du toaster.
-   - Si le navigateur bloque l'installation native, un fallback UI affiche les instructions au sein du toaster ("Appuyez sur l'icône de partage..."), sans jamais recourir à des popups système (`alert()`).
+   - Le toaster PWA attend l'événement natif `beforeinstallprompt` envoyé par le navigateur.
+   - Afin d'éviter les pop-ups abusifs sur PC (où le navigateur gère nativement le bouton d'installation dans la barre d'adresse), aucun timer de forçage (`setTimeout`) n'est utilisé.
+   - Si le navigateur bloque l'installation via la fonction `prompt()` ou s'il s'agit d'iOS sans support natif fluide, un fallback UI affiche les instructions ("Appuyez sur l'icône de partage..."), sans jamais recourir à des popups système (`alert()`).
 2. **Double Détection** :
    - Toujours vérifier le statut `window.matchMedia('(display-mode: standalone)').matches` et `window.navigator.standalone` au montage pour ne pas ennuyer un utilisateur ayant déjà installé la PWA.
 3. **Séparation Logique** :
@@ -147,7 +148,19 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 
 ---
 
-## 🧪 6. Protocole de Test & Déploiement Strict
+## 🤖 6. Architecture IA & Agent M84
+
+1. **Base de connaissances (Knowledge Base)** :
+   - Gérée dans `src/data/knowledgeBase.js`, elle centralise toutes les instructions, l'expérience découpée par type de métier (Product Design, Graphic Design, Motion) et les clients phares, afin d'optimiser le contexte envoyé au LLM.
+2. **Configuration Dynamique via Backoffice** :
+   - L'Agent utilise un *System Prompt* configurable via l'UI d'administration (`AiConfigManager.jsx`).
+   - Le prompt est stocké de manière sécurisée dans la base de données Firestore (collection `config`, document `agent`). S'il est présent, il a la priorité absolue sur le fallback de l'application.
+3. **Historique CRM & UI** :
+   - Le pipeline d'acquisition sauvegarde l'historique complet des échanges. `CrmLeadsManager.jsx` parse intelligemment ce bloc textuel (`--- Historique ---`) pour restituer une interface conversationnelle fluide (bulles de discussion) dans le profil du lead.
+
+---
+
+## 🧪 7. Protocole de Test & Déploiement Strict
 
 Après chaque modification ou ajout de page :
 

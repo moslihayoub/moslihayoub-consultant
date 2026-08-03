@@ -90,16 +90,24 @@
   - Tracking d'installation séparé via clés `localStorage` distinctes pour le Portfolio (`m84_pwa_dismissed_portfolio`) et le Backoffice (`m84_pwa_dismissed_admin`), afin que l'un ne masque pas l'autre.
   - Détection automatique du mode `standalone` pour masquer définitivement l'invite si l'app est déjà installée.
 
+### 11. ⚙️ Tableau de bord, Filtres et Optimisations UX (Admin)
+- **Filtres par dates ("Du/Au")** : Implémentation du composant natif de calendrier sur les pages `Vue d'ensemble` et `CRM Leads`. Les données (Trafic, Nouveaux Leads) sont filtrées dynamiquement en fonction de la plage de dates sélectionnée.
+- **Détails CRM (Historique de Chat)** : Parsage de la chaîne de texte de l'historique complet pour générer une interface conversationnelle (bulles de chat Agent/Visiteur) à l'intérieur de la modale de détails CRM.
+- **Toaster PWA** : Suppression du `setTimeout` forçant l'affichage du toaster iOS/Fallback sur ordinateur. Le toaster n'apparaît désormais que sur mobile lors du déclenchement natif de l'événement `beforeinstallprompt`, garantissant une installation `prompt()` 100% native.
+- **Gestion Configuration IA** : L'interface `AiConfigManager` permet la sauvegarde d'un *system prompt* personnalisé directement dans Firestore (collection `config`, document `agent`). Ce prompt est utilisé en priorité par l'Agent M84 s'il existe, écrasant le prompt par défaut de l'application.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
 - [x] Refonte & alignement de l'Agent M84 (Mode IA & Mode Local).
 - [x] Interrupteur Toggle Switch visuel pour les tests en dev.
 - [x] Intégration des images dans les cartes projets UI du chat.
-- [x] Alignement UX pour "Voir ses services".
 - [x] Optimisation de l'Admin Dashboard (Responsive Mobile, Tiroirs, FAB, Animations).
 - [x] Affichage de l'historique complet de discussion Chatbot (UI Bulles de chat) dans la modale CRM Lead.
 - [x] Refonte de l'installation PWA (Custom UI iOS, Détection standalone, Séparation Portfolio/Admin).
+- [x] Validation PWA sur Vercel Prod et Desktop Chrome.
+- [x] Implémentation filtre de dates Dashboard et CRM Leads.
+- [x] Importation de l'historique CSV des anciens leads.
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Déploiement Vercel.
