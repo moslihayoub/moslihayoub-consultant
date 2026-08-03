@@ -101,7 +101,10 @@
 - **Gestion Hors-Ligne** : Intégration du composant `OfflineDetector` qui enveloppe toute l'application et affiche la page d'erreur de connexion si l'utilisateur perd internet.
 - **Support Multilingue** : Les pages d'erreurs s'adaptent dynamiquement (FR/EN) selon la langue de navigation du visiteur via `LanguageContext`.
 - **Intégration Lottie** : Architecture prête pour l'intégration de fichiers JSON animés (`public/assets/lottie/`). Temporairement désactivée selon la demande du client pour afficher uniquement du texte épuré.
-- **Sécurisation Admin** : Affichage d'une page d'erreur 401 avec redirection propre vers le login au lieu d'une redirection brutale.
+### 13. 🖼️ Meta Tags Open Graph & Aperçus Réseaux Sociaux (WhatsApp, LinkedIn, Twitter & SEO)
+- **Image d'aperçu d'URL (`og:image`)** : Configuration de l'image officielle `https://moslih84.vercel.app/assets/galerie/20250419_155833.webp` dans `index.html`.
+- **Compatibilité WhatsApp & Réseaux** : Déclaration des balises `og:image:secure_url`, `og:image:type` (`image/webp`), `og:image:width` (600), `og:image:height` (849) et `og:url` permettant d'afficher automatiquement l'aperçu visuel de haute qualité lors du partage du lien sur WhatsApp, LinkedIn, Facebook et Twitter.
+- **Données Structurées JSON-LD** : Enrichissement du schéma `Person` avec le lien direct vers l'image du profil pour l'indexation Google Search.
 
 ---
 
@@ -116,7 +119,9 @@
 - [x] Implémentation filtre de dates Dashboard et CRM Leads.
 - [x] Importation de l'historique CSV des anciens leads.
 - [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN.
+- [x] Configuration des balises Open Graph (`og:image`) et Twitter pour les aperçus WhatsApp & SEO avec `20250419_155833.webp`.
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
-- [x] Déploiement Vercel.
+- [x] Déploiement Vercel & GitHub.
+
 

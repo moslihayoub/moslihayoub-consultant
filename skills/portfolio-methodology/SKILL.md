@@ -119,6 +119,10 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
    - Ne pas charger Three.js sur la page d'accueil.
 4. **Appareils Mobiles** :
    - Le `CustomCursor` et les écouteurs d'événements lourds doivent rester désactivés sur écran tactile (`pointer: coarse`).
+5. **SEO & Aperçus Réseaux Sociaux (WhatsApp, LinkedIn, Twitter)** :
+   - L'image d'aperçu d'URL (`og:image`, `twitter:image`) dans `index.html` doit utiliser une URL absolue HTTPS valide (`https://moslih84.vercel.app/assets/galerie/20250419_155833.webp`).
+   - Toujours spécifier `og:image:secure_url`, `og:image:type` (`image/webp`), `og:image:width`, et `og:image:height` afin de garantir que WhatsApp, iMessage, LinkedIn et Twitter affichent immédiatement l'aperçu visuel sans échec lors des partages de liens.
+
 
 ---
 
