@@ -96,6 +96,13 @@
 - **Toaster PWA** : Suppression du `setTimeout` forçant l'affichage du toaster iOS/Fallback sur ordinateur. Le toaster n'apparaît désormais que sur mobile lors du déclenchement natif de l'événement `beforeinstallprompt`, garantissant une installation `prompt()` 100% native.
 - **Gestion Configuration IA** : L'interface `AiConfigManager` permet la sauvegarde d'un *system prompt* personnalisé directement dans Firestore (collection `config`, document `agent`). Ce prompt est utilisé en priorité par l'Agent M84 s'il existe, écrasant le prompt par défaut de l'application.
 
+### 12. 🚫 Pages d'Erreurs Unifiées (404, 401, 403, 500, 503, Offline)
+- **Design Unifié** : Création d'un composant `ErrorPage` générique (Titre, Description, Animation Lottie, Bouton d'action).
+- **Gestion Hors-Ligne** : Intégration du composant `OfflineDetector` qui enveloppe toute l'application et affiche la page d'erreur de connexion si l'utilisateur perd internet.
+- **Support Multilingue** : Les pages d'erreurs s'adaptent dynamiquement (FR/EN) selon la langue de navigation du visiteur via `LanguageContext`.
+- **Intégration Lottie** : Architecture prête pour l'intégration de fichiers JSON animés (`public/assets/lottie/`). Temporairement désactivée selon la demande du client pour afficher uniquement du texte épuré.
+- **Sécurisation Admin** : Affichage d'une page d'erreur 401 avec redirection propre vers le login au lieu d'une redirection brutale.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
@@ -103,11 +110,12 @@
 - [x] Interrupteur Toggle Switch visuel pour les tests en dev.
 - [x] Intégration des images dans les cartes projets UI du chat.
 - [x] Optimisation de l'Admin Dashboard (Responsive Mobile, Tiroirs, FAB, Animations).
-- [x] Affichage de l'historique complet de discussion Chatbot (UI Bulles de chat) dans la modale CRM Lead.
+- [x] Affichage de l'historique complet de discussion Chatbot (UI Bulles de chat robustes via Regex) dans la modale CRM Lead.
 - [x] Refonte de l'installation PWA (Custom UI iOS, Détection standalone, Séparation Portfolio/Admin).
 - [x] Validation PWA sur Vercel Prod et Desktop Chrome.
 - [x] Implémentation filtre de dates Dashboard et CRM Leads.
 - [x] Importation de l'historique CSV des anciens leads.
+- [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN.
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Déploiement Vercel.

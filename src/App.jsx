@@ -18,6 +18,12 @@ const Work = lazy(() => import('./pages/Work'));
 const About = lazy(() => import('./pages/About'));
 const ChatWidget = lazy(() => import('./components/ChatWidget'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+const Error404 = lazy(() => import('./components/Error404'));
+const Error401 = lazy(() => import('./components/Error401'));
+const Error403 = lazy(() => import('./components/Error403'));
+const Error500 = lazy(() => import('./components/Error500'));
+const Error503 = lazy(() => import('./components/Error503'));
+const OfflineDetector = lazy(() => import('./components/OfflineDetector'));
 
 // Admin Routes
 const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
@@ -61,6 +67,7 @@ const AnimatedRoutes = () => {
                 <AdminDashboard />
               </ProtectedRoute>
             } />
+            <Route path="/admin/*" element={<Error404 />} />
           </Routes>
         </Suspense>
       ) : (
@@ -71,6 +78,11 @@ const AnimatedRoutes = () => {
               <Route path="/work" element={<Work />} />
               <Route path="/about" element={<About />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/test-401" element={<Error401 />} />
+              <Route path="/test-403" element={<Error403 />} />
+              <Route path="/test-500" element={<Error500 />} />
+              <Route path="/test-503" element={<Error503 />} />
+              <Route path="*" element={<Error404 />} />
             </Routes>
           </Suspense>
         </AnimatePresence>
@@ -156,10 +168,12 @@ function AppContent() {
 function App() {
   return (
     <LanguageProvider>
-      <Router>
-        <ScrollToTop />
-        <AppContent />
-      </Router>
+      <OfflineDetector>
+        <Router>
+          <ScrollToTop />
+          <AppContent />
+        </Router>
+      </OfflineDetector>
     </LanguageProvider>
   );
 }

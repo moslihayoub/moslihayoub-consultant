@@ -72,7 +72,32 @@ const translations = {
 
     // Chat
     chat_placeholder: 'Posez une question...',
-    chat_online: 'En ligne'
+    chat_online: 'En ligne',
+    
+    // Errors
+    error_404_title: 'Page introuvable',
+    error_404_desc: 'La page que vous cherchez n\'existe pas, a été déplacée ou est temporairement indisponible.',
+    error_404_cta: 'Retour à l\'accueil',
+    
+    error_offline_title: 'Connexion Perdue',
+    error_offline_desc: 'Il semble que vous n\'êtes plus connecté à internet. Veuillez vérifier votre connexion et réessayer.',
+    error_offline_cta: 'Réessayer',
+    
+    error_401_title: 'Accès Non Autorisé',
+    error_401_desc: 'Vous n\'êtes pas connecté ou votre session a expiré. Veuillez vous identifier pour accéder à cet espace.',
+    error_401_cta: 'Se connecter',
+    
+    error_403_title: 'Accès Refusé',
+    error_403_desc: 'Vous n\'avez pas les permissions nécessaires pour accéder à cette ressource.',
+    error_403_cta: 'Retour à l\'accueil',
+    
+    error_500_title: 'Erreur Serveur',
+    error_500_desc: 'Oups, quelque chose s\'est mal passé de notre côté. Nous travaillons pour résoudre le problème.',
+    error_500_cta: 'Rafraîchir la page',
+    
+    error_503_title: 'Service en Maintenance',
+    error_503_desc: 'Le site est actuellement en cours de mise à jour pour vous offrir une meilleure expérience. Nous serons de retour très vite !',
+    error_503_cta: 'Rafraîchir la page'
   },
   en: {
     // Nav & Common
@@ -145,7 +170,32 @@ const translations = {
 
     // Chat
     chat_placeholder: 'Ask a question...',
-    chat_online: 'Online'
+    chat_online: 'Online',
+    
+    // Errors
+    error_404_title: 'Page Not Found',
+    error_404_desc: 'The page you are looking for does not exist, has been moved, or is temporarily unavailable.',
+    error_404_cta: 'Back to Home',
+    
+    error_offline_title: 'Connection Lost',
+    error_offline_desc: 'It seems you are no longer connected to the internet. Please check your connection and try again.',
+    error_offline_cta: 'Retry',
+    
+    error_401_title: 'Unauthorized Access',
+    error_401_desc: 'You are not logged in or your session has expired. Please log in to access this area.',
+    error_401_cta: 'Log In',
+    
+    error_403_title: 'Access Denied',
+    error_403_desc: 'You do not have the necessary permissions to access this resource.',
+    error_403_cta: 'Back to Home',
+    
+    error_500_title: 'Server Error',
+    error_500_desc: 'Oops, something went wrong on our end. We are working to fix the issue.',
+    error_500_cta: 'Refresh Page',
+    
+    error_503_title: 'Service Maintenance',
+    error_503_desc: 'The site is currently undergoing maintenance to offer you a better experience. We will be back shortly!',
+    error_503_cta: 'Refresh Page'
   }
 };
 

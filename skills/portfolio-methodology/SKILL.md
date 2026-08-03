@@ -160,7 +160,20 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 
 ---
 
-## 🧪 7. Protocole de Test & Déploiement Strict
+## 🚫 7. Architecture des Pages d'Erreurs & Mode Hors-Ligne
+
+1. **Pages d'erreurs unifiées** :
+   - Toutes les pages d'erreurs (404, 401, 403, 500, 503) utilisent un composant central réutilisable `ErrorPage.jsx`.
+   - Elles s'appuient sur `LanguageContext` pour traduire automatiquement les titres et descriptions selon la langue du visiteur.
+2. **Détecteur Hors-Ligne (OfflineDetector)** :
+   - L'application est enveloppée par un composant `OfflineDetector.jsx` qui écoute les événements de fenêtre (`online` / `offline`).
+   - En cas de coupure réseau, l'interface est immédiatement remplacée par l'écran de déconnexion.
+3. **Animations Lottie** :
+   - Les encarts d'erreurs sont prévus pour accueillir des animations `.json` fluides (`lottie-react`). L'affichage visuel du composant Lottie peut être activé ou désactivé via le flag interne `showLottie` dans `ErrorPage.jsx` selon la stratégie UX souhaitée.
+
+---
+
+## 🧪 8. Protocole de Test & Déploiement Strict
 
 Après chaque modification ou ajout de page :
 

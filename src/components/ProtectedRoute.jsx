@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import ErrorPage from './ErrorPage';
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,7 +24,17 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return (
+      <ErrorPage 
+        code="401"
+        title="Accès Non Autorisé"
+        description="Vous n'êtes pas connecté ou votre session a expiré. Veuillez vous identifier pour accéder à cet espace."
+        lottieUrl="/assets/lottie/401.json"
+        ctaText="Se connecter"
+        ctaAction={() => window.location.href = '/admin/login'}
+        ctaIcon="dashboard"
+      />
+    );
   }
 
   return children;

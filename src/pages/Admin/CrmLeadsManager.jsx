@@ -156,31 +156,33 @@ const CrmLeadsManager = () => {
 
   const renderMessageContent = (messageStr) => {
     if (!messageStr) return null;
-    if (messageStr.includes('--- Historique ---')) {
-      const parts = messageStr.split('--- Historique ---');
+    if (messageStr.match(/---\s*Historique\s*---/i)) {
+      const parts = messageStr.split(/---\s*Historique\s*---/i);
       const intro = parts[0].trim();
       const historyStr = parts[1].trim();
-      const lines = historyStr.split('\n');
       
       const bubbles = [];
-      let currentRole = null;
-      let currentText = [];
-
-      lines.forEach(line => {
-        if (line.startsWith('Agent:') || line.startsWith('Visiteur:')) {
-          if (currentRole) {
-            bubbles.push({ role: currentRole, text: currentText.join('\n') });
-          }
-          currentRole = line.startsWith('Agent:') ? 'model' : 'user';
-          currentText = [line.replace(/^(Agent|Visiteur):\s*/, '')];
-        } else {
-          if (currentRole) {
-            currentText.push(line);
-          }
+      
+      // Utilisation d'un regex pour attraper toutes les occurrences de "Agent:" ou "Visiteur:" 
+      // et capturer le texte jusqu'à la prochaine occurrence ou la fin.
+      const regex = /(Agent|Visiteur)\s*:\s*([\s\S]*?)(?=(?:Agent|Visiteur)\s*:|$)/gi;
+      let match;
+      
+      while ((match = regex.exec(historyStr)) !== null) {
+        const role = match[1].toLowerCase() === 'agent' ? 'model' : 'user';
+        const text = match[2].trim();
+        if (text) {
+          bubbles.push({ role, text });
         }
-      });
-      if (currentRole) {
-        bubbles.push({ role: currentRole, text: currentText.join('\n') });
+      }
+
+      // Fallback si le regex n'a rien trouvé (au cas où le format est très inattendu)
+      if (bubbles.length === 0) {
+         return (
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', color: '#334155', fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
+            {messageStr}
+          </div>
+        );
       }
 
       return (
