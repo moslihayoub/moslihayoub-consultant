@@ -93,6 +93,14 @@
       },
       "cards": [
         {
+          "title": "Fluxo — Gestion & Trésorerie",
+          "subtitle": "MVP Ai / SaaS FinTech",
+          "desc": "Application SaaS de gestion financière, trésorerie et facturation pour PME.",
+          "image": "/assets/works/ux-ui/fluxo.webp",
+          "url": "https://fluxofinance.vercel.app/",
+          "type": "project"
+        },
+        {
           "title": "QuickToken UI",
           "subtitle": "MVP Ai / Design System",
           "desc": "Générateur intelligent de Design System JSON pour paramétrer vos composants.",

@@ -101,10 +101,10 @@
 - **Gestion Hors-Ligne** : Intégration du composant `OfflineDetector` qui enveloppe toute l'application et affiche la page d'erreur de connexion si l'utilisateur perd internet.
 - **Support Multilingue** : Les pages d'erreurs s'adaptent dynamiquement (FR/EN) selon la langue de navigation du visiteur via `LanguageContext`.
 - **Intégration Lottie** : Architecture prête pour l'intégration de fichiers JSON animés (`public/assets/lottie/`). Temporairement désactivée selon la demande du client pour afficher uniquement du texte épuré.
-### 13. 🖼️ Meta Tags Open Graph & Aperçus Réseaux Sociaux (WhatsApp, LinkedIn, Twitter & SEO)
-- **Image d'aperçu d'URL (`og:image`)** : Configuration de l'image officielle `https://moslih84.vercel.app/assets/galerie/20250419_155833.webp` dans `index.html`.
-- **Compatibilité WhatsApp & Réseaux** : Déclaration des balises `og:image:secure_url`, `og:image:type` (`image/webp`), `og:image:width` (600), `og:image:height` (849) et `og:url` permettant d'afficher automatiquement l'aperçu visuel de haute qualité lors du partage du lien sur WhatsApp, LinkedIn, Facebook et Twitter.
-- **Données Structurées JSON-LD** : Enrichissement du schéma `Person` avec le lien direct vers l'image du profil pour l'indexation Google Search.
+### 14. 💳 Nouvelle Référence Projet MVP : Fluxo Finance
+- **Intégration du projet** : Ajout de **Fluxo — Gestion & Trésorerie** (`https://fluxofinance.vercel.app/`) dans la catégorie **MVP Ai**.
+- **Mockup & Optimisation WebP** : Conversion optimisée du visuel responsive (MacBook Pro + iPhone) au format `.webp` (32 KB, max 1000px) dans `public/assets/works/ux-ui/fluxo.webp`.
+- **RAG & Chatbot M84** : Mise à jour de la base de connaissances `knowledgeBase.js` et `chatbot_faq.json` pour intégrer Fluxo dans les cartes de recommandations de l'Agent M84 et la liste des clients/solutions.
 
 ---
 
@@ -120,6 +120,7 @@
 - [x] Importation de l'historique CSV des anciens leads.
 - [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN.
 - [x] Configuration des balises Open Graph (`og:image`) et Twitter pour les aperçus WhatsApp & SEO avec `20250419_155833.webp`.
+- [x] Ajout de la référence MVP Fluxo Finance (`fluxofinance.vercel.app`) avec visuel WebP optimisé.
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Déploiement Vercel & GitHub.

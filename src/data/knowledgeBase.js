@@ -30,7 +30,7 @@ export const knowledgeBase = {
   },
   clients: [
     'Autocash.ma', 'CGI', 'OCP SA', 'Crédit du Maroc', 'Carrefour', 
-    'Foodeals', 'ParcelIQ', 'eDrive.ma', 'Wiggli', 'Ville de Laval (Canada)', 'Agence Urbaine Larache'
+    'Foodeals', 'ParcelIQ', 'eDrive.ma', 'Wiggli', 'Ville de Laval (Canada)', 'Agence Urbaine Larache', 'Fluxo'
   ],
   services: [
     {

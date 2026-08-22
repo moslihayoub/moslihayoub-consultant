@@ -1,5 +1,23 @@
 export const projectsData = [
-  // UX / UI Projects
+  // UX / UI & MVP Projects
+  {
+    id: 'fluxo',
+    title: 'Fluxo — Gestion & Trésorerie',
+    client: 'Fluxo',
+    category: 'MVP Ai',
+    year: '2026',
+    shortDesc: {
+      fr: "Application SaaS & PWA de gestion financière, de suivi de trésorerie et de facturation intelligente pour PME et indépendants.",
+      en: "SaaS & PWA application for financial management, cash flow tracking, and smart invoicing for SMEs and freelancers."
+    },
+    techDesc: {
+      fr: "Conception Discovery UX/UI, modélisation des flux de trésorerie (encaissements/décaissements, multi-espaces Perso/Pro) et développement MVP PWA ultra-rapide et responsive.",
+      en: "UX/UI Discovery, cash flow modeling (inflows/outflows, Personal/Pro spaces), and rapid responsive PWA MVP development."
+    },
+    image: '/assets/works/ux-ui/fluxo.webp',
+    isProtected: false,
+    url: 'https://fluxofinance.vercel.app/'
+  },
   {
     id: 'quicktoken',
     title: 'QuickToken UI',

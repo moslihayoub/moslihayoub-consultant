@@ -12,7 +12,7 @@ const HeroShape = lazy(() => import('../components/HeroShape'));
 
 import { projectsData } from '../data/projects';
 
-const clients = ['Autocash', 'Carrefour', 'Foodeals', 'Nexastay', 'Babmoulay driss', 'JSEI', 'CGI', 'Wiggli', 'OCP', 'CDM Bank', 'Stibits', 'HBM Com.'];
+const clients = ['Autocash', 'Carrefour', 'Foodeals', 'Nexastay', 'Babmoulay driss', 'JSEI', 'CGI', 'Wiggli', 'OCP', 'CDM Bank', 'Stibits', 'HBM Com.', 'Fluxo'];
 
 const certifications = [
   { title: 'Certification Anthropic gjht8vtzj8ve', issuer: 'Anthropic', year: '2024', url: '/certif/Anthropic/certificate-gjht8vtzj8ve-1775037520.pdf' },
