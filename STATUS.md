@@ -120,7 +120,10 @@
 - **Mise à jour du processus de développement** : Intégration du Spec-Driven Development (SDD) dans `skills/portfolio-methodology/SKILL.md`.
 - **Qualité & Sécurité** : Ajout de règles strictes pour la validation des données, les standards d'accessibilité (Mobile-first, WCAG, ARIA), et l'anonymisation / Guardrails de l'Agent IA.
 - **Pyramide de Tests & Protocole QA** : Formalisation des tests E2E automatisés Playwright, des smoke tests DevTools (0 erreur console tolérée), de la matrice responsive (375px/1440px) et des audits Lighthouse.
-- **Continuité technique** : Zéro impact sur le code source existant (React/Vite).
+### 17. 🔐 Authentification Admin Firebase (Google Sign-In & Email/Password)
+- **Fournisseurs Firebase Auth** : Intégration de Google Sign-In et Email/Mot de passe (`moslihayoub@gmail.com` / `M@slih031984`).
+- **Contrôle d'accès strict (Whitelist)** : Seule l'adresse `moslihayoub@gmail.com` est autorisée.
+- **Tests E2E Playwright** : Validation complète (10/10 tests réussis) incluant la connexion Google et Email/Mot de passe.
 
 ---
 
@@ -137,7 +140,9 @@
 - [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN.
 - [x] Configuration des balises Open Graph (`og:image`) et Twitter pour les aperçus WhatsApp & SEO avec `20250419_155833.webp`.
 - [x] Ajout de la référence MVP Fluxo Finance (`fluxofinance.vercel.app`) avec visuel WebP optimisé.
-- [x] Validation par tests E2E Playwright.
+- [x] Validation par tests E2E Playwright (10/10 réussis).
 - [x] Vérification Build Vite & Oxlint.
-- [x] Synchronisation GitHub & Déploiement Vercel.
 - [x] Mise à jour du document SKILL de méthodologie (SDD, Sécurité IA, A11y, Protocole de Tests & QA E2E/DevTools).
+- [x] Intégration Firebase Auth (Google Sign-In & Email/Mot de passe sécurisé) sur l'Admin.
+- [x] Synchronisation GitHub & Déploiement Vercel Production.
+

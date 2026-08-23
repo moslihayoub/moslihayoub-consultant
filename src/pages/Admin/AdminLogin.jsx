@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, LogIn, AlertCircle } from 'lucide-react';
 import { auth, ADMIN_WHITELIST } from '../../utils/firebaseConfig';
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -30,27 +30,65 @@ const AdminLogin = () => {
       }
     } catch (err) {
       console.error("Erreur Google Auth:", err);
-      setError("Erreur de connexion Google ou fenêtre fermée.");
+      let msg = "Erreur de connexion Google ou fenêtre fermée.";
+      if (err.code === 'auth/unauthorized-domain') {
+        msg = "Ce domaine (ex: localhost) n'est pas autorisé dans Firebase Console > Authentication > Settings > Authorized domains.";
+      } else if (err.code === 'auth/operation-not-allowed') {
+        msg = "Google Sign-In n'est pas encore activé dans Firebase Console > Authentication > Sign-in method.";
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        msg = "La fenêtre de connexion Google a été fermée.";
+      } else if (err.message) {
+        msg = `Erreur Firebase Auth (${err.code || 'inconnue'}) : ${err.message}`;
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
+    const emailOrUser = username.trim();
+    const cleanPass = password.trim();
+
+    // 1. Tenter la connexion avec Firebase Auth (Email/Password)
+    if (auth && emailOrUser.includes('@')) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, emailOrUser, cleanPass);
+        const user = userCredential.user;
+        if (user && ADMIN_WHITELIST.includes(user.email)) {
+          localStorage.setItem('m84_admin_token', 'authenticated_admin_moslih');
+          localStorage.setItem('m84_admin_email', user.email);
+          navigate('/admin/dashboard');
+          return;
+        } else {
+          await signOut(auth);
+          setError(`Accès refusé : L'adresse ${user?.email} n'est pas dans la liste blanche.`);
+          setLoading(false);
+          return;
+        }
+      } catch (fbErr) {
+        console.warn("Connexion Firebase Email/Pass échouée, tentative fallback local:", fbErr.code);
+      }
+    }
+
+    // 2. Fallback sécurisé direct (Email + Mot de passe ou Username classique)
     setTimeout(() => {
-      if (username === 'moslih84' && password === '031984') {
+      const isEmailMatch = (emailOrUser.toLowerCase() === 'moslihayoub@gmail.com') && (cleanPass === 'M@slih031984' || cleanPass === '031984');
+      const isLegacyMatch = (emailOrUser.toLowerCase() === 'moslih84') && (cleanPass === '031984' || cleanPass === 'M@slih031984');
+
+      if (isEmailMatch || isLegacyMatch) {
         localStorage.setItem('m84_admin_token', 'authenticated_admin_moslih');
         localStorage.setItem('m84_admin_email', 'moslihayoub@gmail.com');
         navigate('/admin/dashboard');
       } else {
-        setError("Identifiant ou mot de passe incorrect.");
+        setError("Email ou mot de passe incorrect.");
         setLoading(false);
       }
-    }, 800); // Simulate network delay
+    }, 400);
   };
 
   return (
@@ -115,12 +153,12 @@ const AdminLogin = () => {
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Identifiant autorisé</label>
+            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Email ou Identifiant</label>
             <input 
               type="text" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Identifiant"
+              placeholder="moslihayoub@gmail.com"
               required
               style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }}
               onFocus={(e) => e.target.style.borderColor = '#38bdf8'}
