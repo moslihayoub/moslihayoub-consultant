@@ -105,12 +105,13 @@ const ErrorPage = ({
       {/* Ajout du code d'erreur textuel en haut quand Lottie est caché */}
       {!showLottie && code && (
         <div style={{ 
-          fontSize: '5rem', 
+          fontSize: '5.5rem', 
           fontWeight: '900', 
-          color: '#f1f5f9', 
-          marginBottom: '24px',
+          color: 'rgba(0, 98, 83, 0.18)', 
+          marginBottom: '16px',
           letterSpacing: '-2px',
-          textShadow: '0 2px 10px rgba(0,0,0,0.05)'
+          lineHeight: '1',
+          textShadow: '0 4px 20px rgba(0, 98, 83, 0.08)'
         }}>
           {code}
         </div>

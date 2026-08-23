@@ -8,7 +8,7 @@ export const knowledgeBase = {
     experienceYears: 19,
     breakdown: "19 années réparties sur 3 pôles : 1) Product Designer / Manager AI (≈ 7 ans | 2019-Présent) Expert UX/UI & Automatisation IA (Sprint Design/Agile). 2) Graphic Design & Direction Artistique (≈ 7 ans | 2012-2019) Créations KV, Post SM, Branding. 3) Motion Design (≈ 5 ans | début carrière).",
     location: "Casablanca, Maroc (Interventions sur site et en Remote : Afrique, Europe, Moyen-Orient)",
-    cvUrl: "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf",
+    cvUrl: "/moslihayoub-cv.pdf",
     whatsapp: "https://wa.me/212663585065",
     email: "moslihayoub@gmail.com",
     phone: "+212 6 63 58 50 65",
