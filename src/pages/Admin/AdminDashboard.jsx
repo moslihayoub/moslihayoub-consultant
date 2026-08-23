@@ -111,8 +111,16 @@ const AdminDashboard = () => {
 
   }, [allLeadsList, allTrafficList, filterStartMonth, filterEndMonth]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      const { auth } = await import('../../utils/firebaseConfig');
+      const { signOut } = await import('firebase/auth');
+      if (auth) await signOut(auth);
+    } catch (e) {
+      console.warn("Erreur déconnexion Firebase:", e);
+    }
     localStorage.removeItem('m84_admin_token');
+    localStorage.removeItem('m84_admin_email');
     navigate('/admin/login');
   };
 
