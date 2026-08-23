@@ -120,10 +120,20 @@
 - **Mise à jour du processus de développement** : Intégration du Spec-Driven Development (SDD) dans `skills/portfolio-methodology/SKILL.md`.
 - **Qualité & Sécurité** : Ajout de règles strictes pour la validation des données, les standards d'accessibilité (Mobile-first, WCAG, ARIA), et l'anonymisation / Guardrails de l'Agent IA.
 - **Pyramide de Tests & Protocole QA** : Formalisation des tests E2E automatisés Playwright, des smoke tests DevTools (0 erreur console tolérée), de la matrice responsive (375px/1440px) et des audits Lighthouse.
-### 17. 🔐 Authentification Admin Firebase (Google Sign-In & Email/Password)
-- **Fournisseurs Firebase Auth** : Intégration de Google Sign-In et Email/Mot de passe (`moslihayoub@gmail.com` / `M@slih031984`).
-- **Contrôle d'accès strict (Whitelist)** : Seule l'adresse `moslihayoub@gmail.com` est autorisée.
-- **Tests E2E Playwright** : Validation complète (10/10 tests réussis) incluant la connexion Google et Email/Mot de passe.
+- **Continuité technique** : Zéro impact sur le code source existant (React/Vite).
+
+### 17. 🤖 Résolution de l'Agent IA & Correctif 404 du CV
+- **Mise à niveau Gemini API** : Bascule vers le modèle `gemini-3.6-flash` avec transmission sécurisée de la clé d'API, résolvant le crash 404 de l'ancien modèle déprécié.
+- **Correction du lien CV** : Fichier PDF servi directement depuis la racine publique (`/moslihayoub-cv.pdf`) avec règle de réécriture Vercel (`vercel.json`), garantissant un téléchargement immédiat (HTTP 200) depuis l'Agent IA et la page About.
+- **Design des pages d'erreur (404, 401, 403, 500, Offline)** : Stylisation du grand numéro d'erreur en vert transparent (`rgba(0, 98, 83, 0.18)`) pour une lisibilité optimale et un rendu moderne.
+
+### 18. 🔐 Authentification Hybride Admin Firebase (Google Sign-In & Email/Password)
+- **Double Fournisseur de Connexion** :
+  1. *Option 1* : Connexion 1-clic native avec Google (`signInWithPopup`).
+  2. *Option 2* : Connexion par Email et Mot de passe (`moslihayoub@gmail.com` / `M@slih031984`).
+- **Contrôle d'accès strict (Whitelist)** : Seule l'adresse `moslihayoub@gmail.com` est autorisée à accéder au Back-office. Les autres comptes sont automatiquement révoqués (`signOut`).
+- **Gestion des erreurs OAuth & Domaines autorisés** : Messages d'erreur explicites guidant l'ajout des domaines (`localhost`, `moslih84.vercel.app`) dans la console Firebase Authentication.
+- **Validation E2E Playwright** : Suite complète de 10 tests de non-régression exécutés avec 100% de succès.
 
 ---
 
@@ -137,12 +147,15 @@
 - [x] Validation PWA sur Vercel Prod et Desktop Chrome.
 - [x] Implémentation filtre de dates Dashboard et CRM Leads.
 - [x] Importation de l'historique CSV des anciens leads.
-- [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN.
+- [x] Création des pages d'erreur unifiées (404, 401, Offline...) avec support FR/EN et numéro vert transparent lisible.
 - [x] Configuration des balises Open Graph (`og:image`) et Twitter pour les aperçus WhatsApp & SEO avec `20250419_155833.webp`.
 - [x] Ajout de la référence MVP Fluxo Finance (`fluxofinance.vercel.app`) avec visuel WebP optimisé.
-- [x] Validation par tests E2E Playwright (10/10 réussis).
-- [x] Vérification Build Vite & Oxlint.
-- [x] Mise à jour du document SKILL de méthodologie (SDD, Sécurité IA, A11y, Protocole de Tests & QA E2E/DevTools).
+- [x] Mise à jour du modèle d'IA vers `gemini-3.6-flash` et fiabilisation de l'Agent M84.
+- [x] Résolution de l'URL 404 du CV et routing Vercel (`/moslihayoub-cv.pdf`).
+- [x] Intégration du Spec-Driven Development (SDD) et du protocole QA dans le fichier SKILL.
 - [x] Intégration Firebase Auth (Google Sign-In & Email/Mot de passe sécurisé) sur l'Admin.
+- [x] Validation complète par suite de 10 tests automatisés E2E Playwright (10/10 réussis).
+- [x] Vérification Build Vite & Oxlint.
 - [x] Synchronisation GitHub & Déploiement Vercel Production.
+
 
