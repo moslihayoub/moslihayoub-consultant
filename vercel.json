@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/cv-ayoub-moslih.pdf/moslihayoub-cv.pdf",
+      "destination": "/moslihayoub-cv.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
