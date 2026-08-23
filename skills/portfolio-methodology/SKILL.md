@@ -173,12 +173,42 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 
 ---
 
-## 🧪 9. Protocole de Test & Déploiement Strict
+## 🧪 9. Protocole de Tests, QA & Déploiement Strict
 
-Après chaque modification ou ajout de fonctionnalité, la procédure suivante est **obligatoire** :
+### A. La Pyramide de Tests du Portfolio
+| Niveau | Outils / Commandes | Objectif |
+| :--- | :--- | :--- |
+| **1. Contrôle Statique & Linter** | `npm run lint` (Oxlint) | Détecter les erreurs de syntaxe, imports morts et règles React hooks |
+| **2. Build de Production** | `npm run build` (Vite) | Valider le bundling, le tree-shaking et l'absence d'erreurs d'import |
+| **3. Tests E2E Automatisés** | `npx playwright test` | Valider les parcours critiques (navigation, modales AES, CRM, filtres) |
+| **4. Smoke Tests & DevTools** | Chrome DevTools / Émulation | Valider visuellement l'UI mobile (375px) / desktop (1440px) et 0 erreur console |
+| **5. Audit Performance & A11y** | Lighthouse | Contrôler les Core Web Vitals (LCP < 2.5s, CLS = 0) et le score accessibilité |
 
-1. **Build Check** : Exécuter `npm run build` (détecte toute erreur de bundling ou d'import).
-2. **Linter Check** : Exécuter `npm run lint` (vérifie la qualité et l'absence d'erreurs de syntaxe).
-3. **Vérification de l'Intégrité (SDD)** : S'assurer que le code développé respecte rigoureusement les spécifications métier, l'accessibilité et les performances visées.
-4. **Test Visuel** : Exécuter `npm run preview` pour valider le rendu UI et l'expérience mobile sur `http://localhost:4173/`.
-5. **Accord Déploiement** : Ne **JAMAIS** pousser sur Git (`git push origin main`) ou déployer sur Vercel sans la **validation explicite et finale** de l'utilisateur.
+---
+
+### B. Procédure de Smoke Test E2E & DevTools
+Après chaque développement ou modification d'une vue :
+1. **Lancement local :** `npm run preview` ou `npm run dev` (vérifier que l'application répond sans warning bloquant).
+2. **Inspection Console :** S'assurer de l'absence totale d'erreurs rouges (`0 erreurs console tolérées`) ou d'avertissements de clé React.
+3. **Parcours critiques à tester :**
+   - **Navigation & Routage :** Changement de langue (FR/EN), navigation fluide entre les pages sans rechargement.
+   - **Projets protégés (AES) :** Tester la modale de déverrouillage avec le code `031984`.
+   - **Agent M84 (Chatbot) :** Vérifier la réponse texte, les CTAs cliquables et la transition de quota/fallback local.
+   - **Capture de Leads :** Vérifier que le formulaire CRM s'enregistre ou bascule en mode fallback sans écran blanc.
+4. **Matrice Responsive :**
+   - **Mobile Standard (375 x 812) :** Menu hamburger, FAB, tiroirs du dashboard, cartes projets sans débordement horizontal.
+   - **Desktop Standard (1440 x 900) :** Centrage des sections, effet parallaxe/tilt et animations fluides.
+
+---
+
+### C. Checklist de Validation & Déploiement
+
+Avant de marquer une tâche comme terminée ou de procéder au déploiement :
+
+- [ ] **Linter :** `npm run lint` passe avec 0 erreur.
+- [ ] **Build de Production :** `npm run build` se termine avec succès (code 0).
+- [ ] **Tests E2E :** `npx playwright test` valide les suites de tests sans régression.
+- [ ] **Console propre :** Aucune exception non gérée ni crash dans la console.
+- [ ] **Responsive validé :** Testé sur mobile (375px) et desktop (1440px).
+- [ ] **Accord Déploiement :** Ne **JAMAIS** pousser sur Git (`git push origin main`) ou déclencher un déploiement Vercel sans la **validation explicite et finale** de l'utilisateur.
+
