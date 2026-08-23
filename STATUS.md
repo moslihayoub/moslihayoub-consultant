@@ -116,6 +116,11 @@
 - **Récupération Token GitHub** : Récupération et application des identifiants d'accès valides pour le compte `moslihayoub`.
 - **Push & Déploiement** : Branche `main` synchronisée sur GitHub (`moslihayoub/moslihayoub-consultant`) et pipeline de production Vercel validé sur `https://moslih84.vercel.app/`.
 
+### 16. 🧠 Évolution de la Méthodologie (Spec-Driven Development)
+- **Mise à jour du processus de développement** : Intégration du Spec-Driven Development (SDD) dans `skills/portfolio-methodology/SKILL.md`.
+- **Qualité & Sécurité** : Ajout de règles strictes pour la validation des données, les standards d'accessibilité (Mobile-first, WCAG, ARIA), et l'anonymisation / Guardrails de l'Agent IA.
+- **Continuité technique** : Zéro impact sur le code source existant (React/Vite).
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
@@ -134,5 +139,4 @@
 - [x] Validation par tests E2E Playwright.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Synchronisation GitHub & Déploiement Vercel.
-
-
+- [x] Mise à jour du document SKILL de méthodologie (SDD, Sécurité IA, A11y).

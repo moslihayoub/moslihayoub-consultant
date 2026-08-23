@@ -1,19 +1,28 @@
 ---
 name: portfolio-methodology
-description: Directives d'architecture, protocole de création de pages, normes de performance, sécurité et règles de développement pour le portfolio d'Ayoub MOSLIH.
+description: Directives d'architecture, protocole Spec-Driven Development (SDD), normes de performance, sécurité IA, et règles de développement pour le portfolio d'Ayoub MOSLIH.
 ---
 
 # 📌 Méthodologie & Architecture du Portfolio — Ayoub MOSLIH
 
-Ce Skill définit l'architecture complète, la structure des dossiers, le protocole de création de pages et les règles d'optimisation pour le site [Ayoub MOSLIH Portfolio](https://moslih84.vercel.app/).
+Ce Skill définit l'architecture complète, le flux de travail Spec-Driven Development (SDD), le protocole de création de pages, les normes strictes de performance/UI et les garde-fous de sécurité pour le site [Ayoub MOSLIH Portfolio](https://moslih84.vercel.app/).
 
 ---
 
-## 🏛️ 1. Architecture Globale & Carte du Codebase
+## 🚀 1. Workflow de Développement : Spec-Driven Development (SDD)
+
+Avant toute modification majeure ou création de fonctionnalité, le principe **SDD** s'applique :
+1. **Spécifications d'abord :** Valider l'UI/UX, les données nécessaires, et les règles métier avec l'utilisateur avant d'écrire du code React.
+2. **Conception guidée :** L'architecture des composants découle directement des spécifications validées.
+3. **Itérations contrôlées :** Ne pas coder "à l'aveugle". Chaque implémentation technique doit répondre à une exigence préalablement définie et validée.
+
+---
+
+## 🏛️ 2. Architecture Globale & Carte du Codebase
 
 ### Point d'entrée & Routage
 - **`index.html`** : Contient le loader squelette initial, les méta-tags SEO/OG, le JSON-LD (`Person`), et le script analytique différé (GTM & GA4).
-- **`src/main.jsx`** : Instancie le `createRoot`, la feuille de style globale `./index.css` et Vercel Analytics (`@vercel/analytics/react`).
+- **`src/main.jsx`** : Instancie le `createRoot`, la feuille de style globale `./index.css` et Vercel Analytics.
 - **`src/App.jsx`** : Déclare le `BrowserRouter`, la gestion de langue (`LanguageProvider`), les composants d'infrastructure (`Navbar`, `Footer`, `CustomCursor`, `ScrollSpy`, `CookieBanner`, `PwaInstallPrompt`, `ChatWidget`) et l'animation de routes (`AnimatePresence` + `ErrorBoundary`).
 
 ### Arborescence des Dossiers
@@ -31,7 +40,7 @@ src/
 │   └── TiltWrapper.jsx         # Effet parallaxe 3D sur carte au survol
 ├── contexts/            # Contextes React globaux
 │   └── LanguageContext.jsx     # Système i18n (FR / EN) & traductions
-├── data/                # Sources de données
+├── data/                # Sources de données statiques
 │   └── projects.js             # Catalogue officiel des projets & URLs chiffrées AES
 ├── pages/               # Pages principales de l'application
 │   ├── Home.jsx                # Page d'accueil (Hero Marquee, Recent Work, Timeline)
@@ -49,9 +58,9 @@ public/
 
 ---
 
-## 🛠️ 2. Protocole de Création d'une Nouvelle Page
+## 🛠️ 3. Protocole de Création d'une Nouvelle Page
 
-Pour ajouter une nouvelle page sans se perdre ni casser le routage, la PWA ou la fluidité des animations :
+*Pré-requis (SDD) : Avoir défini et validé l'objectif de la page et les données nécessaires.*
 
 ### Étape 1 : Créer le composant Page
 Créer le fichier dans `src/pages/MaNouvellePage.jsx`. **Obligation** : Envelopper le contenu avec `<AnimatedPage>`.
@@ -82,106 +91,94 @@ export default function MaNouvellePage() {
    ```jsx
    const MaNouvellePage = lazy(() => import('./pages/MaNouvellePage'));
    ```
-2. Ajouter la route dans le composant `AnimatedRoutes` de `src/App.jsx` :
+2. Ajouter la route dans le composant `AnimatedRoutes` :
    ```jsx
    <Route path="/ma-nouvelle-page" element={<MaNouvellePage />} />
    ```
 
 ### Étape 3 : Ajouter les clés de traduction dans `src/contexts/LanguageContext.jsx`
-Ajouter les textes en Français et en Anglais dans l'objet `translations` :
-```javascript
-fr: {
-  nav_ma_page: 'Ma Page',
-  titre_ma_page: 'Bienvenue sur ma nouvelle page'
-},
-en: {
-  nav_ma_page: 'My Page',
-  titre_ma_page: 'Welcome to my new page'
-}
-```
+Ajouter les textes en Français et en Anglais dans l'objet `translations`.
 
 ### Étape 4 : Mettre à jour la Navigation (`Navbar.jsx`)
 Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/components/Navbar.jsx`.
 
 ---
 
-## ⚡ 3. Normes de Performance & Médias
+## ⚡ 4. Normes UI/UX, Accessibilité & Performance
 
-1. **Format des Images** :
-   - Toutes les images **doivent être au format `.webp`** (largeur max 1000px).
-   - Emplacements : `public/assets/galerie/` et `public/assets/works/`.
-   - Utiliser `scripts/optimize-images.js` pour la conversion automatique.
-2. **Priorités de Chargement LCP & Marquee** :
-   - L'image principale au-dessus de la ligne de flottaison (LCP) dans `Home.jsx` a `fetchPriority="high"` et un `<link rel="preload">` dans `index.html`.
-   - Toutes les autres images ont `loading="lazy"` et `fetchPriority="low"`.
-3. **Optimisation JS & Bundling** :
-   - Les scripts lourds (`Three.js`, `GTM`, `GA4`) sont séparés ou différés.
-   - Ne pas charger Three.js sur la page d'accueil.
-4. **Appareils Mobiles** :
+1. **Accessibilité (A11y) & UI Mobile-First :**
+   - L'interface doit être conçue en priorité pour le mobile (Mobile-First).
+   - Utiliser systématiquement les attributs d'accessibilité (balises sémantiques, attributs ARIA comme `aria-label`, `aria-hidden`, `role`) pour garantir l'utilisabilité par tous.
    - Le `CustomCursor` et les écouteurs d'événements lourds doivent rester désactivés sur écran tactile (`pointer: coarse`).
-5. **SEO & Aperçus Réseaux Sociaux (WhatsApp, LinkedIn, Twitter)** :
-   - L'image d'aperçu d'URL (`og:image`, `twitter:image`) dans `index.html` doit utiliser une URL absolue HTTPS valide (`https://moslih84.vercel.app/assets/galerie/20250419_155833.webp`).
-   - Toujours spécifier `og:image:secure_url`, `og:image:type` (`image/webp`), `og:image:width`, et `og:image:height` afin de garantir que WhatsApp, iMessage, LinkedIn et Twitter affichent immédiatement l'aperçu visuel sans échec lors des partages de liens.
-
+2. **Format des Images :**
+   - Toutes les images **doivent être au format `.webp`** (largeur max 1000px).
+   - Utiliser `scripts/optimize-images.js` pour la conversion automatique.
+3. **Priorités de Chargement (Web Vitals) :**
+   - **LCP (Largest Contentful Paint)** : L'image principale au-dessus de la ligne de flottaison dans `Home.jsx` a `fetchPriority="high"` et un `<link rel="preload">` dans `index.html`. Objectif visé : LCP < 2.5s.
+   - Toutes les autres images ont `loading="lazy"` et `fetchPriority="low"`.
+4. **Optimisation JS & Bundling :**
+   - Les scripts lourds (`Three.js`, `GTM`, `GA4`) sont séparés ou différés.
+5. **SEO & Aperçus Réseaux Sociaux :**
+   - L'image d'aperçu d'URL (`og:image`, `twitter:image`) dans `index.html` doit utiliser une URL absolue HTTPS valide et spécifier ses dimensions (`width`, `height`) pour un affichage immédiat sur WhatsApp, LinkedIn, etc.
 
 ---
 
-## 🔐 4. Sécurité & Projets Confidentiels (AES)
+## 🔐 5. Sécurité, Intégrité des Données & Projets Confidentiels
 
-1. **Chiffrement des URLs** :
-   - Dans `src/data/projects.js`, les URLs confidentielles sont chiffrées avec `crypto-js` (AES).
-2. **Déchiffrement** :
-   - `ProtectedProjectModal.jsx` prend le mot de passe utilisateur et déchiffre l'URL dynamiquement.
-3. **Protection des Vidéos / Making-Of** :
+1. **Validation Stricte aux Frontières :**
+   - Toute donnée entrante (formulaires CRM, interactions Chatbot, entrées utilisateur) doit être **strictement validée et assainie** avant traitement ou envoi vers la base de données, pour garantir l'intégrité absolue des données métier.
+2. **Chiffrement des URLs :**
+   - Dans `src/data/projects.js`, les URLs confidentielles sont chiffrées avec `crypto-js` (AES). `ProtectedProjectModal.jsx` prend le mot de passe utilisateur et déchiffre l'URL dynamiquement.
+3. **Protection des Vidéos :**
    - Les vidéos YouTube intégrées utilisent un overlay CSS transparent pour empêcher le clic droit / extraction directe.
-4. **Firebase Security Rules & Fallback Data Extensif** :
-   - Les lectures Firestore (Admin) sont protégées. L'application (`AdminDashboard`, `CrmLeadsManager`) implémente un pattern de fallback (`try/catch` ET contrôle de collection vide `leadsData.length === 0`) : si les règles bloquent la requête (absence de Firebase Auth) ou si la base est totalement vierge, les composants injectent statiquement les données par défaut (issues du parsing CSV `src/data/fallbackLeads.js`) pour garantir que l'UI, les graphiques et le tableau de bord affichent toujours des statistiques et informations concrètes.
+4. **Firebase Security Rules & Fallback Data Extensif :**
+   - Les lectures Firestore (Admin) sont protégées. En cas de blocage (règles de sécurité) ou de base vierge, l'application injecte des données par défaut (`try/catch`) pour éviter les crashs UI.
 
 ---
 
-## 📱 5. PWA (Progressive Web App) & Expérience Mobile
+## 📱 6. PWA (Progressive Web App) & Expérience Mobile
 
-1. **Prompt d'Installation Personnalisé** :
-   - Le toaster PWA attend l'événement natif `beforeinstallprompt` envoyé par le navigateur.
-   - Afin d'éviter les pop-ups abusifs sur PC (où le navigateur gère nativement le bouton d'installation dans la barre d'adresse), aucun timer de forçage (`setTimeout`) n'est utilisé.
-   - Si le navigateur bloque l'installation via la fonction `prompt()` ou s'il s'agit d'iOS sans support natif fluide, un fallback UI affiche les instructions ("Appuyez sur l'icône de partage..."), sans jamais recourir à des popups système (`alert()`).
-2. **Double Détection** :
-   - Toujours vérifier le statut `window.matchMedia('(display-mode: standalone)').matches` et `window.navigator.standalone` au montage pour ne pas ennuyer un utilisateur ayant déjà installé la PWA.
-3. **Séparation Logique** :
-   - Les contextes d'installation doivent rester indépendants selon le périmètre (Portfolio Front vs Backoffice Admin). On utilise des clés de localStorage distinctes (`m84_pwa_dismissed_portfolio` et `m84_pwa_dismissed_admin`).
-
----
-
-## 🤖 6. Architecture IA & Agent M84
-
-1. **Base de connaissances (Knowledge Base)** :
-   - Gérée dans `src/data/knowledgeBase.js`, elle centralise toutes les instructions, l'expérience découpée par type de métier (Product Design, Graphic Design, Motion) et les clients phares, afin d'optimiser le contexte envoyé au LLM.
-2. **Configuration Dynamique via Backoffice** :
-   - L'Agent utilise un *System Prompt* configurable via l'UI d'administration (`AiConfigManager.jsx`).
-   - Le prompt est stocké de manière sécurisée dans la base de données Firestore (collection `config`, document `agent`). S'il est présent, il a la priorité absolue sur le fallback de l'application.
-3. **Historique CRM & UI** :
-   - Le pipeline d'acquisition sauvegarde l'historique complet des échanges. `CrmLeadsManager.jsx` parse intelligemment ce bloc textuel (`--- Historique ---`) pour restituer une interface conversationnelle fluide (bulles de discussion) dans le profil du lead.
+1. **Prompt d'Installation Personnalisé :**
+   - Attendre l'événement natif `beforeinstallprompt`. Aucun timer de forçage (`setTimeout`) n'est autorisé.
+   - Fournir un fallback UI textuel si l'installation native n'est pas supportée (ex: iOS), sans jamais recourir à des popups système (`alert()`).
+2. **Double Détection :**
+   - Toujours vérifier le statut `window.matchMedia('(display-mode: standalone)').matches` pour ne pas ennuyer un utilisateur ayant déjà installé la PWA.
+3. **Séparation Logique :**
+   - Utiliser des clés de localStorage distinctes (`m84_pwa_dismissed_portfolio` et `m84_pwa_dismissed_admin`) pour séparer les contextes d'installation.
 
 ---
 
-## 🚫 7. Architecture des Pages d'Erreurs & Mode Hors-Ligne
+## 🤖 7. Architecture IA & Sécurité (Guardrails)
 
-1. **Pages d'erreurs unifiées** :
-   - Toutes les pages d'erreurs (404, 401, 403, 500, 503) utilisent un composant central réutilisable `ErrorPage.jsx`.
-   - Elles s'appuient sur `LanguageContext` pour traduire automatiquement les titres et descriptions selon la langue du visiteur.
-2. **Détecteur Hors-Ligne (OfflineDetector)** :
-   - L'application est enveloppée par un composant `OfflineDetector.jsx` qui écoute les événements de fenêtre (`online` / `offline`).
-   - En cas de coupure réseau, l'interface est immédiatement remplacée par l'écran de déconnexion.
-3. **Animations Lottie** :
-   - Les encarts d'erreurs sont prévus pour accueillir des animations `.json` fluides (`lottie-react`). L'affichage visuel du composant Lottie peut être activé ou désactivé via le flag interne `showLottie` dans `ErrorPage.jsx` selon la stratégie UX souhaitée.
+1. **Base de connaissances (Knowledge Base) :**
+   - Gérée dans `src/data/knowledgeBase.js`, elle centralise les instructions et l'expérience pour optimiser le contexte envoyé au LLM.
+2. **Configuration Dynamique & Guardrails Stricts :**
+   - L'Agent utilise un *System Prompt* sécurisé dans Firestore.
+   - **Guardrails IA :** Les instructions du chatbot doivent interdire formellement les hallucinations et forcer l'IA à rester dans le périmètre du portfolio. 
+3. **Anonymisation & Confidentialité :**
+   - Toute donnée personnelle transitant par l'IA doit être manipulée avec précaution ; le système ne doit pas exposer de données de leads (CRM) aux utilisateurs du chat public.
+4. **Historique CRM :**
+   - Le pipeline d'acquisition sauvegarde l'historique complet des échanges. `CrmLeadsManager.jsx` parse intelligemment ce bloc textuel pour restituer une UI conversationnelle dans l'admin.
 
 ---
 
-## 🧪 8. Protocole de Test & Déploiement Strict
+## 🚫 8. Architecture des Pages d'Erreurs & Mode Hors-Ligne
 
-Après chaque modification ou ajout de page :
+1. **Pages d'erreurs unifiées :**
+   - `ErrorPage.jsx` gère dynamiquement toutes les erreurs (404, 401, 403, 500) avec traduction automatique (`LanguageContext`).
+2. **Détecteur Hors-Ligne (OfflineDetector) :**
+   - Écoute les événements `online` / `offline` et remplace l'UI par un écran de déconnexion si nécessaire.
+3. **Animations Lottie :**
+   - Les erreurs intègrent des animations `.json` fluides, activables via le flag `showLottie`.
+
+---
+
+## 🧪 9. Protocole de Test & Déploiement Strict
+
+Après chaque modification ou ajout de fonctionnalité, la procédure suivante est **obligatoire** :
 
 1. **Build Check** : Exécuter `npm run build` (détecte toute erreur de bundling ou d'import).
 2. **Linter Check** : Exécuter `npm run lint` (vérifie la qualité et l'absence d'erreurs de syntaxe).
-3. **Test Visuel** : Exécuter `npm run preview` pour valider le rendu sur `http://localhost:4173/`.
-4. **Accord Déploiement** : Ne **JAMAIS** pousser sur Git (`git push origin main`) ou déployer sur Vercel sans la validation explicite de l'utilisateur.
+3. **Vérification de l'Intégrité (SDD)** : S'assurer que le code développé respecte rigoureusement les spécifications métier, l'accessibilité et les performances visées.
+4. **Test Visuel** : Exécuter `npm run preview` pour valider le rendu UI et l'expérience mobile sur `http://localhost:4173/`.
+5. **Accord Déploiement** : Ne **JAMAIS** pousser sur Git (`git push origin main`) ou déployer sur Vercel sans la **validation explicite et finale** de l'utilisateur.
