@@ -135,6 +135,12 @@
 - **Gestion des erreurs OAuth & Domaines autorisés** : Messages d'erreur explicites guidant l'ajout des domaines (`localhost`, `moslih84.vercel.app`) dans la console Firebase Authentication.
 - **Validation E2E Playwright** : Suite complète de 10 tests de non-régression exécutés avec 100% de succès.
 
+### 19. 🧪 Intégration Agent TestSprite & Automatisation Antigravity
+- **Installation Skills Antigravity** : Intégration des compétences `.agents/skills/testsprite-verify` et `.agents/skills/testsprite-onboard` via `testsprite agent install --target antigravity`.
+- **Configuration Projet TestSprite** : Création et liaison du projet `Ayoub MOSLIH Portfolio` (`d6258fed-716e-4b75-8b95-a546c869f1c8`) ciblant l'environnement déployé `https://moslih84.vercel.app/` via `.testsprite/config.json`.
+- **Test E2E Cloud TestSprite** : Exécution d'un plan E2E autonome vérifiant le chargement de la page d'accueil et la navigation vers la galerie des projets. Verdict : **PASSED (6/6 étapes validées)** avec enregistrement vidéo disponible.
+- **Règle de Déclenchement des Tests (Méthodologie)** : La suite de tests interne (Linter, Build, 10 tests E2E Playwright) reste la norme par défaut pour chaque développement. L'exécution des tests cloud TestSprite est déclenchée uniquement sur demande explicite de l'utilisateur.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
@@ -155,6 +161,9 @@
 - [x] Intégration du Spec-Driven Development (SDD) et du protocole QA dans le fichier SKILL.
 - [x] Intégration Firebase Auth (Google Sign-In & Email/Mot de passe sécurisé) sur l'Admin.
 - [x] Validation complète par suite de 10 tests automatisés E2E Playwright (10/10 réussis).
+- [x] Intégration de l'Agent TestSprite (`testsprite agent install --target antigravity`) et configuration du projet.
+- [x] Exécution et validation du test cloud TestSprite sur `https://moslih84.vercel.app/` (Statut: PASSED).
+- [x] Mise à jour de la méthodologie de test (Tests standards par défaut, TestSprite sur demande explicite).
 - [x] Vérification Build Vite & Oxlint.
 - [x] Synchronisation GitHub & Déploiement Vercel Production.
 

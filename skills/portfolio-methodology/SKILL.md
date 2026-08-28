@@ -175,7 +175,9 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 
 ## 🧪 9. Protocole de Tests, QA & Déploiement Strict
 
-### A. La Pyramide de Tests du Portfolio
+### A. La Pyramide de Tests du Portfolio (Par Défaut)
+Par défaut, toutes les vérifications de routine s'effectuent via la suite de tests interne :
+
 | Niveau | Outils / Commandes | Objectif |
 | :--- | :--- | :--- |
 | **1. Contrôle Statique & Linter** | `npm run lint` (Oxlint) | Détecter les erreurs de syntaxe, imports morts et règles React hooks |
@@ -186,7 +188,15 @@ Si la page doit figurer dans le menu haut/mobile, ajouter l'élément dans `src/
 
 ---
 
-### B. Procédure de Smoke Test E2E & DevTools
+### B. Règle d'Exécution des Tests : Standard vs TestSprite
+- **Mode Standard (Par Défaut)** : Toujours exécuter la pyramide standard (`npm run lint` + `npm run build` + `npx playwright test`).
+- **Mode TestSprite (Sur Demande Explicite Uniquement)** :
+  - N'exécuter les tests autonomes cloud via le CLI TestSprite (`testsprite test create --plan-from ... --run --wait` ou `testsprite test run ... --wait`) **uniquement si l'utilisateur en fait la demande explicite** (ex : *"teste avec TestSprite"*, *"lance testsprite"*, *"fais un test testsprite"*).
+  - Si l'utilisateur ne mentionne pas spécifiquement TestSprite, **toujours utiliser la suite de tests interne (Playwright, Oxlint, Build)** définie dans la méthodologie.
+
+---
+
+### C. Procédure de Smoke Test E2E & DevTools
 Après chaque développement ou modification d'une vue :
 1. **Lancement local :** `npm run preview` ou `npm run dev` (vérifier que l'application répond sans warning bloquant).
 2. **Inspection Console :** S'assurer de l'absence totale d'erreurs rouges (`0 erreurs console tolérées`) ou d'avertissements de clé React.
@@ -201,13 +211,14 @@ Après chaque développement ou modification d'une vue :
 
 ---
 
-### C. Checklist de Validation & Déploiement
+### D. Checklist de Validation & Déploiement
 
 Avant de marquer une tâche comme terminée ou de procéder au déploiement :
 
 - [ ] **Linter :** `npm run lint` passe avec 0 erreur.
 - [ ] **Build de Production :** `npm run build` se termine avec succès (code 0).
 - [ ] **Tests E2E :** `npx playwright test` valide les suites de tests sans régression.
+- [ ] **TestSprite (Si demandé) :** Exécuté et validé sur l'environnement cible si requis par l'utilisateur.
 - [ ] **Console propre :** Aucune exception non gérée ni crash dans la console.
 - [ ] **Responsive validé :** Testé sur mobile (375px) et desktop (1440px).
 - [ ] **Accord Déploiement :** Ne **JAMAIS** pousser sur Git (`git push origin main`) ou déclencher un déploiement Vercel sans la **validation explicite et finale** de l'utilisateur.
