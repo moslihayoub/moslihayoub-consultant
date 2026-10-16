@@ -187,7 +187,9 @@ const ChatWidget = () => {
         }),
         mode: 'no-cors'
       }).catch(err => console.debug('Sheet logging skipped:', err));
-    } catch (e) {}
+    } catch {
+      // ignore fetch error
+    }
   };
 
   const startLeadCapture = () => {
@@ -229,7 +231,7 @@ const ChatWidget = () => {
         role: 'model',
         text: successText,
         ctas: [
-          { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
+          { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#services" },
           { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
         ]
       }]);
@@ -252,7 +254,9 @@ const ChatWidget = () => {
             }),
             mode: 'no-cors'
           }).catch(err => console.debug('Sheet logging skipped:', err));
-        } catch (e) {}
+        } catch {
+          // ignore fetch error
+        }
       }
 
       // Enregistrement du lead dans Firestore
@@ -367,9 +371,11 @@ const ChatWidget = () => {
     logInteractionToSheet(`[Clic CTA] ${cta.text}`, `Action: ${cta.action} -> ${cta.target}`, 'cta_click');
 
     if (cta.action === 'external' && cta.target) {
-      window.open(cta.target, '_blank', 'noopener,noreferrer');
+      window.open(encodeURI(cta.target), '_blank', 'noopener,noreferrer');
     } else if (cta.action === 'navigate' && cta.target) {
-      const [path, hash] = cta.target.split('#');
+      const [path, rawHash] = cta.target.split('#');
+      const hashMap = { expertise: 'services', timeline: 'parcours' };
+      const hash = rawHash ? (hashMap[rawHash] || rawHash) : '';
       navigate(path || '/');
       if (isMobile) setIsOpen(false);
       if (hash) {
@@ -530,11 +536,11 @@ const ChatWidget = () => {
                         <div style={{ color: 'inherit', fontSize: '0.85rem', lineHeight: '1.6' }}>
                           <ReactMarkdown
                             components={{
-                              strong: ({node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
-                              p: ({node, ...props}) => <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem' }} {...props} />,
-                              ul: ({node, ...props}) => <ul style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
-                              ol: ({node, ...props}) => <ol style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
-                              li: ({node, ...props}) => <li style={{ margin: '0 0 3px 0', fontSize: '0.85rem' }} {...props} />
+                              strong: ({node: _node, ...props}) => <strong style={{ color: 'var(--color-electric-green, #006253)', fontWeight: 600 }} {...props} />,
+                              p: ({node: _node, ...props}) => <p style={{ margin: '0 0 6px 0', fontSize: '0.85rem' }} {...props} />,
+                              ul: ({node: _node, ...props}) => <ul style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
+                              ol: ({node: _node, ...props}) => <ol style={{ margin: '0 0 6px 0', paddingLeft: '18px', fontSize: '0.85rem' }} {...props} />,
+                              li: ({node: _node, ...props}) => <li style={{ margin: '0 0 3px 0', fontSize: '0.85rem' }} {...props} />
                             }}
                           >
                             {msg.text}
@@ -579,10 +585,14 @@ const ChatWidget = () => {
                             {card.desc && <p style={styles.miniCardDesc}>{card.desc}</p>}
                             {card.url && (
                               <button
-                                onClick={() => handleCtaClick({ text: card.title, action: card.url.startsWith('http') ? 'external' : 'navigate', target: card.url })}
+                                onClick={() => handleCtaClick({ text: card.title, action: card.url.startsWith('http') || card.url.endsWith('.pdf') ? 'external' : 'navigate', target: card.url })}
                                 style={styles.miniCardAction}
                               >
-                                <span>{lang === 'en' ? 'View project' : 'Voir le projet'}</span>
+                                <span>
+                                  {card.type === 'certif'
+                                    ? (lang === 'en' ? 'View certificate' : 'Voir le certificat')
+                                    : (lang === 'en' ? 'View project' : 'Voir le projet')}
+                                </span>
                                 <ArrowRight size={12} />
                               </button>
                             )}

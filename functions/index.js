@@ -9,11 +9,10 @@ admin.initializeApp();
 // firebase functions:secrets:set GA_CLIENT_EMAIL
 // firebase functions:secrets:set GA_PRIVATE_KEY
 
-exports.getAnalyticsData = functions.https.onCall(async (data, context) => {
-  // Optionnel : vérifier si l'utilisateur est authentifié pour plus de sécurité
-  // if (!context.auth) {
-  //   throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
-  // }
+exports.getAnalyticsData = functions.https.onCall(async (_data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
+  }
 
   try {
     const propertyId = process.env.GA_PROPERTY_ID;

@@ -5,9 +5,8 @@ import ProjectsManager from './ProjectsManager';
 import CrmLeadsManager from './CrmLeadsManager';
 import AiConfigManager from './AiConfigManager';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import { collection, getDocs, query, orderBy, limit, doc, setDoc, addDoc } from 'firebase/firestore';
-import { app, db } from '../../utils/firebaseConfig';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '../../utils/firebaseConfig';
 import { fallbackLeads } from '../../data/fallbackLeads';
 
 
@@ -20,7 +19,6 @@ const AdminDashboard = () => {
   const [leadsData, setLeadsData] = useState([]);
   const [totalLeads, setTotalLeads] = useState(0);
   const [loadingTraffic, setLoadingTraffic] = useState(true);
-  const [isSeeding, setIsSeeding] = useState(false);
 
   // Auto-import CSV data disabled to prevent duplicates
 

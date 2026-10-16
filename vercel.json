@@ -5,7 +5,7 @@
       "destination": "/moslihayoub-cv.pdf"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!certif/|assets/|.*\\.pdf$).*)",
       "destination": "/index.html"
     }
   ]

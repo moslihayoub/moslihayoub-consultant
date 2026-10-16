@@ -139,7 +139,22 @@
 - **Installation Skills Antigravity** : Intégration des compétences `.agents/skills/testsprite-verify` et `.agents/skills/testsprite-onboard` via `testsprite agent install --target antigravity`.
 - **Configuration Projet TestSprite** : Création et liaison du projet `Ayoub MOSLIH Portfolio` (`d6258fed-716e-4b75-8b95-a546c869f1c8`) ciblant l'environnement déployé `https://moslih84.vercel.app/` via `.testsprite/config.json`.
 - **Test E2E Cloud TestSprite** : Exécution d'un plan E2E autonome vérifiant le chargement de la page d'accueil et la navigation vers la galerie des projets. Verdict : **PASSED (6/6 étapes validées)** avec enregistrement vidéo disponible.
-- **Règle de Déclenchement des Tests (Méthodologie)** : La suite de tests interne (Linter, Build, 10 tests E2E Playwright) reste la norme par défaut pour chaque développement. L'exécution des tests cloud TestSprite est déclenchée uniquement sur demande explicite de l'utilisateur.
+- **Règle de Déclenchement des Tests (Méthodologie)** : La suite de tests interne (Linter, Build, 11 tests E2E Playwright) reste la norme par défaut pour chaque développement. L'exécution des tests cloud TestSprite est déclenchée uniquement sur demande explicite de l'utilisateur.
+
+### 20. Audit Complet & Correctifs (Certificats 404, Agent M84, Backoffice & Backend) (Nouveau)
+- **Correctif 404 Certificats (`/about` & `/work`)** :
+  - Ajout de `workbox: { navigateFallbackDenylist: [/^\/certif\//, /\.pdf$/i] }` dans `vite.config.js` pour empêcher le Service Worker PWA d'intercepter l'ouverture des PDF avec `index.html` (qui déclenchait la route React `<Error404 />`).
+  - Exclusion explicite de `certif/`, `assets/` et `*.pdf` de la réécriture SPA dans `vercel.json`.
+  - Encodage systématique `encodeURI(cert.url)` dans `About.jsx`, `Work.jsx` et `ChatWidget.jsx` pour gérer les espaces et caractères spéciaux (`&`).
+- **Optimisation & Fiabilisation Agent IA (`firebaseAi.js` & `ChatWidget.jsx`)** :
+  - Mise en cache mémoire (TTL 5 min + timeout 1.5s) du prompt Firestore `config/agent` avec invalidation instantanée (`invalidateAgentPromptCache`) depuis `AiConfigManager.jsx`.
+  - Nettoyage de `VITE_GEMINI_API_KEY` et correction des ancres de redirection (`/about#services` et `/about#parcours` au lieu des ancres inexistantes `#expertise` et `#timeline`).
+  - Libellés contextuels sur les mini-cartes du chat (`"Voir le certificat"` pour les certifications vs `"Voir le projet"`).
+- **Synchronisation Backoffice & Sécurité Backend** :
+  - Création du helper `getProjects()` dans `src/data/projects.js` lisant `m84_projects_mock` pour synchroniser les modifications CRUD de `ProjectsManager.jsx` avec le site public (`/work`) et la base de connaissances de l'Agent IA.
+  - Amélioration du parseur Regex de l'historique de chat dans `CrmLeadsManager.jsx` (`/(Agent|Visiteur|Utilisateur)\s*:/gi`).
+  - Réactivation du contrôle d'authentification `if (!context.auth)` sur la Cloud Function `getAnalyticsData` dans `functions/index.js`.
+- **Tests E2E Playwright (11/11)** : Ajout d'un test automatisé vérifiant la validité et le statut HTTP `200 OK` (`application/pdf`) des certificats sur `/about`.
 
 ---
 
@@ -160,11 +175,13 @@
 - [x] Résolution de l'URL 404 du CV et routing Vercel (`/moslihayoub-cv.pdf`).
 - [x] Intégration du Spec-Driven Development (SDD) et du protocole QA dans le fichier SKILL.
 - [x] Intégration Firebase Auth (Google Sign-In & Email/Mot de passe sécurisé) sur l'Admin.
-- [x] Validation complète par suite de 10 tests automatisés E2E Playwright (10/10 réussis).
+- [x] Validation complète par suite de 11 tests automatisés E2E Playwright (11/11 réussis).
 - [x] Intégration de l'Agent TestSprite (`testsprite agent install --target antigravity`) et configuration du projet.
 - [x] Exécution et validation du test cloud TestSprite sur `https://moslih84.vercel.app/` (Statut: PASSED).
 - [x] Mise à jour de la méthodologie de test (Tests standards par défaut, TestSprite sur demande explicite).
+- [x] Audit et correction 404 Certificats (`/about`), Cache/Ancres Agent IA, Sync Backoffice CRUD et Auth Backend.
 - [x] Vérification Build Vite & Oxlint.
 - [x] Synchronisation GitHub & Déploiement Vercel Production.
+
 
 

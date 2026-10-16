@@ -1,5 +1,4 @@
-import { projectsData } from './projects';
-import { certificationsData } from './certifications';
+import { getProjects } from './projects';
 
 export const knowledgeBase = {
   profile: {
@@ -80,7 +79,7 @@ export const knowledgeBase = {
   ],
   // Projets publics (Exclusion stricte des projets chiffrés / protégés par mot de passe)
   getPublicProjects: () => {
-    return projectsData
+    return getProjects()
       .filter(p => !p.isProtected)
       .map(p => ({
         id: p.id,

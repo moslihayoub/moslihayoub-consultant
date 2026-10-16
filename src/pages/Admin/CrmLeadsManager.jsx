@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
-import { Mail, Clock, CheckCircle2, Trash2, Search, MoreVertical, ChevronLeft, ChevronRight, X, User, Phone, Briefcase, MessageSquare } from 'lucide-react';
+import { Mail, Clock, Trash2, Search, ChevronLeft, ChevronRight, X, User, Phone, Briefcase, MessageSquare } from 'lucide-react';
 import ExportButton from './ExportButton';
 import { fallbackLeads } from '../../data/fallbackLeads';
 
 const CrmLeadsManager = () => {
   const [leads, setLeads] = useState([]);
-  const [openDropdownId, setOpenDropdownId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
@@ -55,16 +54,6 @@ const CrmLeadsManager = () => {
     });
 
     return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.dropdown-container')) {
-        setOpenDropdownId(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Reset page to 1 when filters change
@@ -163,9 +152,8 @@ const CrmLeadsManager = () => {
       
       const bubbles = [];
       
-      // Utilisation d'un regex pour attraper toutes les occurrences de "Agent:" ou "Visiteur:" 
-      // et capturer le texte jusqu'à la prochaine occurrence ou la fin.
-      const regex = /(Agent|Visiteur)\s*:\s*([\s\S]*?)(?=(?:Agent|Visiteur)\s*:|$)/gi;
+      // Utilisation d'un regex pour attraper toutes les occurrences de "Agent:", "Visiteur:" ou "Utilisateur:"
+      const regex = /(Agent|Visiteur|Utilisateur)\s*:\s*([\s\S]*?)(?=(?:Agent|Visiteur|Utilisateur)\s*:|$)/gi;
       let match;
       
       while ((match = regex.exec(historyStr)) !== null) {

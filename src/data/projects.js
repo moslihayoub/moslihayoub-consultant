@@ -418,3 +418,21 @@ export const projectsData = [
     url: 'U2FsdGVkX1/t9RZKKV9Wv4zHLOlENJiu6g0n5QZXdfE3BOhzTCa7WLS87T8QZnEM'
   }
 ];
+
+export function getProjects() {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('m84_projects_mock');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore localStorage read errors
+    }
+  }
+  return projectsData;
+}
+

@@ -1,5 +1,5 @@
 import faqData from '../data/chatbot_faq.json';
-import { projectsData } from '../data/projects';
+import { getProjects } from '../data/projects';
 import { certificationsData } from '../data/certifications';
 
 const STOP_WORDS = new Set([
@@ -115,7 +115,7 @@ function getProjectsForQuery(normQuery, currentLang) {
   const isAiMvp = normQuery.includes('ai') || normQuery.includes('ia') || normQuery.includes('mvp') || normQuery.includes('llm') || normQuery.includes('saas');
   const isFilmmaking = normQuery.includes('film') || normQuery.includes('movie') || normQuery.includes('2d') || normQuery.includes('serie');
 
-  const publicProjects = projectsData.filter(p => !p.isProtected);
+  const publicProjects = getProjects().filter(p => !p.isProtected);
   let matchedProjects = [];
   let categoryLabel = "";
 
@@ -195,7 +195,7 @@ function getCertificationsForQuery(normQuery, currentLang) {
     title: c.title || '',
     subtitle: c.issuer || '',
     desc: `Certificat ${c.year} - ${c.category}`,
-    url: '/about#certifications',
+    url: c.url || '/about#certifications',
     type: 'certif'
   }));
 

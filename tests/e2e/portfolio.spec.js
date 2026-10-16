@@ -73,4 +73,23 @@ test.describe('Portfolio E2E Tests', () => {
     const modelResponse = page.locator('p', { hasText: /Transformation Digitale|services|Ayoub/i }).first();
     await expect(modelResponse).toBeVisible({ timeout: 10000 });
   });
+
+  test('about page certificates should have valid PDF links and return 200 OK', async ({ page, request }) => {
+    await page.goto('/about');
+
+    const certSection = page.locator('#certifications');
+    await expect(certSection).toBeVisible();
+
+    const firstCertLink = certSection.locator('a[href*="/certif/"]').first();
+    await expect(firstCertLink).toBeVisible();
+
+    const href = await firstCertLink.getAttribute('href');
+    expect(href).toBeTruthy();
+    expect(href).toMatch(/^\/certif\/.*\.pdf$/);
+
+    const response = await request.get(href);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('application/pdf');
+  });
 });
+

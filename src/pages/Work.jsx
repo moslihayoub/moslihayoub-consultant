@@ -10,7 +10,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const HeroShape = lazy(() => import('../components/HeroShape'));
 
-import { projectsData } from '../data/projects';
+import { getProjects } from '../data/projects';
 
 const clients = ['Autocash', 'Carrefour', 'Foodeals', 'Nexastay', 'Babmoulay driss', 'JSEI', 'CGI', 'Wiggli', 'OCP', 'CDM Bank', 'Stibits', 'HBM Com.', 'Fluxo'];
 
@@ -39,7 +39,7 @@ const CertCard = ({ cert, index }) => {
   const isInView = useInView(ref, { once: true, margin: '-40px' });
   return (
     <a
-      href={cert.url}
+      href={encodeURI(cert.url)}
       target="_blank"
       rel="noopener noreferrer"
       ref={ref}
@@ -82,6 +82,7 @@ const Work = () => {
   const [activeTab, setActiveTab] = useState('Tous');
   const [visibleProjectsCount, setVisibleProjectsCount] = useState(6);
   const videoRef = useRef(null);
+  const allProjects = getProjects();
 
   useEffect(() => {
     if (videoRef.current) {
@@ -93,7 +94,7 @@ const Work = () => {
     setVisibleProjectsCount(6);
   }, [activeTab]);
 
-  const filteredProjects = projectsData.filter(project => {
+  const filteredProjects = allProjects.filter(project => {
     if (activeTab === 'Tous') return true;
     return project.category === activeTab;
   });
@@ -220,7 +221,7 @@ const Work = () => {
             </motion.div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
-              {displayedProjects.map((project, index) => (
+              {displayedProjects.map((project) => (
                 <motion.div key={project.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.4 }} style={{ height: '100%' }}>
                   <ProjectCard project={project} onClick={handleProjectClick} />
                 </motion.div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
-import { Save, Bot, RefreshCcw } from 'lucide-react';
+import { invalidateAgentPromptCache } from '../../utils/firebaseAi';
+import { Save, RefreshCcw } from 'lucide-react';
 
 const AiConfigManager = () => {
   const [prompt, setPrompt] = useState('');
@@ -45,6 +46,7 @@ const AiConfigManager = () => {
         updatedAt: new Date()
       }, { merge: true });
       
+      invalidateAgentPromptCache();
       setLastSaved(new Date());
       // Show temporary success feedback
       setTimeout(() => setLastSaved(null), 3000);

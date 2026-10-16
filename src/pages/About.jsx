@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, lazy, Suspense } from 'react';
-import { motion, useMotionValue, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Calendar, Download, Mail, MapPin, Phone, ExternalLink, Award, Play, ChevronRight, MessageCircle, Briefcase, UserCheck, CheckCircle2, Brain, ChevronDown, ChevronUp, Globe, Layout, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Download, Mail, MapPin, Phone, ExternalLink, Award, MessageCircle, Briefcase, Brain, ChevronDown, ChevronUp, Layout, Search } from 'lucide-react';
 import TiltWrapper from '../components/TiltWrapper';
 import AnimatedPage from '../components/AnimatedPage';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -118,9 +118,9 @@ const contactLinks = [
 export default function About() {
   const { lang, t } = useLanguage();
   const [expandedTimeline, setExpandedTimeline] = useState(null);
-  const [calType, setCalType] = useState('30min');
+  const calType = '30min';
   const [activeCertTab, setActiveCertTab] = useState('Tous');
-  const [filterValue, setFilterValue] = useState('Tous');
+  const filterValue = 'Tous';
   const [visibleCertsCount, setVisibleCertsCount] = useState(6);
   const videoRef = useRef(null);
 
@@ -132,7 +132,7 @@ export default function About() {
 
   useEffect(() => {
     setVisibleCertsCount(6);
-  }, [activeCertTab, filterValue]);
+  }, [activeCertTab]);
 
   const filteredCerts = certificationsData.filter(cert => {
     const matchCat = activeCertTab === 'Tous' || cert.category === activeCertTab;
@@ -382,7 +382,7 @@ export default function About() {
               {displayedCerts.map((cert, i) => (
                 <TiltWrapper key={`${activeCertTab}-${i}`} style={{ display: 'block', height: '100%' }}>
                   <a
-                    href={cert.url}
+                    href={encodeURI(cert.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="project-card hover-trigger"

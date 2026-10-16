@@ -9,6 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml', 'apple-touch-icon.png'],
+      workbox: {
+        navigateFallbackDenylist: [/^\/certif\//, /\.pdf$/i]
+      },
       manifest: {
         name: 'Ayoub MOSLIH - Consultant en transformation digital & AI',
         short_name: 'MOSLIH',

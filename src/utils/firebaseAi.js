@@ -1,7 +1,19 @@
 import { findBestMatch } from './chatbotEngine';
 import { knowledgeBase } from '../data/knowledgeBase';
+import { db } from './firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const rawApiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+const GEMINI_API_KEY = (rawApiKey && rawApiKey !== 'your_gemini_api_key') ? rawApiKey.trim() : '';
+
+let cachedCustomPrompt = undefined;
+let cachedPromptTimestamp = 0;
+const PROMPT_CACHE_TTL_MS = 300000; // 5 minutes
+
+export function invalidateAgentPromptCache() {
+  cachedCustomPrompt = undefined;
+  cachedPromptTimestamp = 0;
+}
 
 export function getDevModeOverride() {
   if (typeof window === 'undefined') return null;
@@ -16,9 +28,6 @@ export function setDevModeOverride(mode) {
     localStorage.setItem('m84_dev_mode_override', mode);
   }
 }
-
-import { db } from './firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
 
 async function getSystemInstruction(lang = 'fr') {
   const publicProjects = knowledgeBase.getPublicProjects()
@@ -44,7 +53,7 @@ Explique en UNE SEULE PHRASE que tu es un agent dédié au portfolio d'Ayoub Mos
 
 RÈGLE D'OR 2 - QUALIFICATION B2B & CONSULTING (TRES IMPORTANT) :
 Si le prospect parle de consulting, collaboration ou partenariat, guide-le à travers l'expertise et les projets du site.
-ATTENTION : Tu ne dois JAMAIS discuter de budget, de devis ou de factures. Si on te parle de prix, réponds que chaque projet est sur-mesure et invite l'utilisateur à "Laisser ses coordonnées".
+ ATTENTION : Tu ne dois JAMAIS discuter de budget, de devis ou de factures. Si on te parle de prix, réponds que chaque projet est sur-mesure et invite l'utilisateur à "Laisser ses coordonnées".
 Si le prospect a un projet concret, tu DOIS proposer la capture de Lead (CTA: "Laisser vos coordonnées") pour qu'Ayoub le contacte par WhatsApp ou Email.
 
 RÈGLE D'OR 3 - VÉRACITÉ ABSOLUE :
@@ -58,20 +67,32 @@ RÈGLE D'OR 4 - FORMAT & CONCISION :
 - Ne génère AUCUN projet sous mot de passe / restreint.
 `;
 
-  try {
-    if (db) {
-      const docRef = doc(db, 'config', 'agent');
-      // Timeout de 2.5s pour éviter le blocage infini si Firestore n'est pas trouvé
-      const docSnap = await Promise.race([
-        getDoc(docRef),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout Firestore")), 2500))
-      ]);
-      if (docSnap.exists() && docSnap.data().systemPrompt) {
-        dynamicPrompt = docSnap.data().systemPrompt;
-      }
+  const now = Date.now();
+  if (cachedCustomPrompt !== undefined && (now - cachedPromptTimestamp) < PROMPT_CACHE_TTL_MS) {
+    if (cachedCustomPrompt) {
+      dynamicPrompt = cachedCustomPrompt;
     }
-  } catch (error) {
-    console.warn("Prompt dynamique Firestore ignoré (timeout ou erreur) :", error.message);
+  } else {
+    try {
+      if (db) {
+        const docRef = doc(db, 'config', 'agent');
+        const docSnap = await Promise.race([
+          getDoc(docRef),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout Firestore")), 1500))
+        ]);
+        if (docSnap.exists() && docSnap.data().systemPrompt) {
+          cachedCustomPrompt = docSnap.data().systemPrompt;
+          dynamicPrompt = cachedCustomPrompt;
+        } else {
+          cachedCustomPrompt = null;
+        }
+        cachedPromptTimestamp = now;
+      }
+    } catch (error) {
+      cachedCustomPrompt = null;
+      cachedPromptTimestamp = now;
+      console.warn("Prompt dynamique Firestore ignoré (timeout ou erreur) :", error.message);
+    }
   }
 
   return `${dynamicPrompt}
@@ -80,14 +101,14 @@ GESTION DES INTENTIONS PRÉCISES :
 1. Intent "spécialité / qui est Ayoub" ("qui est ayoub", "profil", "spécialité", "présente-toi") :
    - Texte : Synthèse en 1 sentence de son profil (Consultant Transformation Digitale & IA). Ne mentionne pas 19 ans global, donne la répartition.
    - CTAs obligatoires : 
-     1. "Voir ses services" (navigate: /about#expertise)
+     1. "Voir ses services" (navigate: /about#services)
      2. "Voir ses projets" (navigate: /work)
      3. "Ouvrir le CV" (external: ${knowledgeBase.profile.cvUrl})
 
 2. Intent "services" ("quels sont tes services", "les services d'ayoub", "voir ses services", "que proposes-tu", "comment tu peux m'aider", "offres") :
    - Texte : Énumère brièvement sous forme de puces les 4 axes clés, puis demande à l'utilisateur s'il souhaite explorer les détails.
    - CTAs obligatoires :
-     1. "Voir les services en détail" (navigate: /about#expertise)
+     1. "Voir les services en détail" (navigate: /about#services)
      2. "Demander une consultation digitale" (action: start_lead_capture)
 
 3. Intent "projets / SaaS / portfolio" :
@@ -99,7 +120,7 @@ GESTION DES INTENTIONS PRÉCISES :
    - CTAs obligatoires : "Ouvrir le CV" (external: ${knowledgeBase.profile.cvUrl})
 
 5. Intent "parcours / timeline" :
-   - CTAs obligatoires : "Voir la timeline" (navigate: /about#timeline)
+   - CTAs obligatoires : "Voir la timeline" (navigate: /about#parcours)
 
 6. Intent "certifications / formations" :
    - Cards (Max 3 certifs) : title, subtitle (issuer), desc (year), url (/about#certifications).
@@ -170,7 +191,7 @@ export function getQuotaInfo() {
       devOverride,
       isWarning: currentCount === MAX_AI_QUOTA_PER_HOUR - 1
     };
-  } catch (e) {
+  } catch {
     return { count: 0, max: MAX_AI_QUOTA_PER_HOUR, remaining: MAX_AI_QUOTA_PER_HOUR, mode: 'local', devOverride: null, isWarning: false };
   }
 }
@@ -191,7 +212,7 @@ function checkAndIncrementQuota() {
 
     localStorage.setItem('m84_ai_quota', JSON.stringify(quota));
     return true;
-  } catch (e) {
+  } catch {
     return true;
   }
 }
