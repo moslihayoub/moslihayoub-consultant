@@ -285,22 +285,37 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
 
       formattedContents.push(...normalizedHistory);
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-          contents: formattedContents,
-          generationConfig: {
-            responseMimeType: "application/json"
-          }
-        })
-      });
+      const candidateModels = ['gemini-3.6-flash', 'gemini-3-flash-preview'];
+      let successfulData = null;
 
-      if (response.ok) {
-        const data = await response.json();
-        const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      for (const modelName of candidateModels) {
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+              contents: formattedContents,
+              generationConfig: {
+                responseMimeType: "application/json"
+              }
+            })
+          });
+
+          if (response.ok) {
+            successfulData = await response.json();
+            break;
+          } else {
+            console.warn(`Modèle ${modelName} non-200 (${response.status}), tentative modèle de secours...`);
+          }
+        } catch (fetchErr) {
+          console.warn(`Erreur réseau sur ${modelName} :`, fetchErr);
+        }
+      }
+
+      if (successfulData) {
+        const candidateText = successfulData.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (candidateText && candidateText.trim()) {
           try {
@@ -322,11 +337,9 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
             console.warn("Erreur de parsing JSON depuis Gemini Agent M84", jsonError, candidateText);
           }
         }
-      } else {
-        console.warn("Réponse Gemini non-200 (Erreur API / Quota Token Gemini):", response.status);
       }
     } catch (error) {
-      console.warn("Erreur réseau/technique lors de l'appel Gemini Agent M84 :", error);
+      console.warn("Erreur globale lors de l'appel Gemini Agent M84 :", error);
     }
 
     // SI PROBLÈME TECHNIQUE OU QUOTA TOKEN ERREUR DANS L'IA :

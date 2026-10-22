@@ -156,6 +156,16 @@
   - Réactivation du contrôle d'authentification `if (!context.auth)` sur la Cloud Function `getAnalyticsData` dans `functions/index.js`.
 - **Tests E2E Playwright (11/11)** : Ajout d'un test automatisé vérifiant la validité et le statut HTTP `200 OK` (`application/pdf`) des certificats sur `/about`.
 
+### 21. Correctif Critique Agent IA M84 (Résolution du "Pas de réponse") (Nouveau)
+- **Cause Racine Identifiée** :
+  - **Exception bloquante `ReferenceError: jaccardSimilarity is not defined`** dans [`src/utils/chatbotEngine.js`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/chatbotEngine.js) : la fonction était appelée lors du scoring de mots-clés sans avoir été déclarée.
+  - Lors d'une indisponibilité temporaire de l'API (HTTP 503 high demand spike sur `gemini-3.6-flash`) ou en mode local, le moteur basculait vers `findBestMatch`, qui levait cette exception non interceptée. Le `catch` de [`ChatWidget.jsx`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/components/ChatWidget.jsx) rappelait `findBestMatch`, provoquant un deuxième crash silencieux et laissant l'utilisateur sans aucune réponse dans l'interface ("pas de réponse").
+- **Correctifs Appliqués** :
+  - Implémentation complète de [`jaccardSimilarity(tokensA, tokensB)`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/chatbotEngine.js) pour le calcul d'intersection/union des tokens.
+  - Résilience multi-modèles dans [`src/utils/firebaseAi.js`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/firebaseAi.js) : cascade automatique `gemini-3.6-flash` $\rightarrow$ `gemini-3-flash-preview` pour absorber les pics de charge (503/429) sans basculer prématurément en local.
+  - Sécurisation du `catch` dans [`ChatWidget.jsx`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/components/ChatWidget.jsx) avec message de secours garanti et CTAs même en cas d'erreur inattendue.
+- **Validation** : Build réussi, tests E2E Playwright (11/11) validés, et tests automatisés en conditions réelles (mode IA + mode fallback local simulé avec réseau coupé).
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
@@ -180,6 +190,7 @@
 - [x] Exécution et validation du test cloud TestSprite sur `https://moslih84.vercel.app/` (Statut: PASSED).
 - [x] Mise à jour de la méthodologie de test (Tests standards par défaut, TestSprite sur demande explicite).
 - [x] Audit et correction 404 Certificats (`/about`), Cache/Ancres Agent IA, Sync Backoffice CRUD et Auth Backend.
+- [x] Correction critique "Pas de réponse" Agent M84 (jaccardSimilarity + cascade multi-modèles Gemini).
 - [x] Vérification Build Vite & Oxlint.
 - [x] Synchronisation GitHub & Déploiement Vercel Production.
 

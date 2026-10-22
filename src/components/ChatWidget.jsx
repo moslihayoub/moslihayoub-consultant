@@ -333,16 +333,25 @@ const ChatWidget = () => {
       logInteractionToSheet(query, match.text, match.category);
     } catch (error) {
       console.error("Erreur lors du traitement de la requête Agent M84:", error);
-      const fallbackLocal = findBestMatch(query, lang);
+      let fallbackLocal = null;
+      try {
+        fallbackLocal = findBestMatch(query, lang);
+      } catch (fbErr) {
+        console.error("Erreur fallback local:", fbErr);
+      }
+
       const techNotice = lang === 'en'
         ? "⚙️ A temporary technical issue occurred with the AI agent. You have been automatically switched to the Local Agent to continue your consultation.\n\n"
         : "⚙️ Un problème technique temporaire est survenu avec l'agent IA. Vous avez été automatiquement basculé vers l'Agent Local pour continuer votre consultation.\n\n";
 
       setMessages(prev => [...prev, {
         role: 'model',
-        text: techNotice + (fallbackLocal.text || ''),
-        ctas: fallbackLocal.ctas || [],
-        cards: fallbackLocal.cards || [],
+        text: techNotice + ((fallbackLocal && fallbackLocal.text) || (lang === 'en' ? "How can I help you explore Ayoub's services, projects, or expertise today?" : "Comment puis-je vous aider à explorer les services, projets ou expertises d'Ayoub aujourd'hui ?")),
+        ctas: (fallbackLocal && fallbackLocal.ctas) || [
+          { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#services" },
+          { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
+        ],
+        cards: (fallbackLocal && fallbackLocal.cards) || [],
         category: 'local_agent'
       }]);
     } finally {

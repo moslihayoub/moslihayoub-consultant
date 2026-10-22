@@ -215,6 +215,18 @@ function getCertificationsForQuery(normQuery, currentLang) {
   };
 }
 
+export function jaccardSimilarity(tokensA, tokensB) {
+  if (!tokensA || !tokensB || tokensA.length === 0 || tokensB.length === 0) return 0;
+  const setA = new Set(tokensA);
+  const setB = new Set(tokensB);
+  let intersection = 0;
+  for (const item of setA) {
+    if (setB.has(item)) intersection++;
+  }
+  const union = new Set([...setA, ...setB]).size;
+  return union === 0 ? 0 : intersection / union;
+}
+
 export function findBestMatch(userQuery, lang = 'fr') {
   const currentLang = (lang && lang.toLowerCase().startsWith('en')) ? 'en' : 'fr';
   const normQuery = normalizeText(userQuery);
