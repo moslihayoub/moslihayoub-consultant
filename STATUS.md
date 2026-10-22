@@ -166,6 +166,16 @@
   - Sécurisation du `catch` dans [`ChatWidget.jsx`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/components/ChatWidget.jsx) avec message de secours garanti et CTAs même en cas d'erreur inattendue.
 - **Validation** : Build réussi, tests E2E Playwright (11/11) validés, et tests automatisés en conditions réelles (mode IA + mode fallback local simulé avec réseau coupé).
 
+### 23. Refonte UX Switch Local & Moteur d'Auto-Apprentissage IA -> Local (Nouveau)
+- **Suppression du Wording Anxiogène** :
+  - Élimination définitive de l'en-tête *"⚙️ Un problème technique temporaire..."* dans le corps des bulles de chat.
+  - Création d'un **Toaster / Bannière de transition ambrée/orange** ([`ChatWidget.jsx`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/components/ChatWidget.jsx)) discret, élégant et auto-dismissible (8s) avec wording positif : *« ⚡ Relais fluide : l'Agent Local prend le relais pour continuer votre consultation. »*.
+- **Moteur d'Auto-Apprentissage Continu (Learning Automation IA $\rightarrow$ Local)** :
+  - Intégration de [`recordLearnedKnowledge()`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/chatbotEngine.js) et [`findLearnedKnowledgeMatch()`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/chatbotEngine.js) : chaque réponse IA générée avec succès par Gemini est indexée en cache persistant local (`m84_learned_knowledge`).
+  - L'Agent Local consulte ce cache dynamique en priorité absolue lors de futures questions similaires, garantissant des réponses de niveau IA même hors-ligne ou sous quota.
+- **Enrichissement Connaissances & Secteurs d'Activités** :
+  - Ajout de l'entrée `sectors_overview` dans [`src/data/chatbot_faq.json`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/data/chatbot_faq.json) et du mapping de synonymes (`secteur`, `activite`, `industrie`, `verticale`) dans [`src/utils/chatbotEngine.js`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/chatbotEngine.js). Couvre les 6 secteurs clés d'Ayoub (Automotive/FinTech, Banque/Blockchain, OCP/Industrie, Smart Cities, HR Tech, Retail).
+
 ### 22. Déblocage Quota Gemini & Alignement FAQ Local (Nouveau)
 - **Cause du Basculement vers l'Agent Local** :
   - `gemini-3.6-flash` en palier gratuit est bridé par Google à un quota strict de **20 requêtes par jour** (`HTTP 429: Resource Exhausted`).

@@ -73,6 +73,32 @@
       ]
     },
     {
+      "id": "sectors_overview",
+      "category": "sectors",
+      "intent": "sectors",
+      "keywords": [
+        "secteur", "secteurs", "activite", "activites", "domaine", "domaines", "industrie", "industries",
+        "marche", "marches", "verticales", "verticale", "clientele", "qita3at"
+      ],
+      "questions": [
+        "Quels sont vos secteurs d'activités ?",
+        "Les secteurs d'activités",
+        "Dans quels secteurs travailles-tu ?",
+        "Quels sont tes domaines d'intervention ?",
+        "Industries couvertes",
+        "Which industries do you cover?"
+      ],
+      "answer": {
+        "fr": "Ayoub MOSLIH intervient sur des secteurs à fort impact technologique et stratégique :\n- **Automotive & FinTech** : AutoCash.ma, Fluxo Finance\n- **Banque & Blockchain** : Crédit du Maroc, Stibits\n- **Industrie Lourde & Big Data** : OCP SA\n- **Smart Cities & Public** : CGI / Ville de Laval (Canada)\n- **HR Tech & Recrutement SaaS** : Wiggli.io, ParcelIQ\n- **Retail & FoodTech** : Carrefour, Foodeals",
+        "en": "Ayoub MOSLIH operates across high-impact technological industries:\n- **Automotive & FinTech**: AutoCash.ma, Fluxo Finance\n- **Banking & Blockchain**: Crédit du Maroc, Stibits\n- **Industry & Big Data**: OCP SA\n- **Smart Cities & Public**: CGI / City of Laval (Canada)\n- **HR Tech & SaaS**: Wiggli.io, ParcelIQ\n- **Retail & FoodTech**: Carrefour, Foodeals"
+      },
+      "ctas": [
+        { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
+        { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#services" },
+        { "text": { "fr": "Demander une consultation", "en": "Request consultation" }, "action": "start_lead_capture", "target": "" }
+      ]
+    },
+    {
       "id": "projects_overview",
       "category": "projects",
       "intent": "projets",

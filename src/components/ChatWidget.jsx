@@ -130,6 +130,14 @@ const ChatWidget = () => {
   const [input, setInput] = useState('');
   const [leadState, setLeadState] = useState('idle');
   const [leadData, setLeadData] = useState({ type: '', name: '', contact: '' });
+  const [showSwitchToast, setShowSwitchToast] = useState(false);
+
+  useEffect(() => {
+    if (showSwitchToast) {
+      const timer = setTimeout(() => setShowSwitchToast(false), 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSwitchToast]);
 
   const messagesEndRef = useRef(null);
 
@@ -310,16 +318,11 @@ const ChatWidget = () => {
         return;
       }
 
-      const newMessages = [];
-
-      if (previousMode === 'ai' && match.quota && match.quota.mode === 'local' && !match.isTechnicalFallback) {
-        newMessages.push({
-          role: 'model',
-          text: lang === 'en'
-            ? "💡 AI Agent credit is temporarily exhausted. It will reset in about 1 hour and full AI mode will automatically return. In the meantime, you are assisted by the Local Agent to continue your digital consultation, discuss your project, or explore collaboration opportunities."
-            : "💡 Le crédit de l’agent IA est temporairement épuisé.\nIl se réinitialise dans environ 1 heure et le mode IA complet reviendra automatiquement.\nEn attendant, vous êtes accompagné par l’agent local pour continuer votre consultation digitale, parler de votre projet ou explorer des pistes de collaboration."
-        });
+      if (match.isTechnicalFallback || match.switchNotice || (previousMode === 'ai' && match.quota && match.quota.mode === 'local')) {
+        setShowSwitchToast(true);
       }
+
+      const newMessages = [];
 
       newMessages.push({
         role: 'model',
@@ -333,6 +336,7 @@ const ChatWidget = () => {
       logInteractionToSheet(query, match.text, match.category);
     } catch (error) {
       console.error("Erreur lors du traitement de la requête Agent M84:", error);
+      setShowSwitchToast(true);
       let fallbackLocal = null;
       try {
         fallbackLocal = findBestMatch(query, lang);
@@ -340,13 +344,9 @@ const ChatWidget = () => {
         console.error("Erreur fallback local:", fbErr);
       }
 
-      const techNotice = lang === 'en'
-        ? "⚙️ A temporary technical issue occurred with the AI agent. You have been automatically switched to the Local Agent to continue your consultation.\n\n"
-        : "⚙️ Un problème technique temporaire est survenu avec l'agent IA. Vous avez été automatiquement basculé vers l'Agent Local pour continuer votre consultation.\n\n";
-
       setMessages(prev => [...prev, {
         role: 'model',
-        text: techNotice + ((fallbackLocal && fallbackLocal.text) || (lang === 'en' ? "How can I help you explore Ayoub's services, projects, or expertise today?" : "Comment puis-je vous aider à explorer les services, projets ou expertises d'Ayoub aujourd'hui ?")),
+        text: (fallbackLocal && fallbackLocal.text) || (lang === 'en' ? "How can I help you explore Ayoub's services, projects, or expertise today?" : "Comment puis-je vous aider à explorer les services, projets ou expertises d'Ayoub aujourd'hui ?"),
         ctas: (fallbackLocal && fallbackLocal.ctas) || [
           { text: lang === 'en' ? "Explore Services" : "Voir ses services", action: "navigate", target: "/about#services" },
           { text: lang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
@@ -518,6 +518,55 @@ const ChatWidget = () => {
                 )}
               </div>
             </div>
+
+            {/* Toaster / Bannière de basculement vers l'Agent Local (Ambré / Orange) */}
+            <AnimatePresence>
+              {showSwitchToast && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  style={{
+                    backgroundColor: '#FEF3C7',
+                    borderBottom: '1px solid #FCD34D',
+                    padding: '8px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                    fontSize: '0.74rem',
+                    color: '#92400E',
+                    fontWeight: 600,
+                    zIndex: 10
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Cpu size={14} color="#D97706" style={{ flexShrink: 0 }} />
+                    <span>
+                      {lang === 'en'
+                        ? "⚡ Seamless relay: Local Agent is guiding you live through the portfolio."
+                        : "⚡ Relais fluide : l'Agent Local prend le relais pour continuer votre consultation."}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowSwitchToast(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '2px',
+                      color: '#B45309',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                    aria-label="Fermer la notification"
+                  >
+                    <X size={13} />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Corps de conversation */}
             <div style={styles.chatBody}>

@@ -48,6 +48,11 @@ const SYNONYM_MAP = {
   'certification': 'certifications', 'certifications': 'certifications', 'certif': 'certifications',
   'certifs': 'certifications', 'diplome': 'certifications', 'diplomes': 'certifications', 'formation': 'certifications',
 
+  // Secteurs & Industries
+  'secteur': 'sectors', 'secteurs': 'sectors', 'industrie': 'sectors', 'industries': 'sectors',
+  'activite': 'sectors', 'activites': 'sectors', 'verticale': 'sectors', 'verticales': 'sectors',
+  'domaine': 'sectors', 'domaines': 'sectors', 'marche': 'sectors', 'marches': 'sectors',
+
   // Bio
   'ayoub': 'specialite', 'moslih': 'specialite', 'bio': 'specialite', 'profil': 'specialite', 'qui': 'specialite',
   'chkon': 'specialite', 'chkun': 'specialite'
@@ -227,6 +232,103 @@ export function jaccardSimilarity(tokensA, tokensB) {
   return union === 0 ? 0 : intersection / union;
 }
 
+/**
+ * Auto-apprentissage (Learning Automation) : Enregistre les réponses générées par l'IA
+ * dans le cache local persistant pour enrichir l'Agent Local au fil des questions.
+ */
+export function recordLearnedKnowledge(rawQuery, responseData, lang = 'fr') {
+  if (typeof window === 'undefined' || !rawQuery || !responseData || !responseData.text) return;
+  try {
+    const key = `m84_learned_knowledge_${lang}`;
+    const raw = localStorage.getItem(key);
+    const learned = raw ? JSON.parse(raw) : [];
+
+    const norm = normalizeText(rawQuery);
+    const tokens = tokenizeAndMap(rawQuery);
+
+    if (!norm || norm.length < 3) return;
+
+    // Éviter les doublons exacts et placer la connaissance la plus récente en tête
+    const filtered = learned.filter(item => item.norm !== norm);
+
+    filtered.unshift({
+      query: rawQuery,
+      norm,
+      tokens,
+      response: {
+        text: responseData.text,
+        ctas: responseData.ctas || [],
+        cards: responseData.cards || [],
+        intent: responseData.intent || 'general'
+      },
+      learnedAt: Date.now()
+    });
+
+    // Conservation d'une fenêtre glissante de 80 connaissances
+    const bounded = filtered.slice(0, 80);
+    localStorage.setItem(key, JSON.stringify(bounded));
+  } catch (err) {
+    console.debug("Impossible d'enregistrer l'apprentissage local :", err);
+  }
+}
+
+/**
+ * Recherche dans la mémoire d'apprentissage locale (IA -> Local)
+ */
+export function findLearnedKnowledgeMatch(userQuery, lang = 'fr') {
+  if (typeof window === 'undefined' || !userQuery) return null;
+  try {
+    const key = `m84_learned_knowledge_${lang}`;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const learned = JSON.parse(raw);
+    if (!Array.isArray(learned) || learned.length === 0) return null;
+
+    const norm = normalizeText(userQuery);
+    const queryTokens = tokenizeAndMap(userQuery);
+
+    let bestItem = null;
+    let highestScore = 0;
+
+    for (const item of learned) {
+      if (item.norm === norm) {
+        return {
+          ...item.response,
+          score: 1.0,
+          matched: true,
+          source: 'learned_exact'
+        };
+      }
+
+      if (item.norm.includes(norm) || norm.includes(item.norm)) {
+        const containmentScore = Math.min(item.norm.length, norm.length) / Math.max(item.norm.length, norm.length);
+        if (containmentScore > 0.6 && containmentScore > highestScore) {
+          highestScore = containmentScore;
+          bestItem = item;
+        }
+      }
+
+      const score = jaccardSimilarity(queryTokens, item.tokens || []);
+      if (score > highestScore) {
+        highestScore = score;
+        bestItem = item;
+      }
+    }
+
+    if (bestItem && highestScore >= 0.35) {
+      return {
+        ...bestItem.response,
+        score: highestScore,
+        matched: true,
+        source: 'learned_similarity'
+      };
+    }
+  } catch (err) {
+    console.debug("Erreur lecture connaissances apprises :", err);
+  }
+  return null;
+}
+
 export function findBestMatch(userQuery, lang = 'fr') {
   const currentLang = (lang && lang.toLowerCase().startsWith('en')) ? 'en' : 'fr';
   const normQuery = normalizeText(userQuery);
@@ -253,13 +355,23 @@ export function findBestMatch(userQuery, lang = 'fr') {
           ? "I am Agent M84, dedicated solely to Ayoub MOSLIH's portfolio and services. How can I guide you regarding his projects or expertise?"
           : "Bonjour ! Je suis l'Agent M84, l'assistant virtuel d'Ayoub MOSLIH.\nComment puis-je vous aider aujourd'hui ?",
         ctas: [
-          { text: currentLang === 'en' ? "View Services" : "Voir ses services", action: "navigate", target: "/about#expertise" },
+          { text: currentLang === 'en' ? "View Services" : "Voir ses services", action: "navigate", target: "/about#services" },
           { text: currentLang === 'en' ? "View Projects" : "Voir ses projets", action: "navigate", target: "/work" }
         ],
         intent: "offtopic",
         category: "local_agent"
       };
     }
+  }
+
+  // 1.5 Auto-Apprentissage : Consultation prioritaire de la mémoire apprise de l'IA
+  const learnedMatch = findLearnedKnowledgeMatch(userQuery, currentLang);
+  if (learnedMatch && learnedMatch.score >= 0.6) {
+    return {
+      ...learnedMatch,
+      matched: true,
+      category: 'learned_local_agent'
+    };
   }
 
   // 2. Détection dynamique pour les SERVICES (ex: "les services d'ayoub", "quels sont tes services")
@@ -278,6 +390,27 @@ export function findBestMatch(userQuery, lang = 'fr') {
         ctas,
         cards: [],
         intent: 'services',
+        category: 'local_agent'
+      };
+    }
+  }
+
+  // 2.5 Détection dynamique pour les SECTEURS D'ACTIVITÉS (ex: "secteurs", "secteurs d'activités", "industries")
+  if (normQuery.includes('secteur') || normQuery.includes('secteurs') || normQuery.includes('industrie') || normQuery.includes('industries') || (normQuery.includes('activite') && !normQuery.includes('sport'))) {
+    const sectorEntry = faqData.entries.find(e => e.id === 'sectors_overview');
+    if (sectorEntry) {
+      const ctas = (sectorEntry.ctas || []).map(cta => ({
+        text: typeof cta.text === 'object' ? (cta.text[currentLang] || cta.text.fr) : cta.text,
+        action: cta.action,
+        target: cta.target
+      }));
+      return {
+        matched: true,
+        score: 0.99,
+        text: sectorEntry.answer[currentLang] || sectorEntry.answer.fr,
+        ctas,
+        cards: sectorEntry.cards || [],
+        intent: 'sectors',
         category: 'local_agent'
       };
     }

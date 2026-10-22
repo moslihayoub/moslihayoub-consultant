@@ -1,4 +1,4 @@
-import { findBestMatch } from './chatbotEngine';
+import { findBestMatch, recordLearnedKnowledge } from './chatbotEngine';
 import { knowledgeBase } from '../data/knowledgeBase';
 import { db } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
@@ -324,6 +324,14 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
             const cleanCtas = Array.isArray(parsed.ctas) ? parsed.ctas : [];
             const cleanCards = Array.isArray(parsed.cards) ? parsed.cards : [];
 
+            // AUTO-LEARNING (IA -> Local) : Mémorisation persistante pour enrichir l'Agent Local
+            recordLearnedKnowledge(trimmedQuery, {
+              text: cleanText,
+              ctas: cleanCtas,
+              cards: cleanCards,
+              intent: parsed.intent || 'general'
+            }, lang);
+
             return {
               matched: true,
               text: cleanText,
@@ -342,17 +350,14 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
       console.warn("Erreur globale lors de l'appel Gemini Agent M84 :", error);
     }
 
-    // SI PROBLÈME TECHNIQUE OU QUOTA TOKEN ERREUR DANS L'IA :
-    // Bascule automatique transparente vers l'Agent Local avec message d'explication clair au user !
+    // Bascule automatique transparente vers l'Agent Local (texte propre, sans avertissement d'erreur anxiogène)
     const localMatch = findBestMatch(trimmedQuery, lang);
-    const techNotice = lang === 'en'
-      ? "⚙️ A temporary technical issue occurred with the AI agent. You have been automatically switched to the Local Agent to continue your consultation.\n\n"
-      : "⚙️ Un problème technique temporaire est survenu avec l'agent IA. Vous avez été automatiquement basculé vers l'Agent Local pour continuer votre consultation.\n\n";
 
     return {
       ...localMatch,
-      text: techNotice + (localMatch.text || ''),
+      text: localMatch.text || '',
       isTechnicalFallback: true,
+      switchNotice: true,
       quota: {
         ...quotaInfo,
         mode: 'local'
