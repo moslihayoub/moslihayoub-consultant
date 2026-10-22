@@ -166,6 +166,15 @@
   - Sécurisation du `catch` dans [`ChatWidget.jsx`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/components/ChatWidget.jsx) avec message de secours garanti et CTAs même en cas d'erreur inattendue.
 - **Validation** : Build réussi, tests E2E Playwright (11/11) validés, et tests automatisés en conditions réelles (mode IA + mode fallback local simulé avec réseau coupé).
 
+### 22. Déblocage Quota Gemini & Alignement FAQ Local (Nouveau)
+- **Cause du Basculement vers l'Agent Local** :
+  - `gemini-3.6-flash` en palier gratuit est bridé par Google à un quota strict de **20 requêtes par jour** (`HTTP 429: Resource Exhausted`).
+- **Correctifs Appliqués** :
+  - **Cascade IA prioritaire** dans [`src/utils/firebaseAi.js`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/utils/firebaseAi.js) : `gemini-3.1-flash-lite` $\rightarrow$ `gemini-3.5-flash-lite` $\rightarrow$ `gemini-3-flash-preview` $\rightarrow$ `gemini-3.6-flash`. Les modèles flash-lite disposent de quotas gratuits massifs (1500 requêtes/jour), d'une latence inférieure à 400ms et supportent le JSON structuré.
+  - **Mise à niveau de [`src/data/chatbot_faq.json`](file:///Users/fahdrahali/Downloads/Ayoub%20MOSLIH%20-%20Portfolio/src/data/chatbot_faq.json)** :
+    - Alignement de la présentation du profil sur la répartition détaillée (Product Design & IA ~7 ans, Direction Artistique ~7 ans, Motion Design ~5 ans).
+    - Remplacement des cibles de redirection obsolètes `/about#expertise` par `/about#services`.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes

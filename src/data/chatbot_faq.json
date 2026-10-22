@@ -20,7 +20,7 @@
         "en": "Hello! I am Agent M84, Ayoub MOSLIH's virtual assistant.\\nHow can I help you today?"
       },
       "ctas": [
-        { "text": { "fr": "Voir ses services", "en": "Explore services" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Voir ses services", "en": "Explore services" }, "action": "navigate", "target": "/about#services" },
         { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" }
       ]
     },
@@ -39,11 +39,11 @@
         "Quel est le profil d'Ayoub ?"
       ],
       "answer": {
-        "fr": "Ayoub MOSLIH est Consultant en Transformation Digitale & IA avec 19 ans d'expérience (10+ ans Digital, 7+ ans UX/UI, 2+ ans IA Générative).",
-        "en": "Ayoub MOSLIH is a Digital Transformation & AI Consultant with 19 years of experience (10+ yrs Digital, 7+ yrs UX/UI, 2+ yrs GenAI)."
+        "fr": "Ayoub MOSLIH est Consultant en Transformation Digitale & IA combinant Product Design & Management IA (~7 ans), Direction Artistique (~7 ans) et Motion Design (~5 ans).",
+        "en": "Ayoub MOSLIH is a Digital Transformation & AI Consultant combining Product Design & AI Management (~7 yrs), Art Direction (~7 yrs), and Motion Design (~5 yrs)."
       },
       "ctas": [
-        { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#services" },
         { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
         { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/moslihayoub-cv.pdf" }
       ]
@@ -68,7 +68,7 @@
         "en": "Ayoub specializes in 4 core pillars:\n- **Digital Transformation**: audit and strategic guidance\n- **AI Strategy & LLMs**: automation and GenAI prototypes\n- **Product & UX Strategy**: discovery, research, and ROI\n- **Design Systems**: scalable UI industrialization\n\nWould you like to explore full details of his services?"
       },
       "ctas": [
-        { "text": { "fr": "Voir les services en détail", "en": "View services in detail" }, "action": "navigate", "target": "/about#expertise" },
+        { "text": { "fr": "Voir les services en détail", "en": "View services in detail" }, "action": "navigate", "target": "/about#services" },
         { "text": { "fr": "Demander une consultation digitale", "en": "Request digital consultation" }, "action": "start_lead_capture", "target": "" }
       ]
     },
@@ -248,7 +248,7 @@
     "fr": "Vous souhaitez en savoir plus sur ses services, ses projets ou son parcours ?",
     "en": "Would you like to learn more about his services, projects, or background?",
     "ctas": [
-      { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#expertise" },
+      { "text": { "fr": "Voir ses services", "en": "View services" }, "action": "navigate", "target": "/about#services" },
       { "text": { "fr": "Voir ses projets", "en": "View projects" }, "action": "navigate", "target": "/work" },
       { "text": { "fr": "Ouvrir le CV", "en": "Open CV" }, "action": "external", "target": "/moslihayoub-cv.pdf" }
     ]

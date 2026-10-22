@@ -285,7 +285,7 @@ export async function queryM84Chatbot(userQuery, messagesHistory = [], lang = 'f
 
       formattedContents.push(...normalizedHistory);
 
-      const candidateModels = ['gemini-3.6-flash', 'gemini-3-flash-preview'];
+      const candidateModels = ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.1-flash-lite', 'gemini-3-flash-preview', 'gemini-flash-latest', 'gemini-3.6-flash'];
       let successfulData = null;
 
       for (const modelName of candidateModels) {
