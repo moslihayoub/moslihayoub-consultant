@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, LogIn, AlertCircle } from 'lucide-react';
 import { auth, ADMIN_WHITELIST } from '../../utils/firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { supabase, isSupabaseConfigured } from '../../utils/supabaseClient';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -11,9 +12,43 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Écoute de retour OAuth Supabase
+  useEffect(() => {
+    try {
+      if (isSupabaseConfigured && supabase) {
+        supabase.auth.getSession()
+          .then(({ data: { session } = {} } = {}) => {
+            if (session?.user && ADMIN_WHITELIST.includes(session.user.email)) {
+              localStorage.setItem('m84_admin_token', 'authenticated_admin_moslih');
+              localStorage.setItem('m84_admin_email', session.user.email);
+              navigate('/admin/dashboard');
+            }
+          })
+          .catch(e => console.warn("Supabase session check skipped:", e.message));
+      }
+    } catch (err) {
+      console.warn("Supabase effect error:", err);
+    }
+  }, [navigate]);
+
   const handleGoogleLogin = async () => {
     setError('');
     setLoading(true);
+
+    // 1. Essai Supabase OAuth Google
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { error: sbOAuthErr } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: window.location.origin + '/admin/dashboard' }
+        });
+        if (!sbOAuthErr) return;
+      } catch (e) {
+        console.warn("Supabase OAuth warning:", e);
+      }
+    }
+
+    // 2. Fallback Firebase OAuth Google
     try {
       if (!auth) throw new Error("Firebase Auth non disponible");
       const provider = new GoogleAuthProvider();
@@ -38,7 +73,7 @@ const AdminLogin = () => {
       } else if (err.code === 'auth/popup-closed-by-user') {
         msg = "La fenêtre de connexion Google a été fermée.";
       } else if (err.message) {
-        msg = `Erreur Firebase Auth (${err.code || 'inconnue'}) : ${err.message}`;
+        msg = `Erreur Auth (${err.code || 'inconnue'}) : ${err.message}`;
       }
       setError(msg);
     } finally {
@@ -54,7 +89,30 @@ const AdminLogin = () => {
     const emailOrUser = username.trim();
     const cleanPass = password.trim();
 
-    // 1. Tenter la connexion avec Firebase Auth (Email/Password)
+    // 1. Tenter Supabase Auth (Email / Password avec timeout 1.5s)
+    if (isSupabaseConfigured && supabase && emailOrUser.includes('@')) {
+      try {
+        const sbPromise = supabase.auth.signInWithPassword({
+          email: emailOrUser,
+          password: cleanPass
+        });
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
+        const { data: sbData, error: sbErr } = await Promise.race([sbPromise, timeoutPromise]);
+        
+        if (!sbErr && sbData?.user) {
+          if (ADMIN_WHITELIST.includes(sbData.user.email)) {
+            localStorage.setItem('m84_admin_token', 'authenticated_admin_moslih');
+            localStorage.setItem('m84_admin_email', sbData.user.email);
+            navigate('/admin/dashboard');
+            return;
+          }
+        }
+      } catch (err) {
+        // Supabase indisponible ou timeout -> bascule fluide vers Firebase / Local
+      }
+    }
+
+    // 2. Tenter la connexion avec Firebase Auth (Email/Password)
     if (auth && emailOrUser.includes('@')) {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, emailOrUser, cleanPass);
@@ -75,7 +133,7 @@ const AdminLogin = () => {
       }
     }
 
-    // 2. Fallback sécurisé direct (Email + Mot de passe ou Username classique)
+    // 3. Fallback sécurisé direct (Email + Mot de passe ou Username classique)
     setTimeout(() => {
       const isEmailMatch = (emailOrUser.toLowerCase() === 'moslihayoub@gmail.com') && (cleanPass === 'M@slih031984' || cleanPass === '031984');
       const isLegacyMatch = (emailOrUser.toLowerCase() === 'moslih84') && (cleanPass === '031984' || cleanPass === 'M@slih031984');

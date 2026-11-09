@@ -22,38 +22,74 @@ const CrmLeadsManager = () => {
   const itemsPerPage = 8;
 
   useEffect(() => {
-    if (!db) {
-      console.error("Firestore non initialisé");
-      setLoading(false);
-      return;
+    let isSubscribed = true;
+
+    async function loadAllLeads() {
+      // 1. Essai Supabase en priorité
+      try {
+        const { supabase, isSupabaseConfigured } = await import('../../utils/supabaseClient');
+        if (isSupabaseConfigured && supabase) {
+          const { data, error } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+          if (!error && data && data.length > 0) {
+            if (isSubscribed) {
+              setLeads(data.map(d => ({
+                id: d.id,
+                name: d.name,
+                email: d.email,
+                phone: d.phone,
+                message: d.full_chat_history ? `${d.message || ''}\n\n--- Historique ---\n${d.full_chat_history}` : (d.message || ''),
+                status: d.status || 'Nouveau',
+                createdAt: d.created_at
+              })));
+              setLoading(false);
+              return;
+            }
+          }
+        }
+      } catch (sbErr) {
+        console.warn("Supabase load leads check:", sbErr);
+      }
+
+      // 2. Fallback Firestore
+      if (!db) {
+        if (isSubscribed) {
+          setLeads(fallbackLeads);
+          setLoading(false);
+        }
+        return;
+      }
+
+      const q = collection(db, 'leads');
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const leadsData = [];
+        snapshot.forEach((doc) => {
+          leadsData.push({ id: doc.id, ...doc.data() });
+        });
+        leadsData.sort((a, b) => {
+          const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (new Date(a.createdAt).getTime() || 0);
+          const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (new Date(b.createdAt).getTime() || 0);
+          return dateB - dateA;
+        });
+        if (isSubscribed) {
+          setLeads(leadsData.length > 0 ? leadsData : fallbackLeads);
+          setLoading(false);
+        }
+      }, (error) => {
+        console.error("Erreur lecture leads Firestore:", error);
+        if (isSubscribed) {
+          setLeads(fallbackLeads);
+          setLoading(false);
+        }
+      });
+
+      return unsubscribe;
     }
 
-    const q = collection(db, 'leads');
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const leadsData = [];
-      snapshot.forEach((doc) => {
-        leadsData.push({ id: doc.id, ...doc.data() });
-      });
-      // Sort by date descending
-      leadsData.sort((a, b) => {
-        const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (new Date(a.createdAt).getTime() || 0);
-        const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (new Date(b.createdAt).getTime() || 0);
-        return dateB - dateA;
-      });
-      if (leadsData.length === 0) {
-        setLeads(fallbackLeads);
-      } else {
-        setLeads(leadsData);
-      }
-      setLoading(false);
-    }, (error) => {
-      console.error("Erreur lecture leads:", error);
-      // Fallback CSV Data if Firestore is locked
-      setLeads(fallbackLeads);
-      setLoading(false);
-    });
-
-    return unsubscribe;
+    const unsubPromise = loadAllLeads();
+    return () => {
+      isSubscribed = false;
+      unsubPromise.then(unsub => { if (typeof unsub === 'function') unsub(); });
+    };
   }, []);
 
   // Reset page to 1 when filters change

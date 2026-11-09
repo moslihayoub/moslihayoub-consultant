@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, LayoutDashboard, Database, Users, Settings, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LogOut, LayoutDashboard, Database, Users, Settings, Menu, X, ChevronLeft, ChevronRight, Briefcase } from 'lucide-react';
 import ProjectsManager from './ProjectsManager';
 import CrmLeadsManager from './CrmLeadsManager';
 import AiConfigManager from './AiConfigManager';
+import ClientMissionsManager from './ClientMissionsManager';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
@@ -116,6 +117,12 @@ const AdminDashboard = () => {
       if (auth) await signOut(auth);
     } catch (e) {
       console.warn("Erreur déconnexion Firebase:", e);
+    }
+    try {
+      const { supabase } = await import('../../utils/supabaseClient');
+      if (supabase) await supabase.auth.signOut();
+    } catch (e) {
+      console.warn("Erreur déconnexion Supabase:", e);
     }
     localStorage.removeItem('m84_admin_token');
     localStorage.removeItem('m84_admin_email');
@@ -257,6 +264,7 @@ const AdminDashboard = () => {
         </div>
         <nav style={{ flex: 1, padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {navButton('overview', <LayoutDashboard size={20} />, "Vue d'ensemble")}
+          {navButton('missions', <Briefcase size={20} />, "Missions Clients (CRA)")}
           {navButton('projects', <Database size={20} />, "Projets (CRUD)")}
           {navButton('leads', <Users size={20} />, "CRM Leads")}
           {navButton('settings', <Settings size={20} />, "Configuration IA")}
@@ -389,6 +397,7 @@ const AdminDashboard = () => {
             </>
           )}
 
+          {activeTab === 'missions' && <ClientMissionsManager />}
           {activeTab === 'projects' && <ProjectsManager />}
           {activeTab === 'leads' && <CrmLeadsManager />}
           {activeTab === 'settings' && <AiConfigManager />}

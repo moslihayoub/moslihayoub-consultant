@@ -2,7 +2,7 @@
 name: testsprite-verify
 description: TestSprite verification loop — after finishing a feature or fix in a TestSprite-tested repo, use the `testsprite` CLI to run the relevant TestSprite tests against the change and inspect any failure artifacts before reporting the work as done. Use whenever code has changed outside docs/config and is about to be reported complete — by running an existing test that covers the change, or by creating a new TestSprite test (a frontend plan, or a backend Python assertion) and running it to a terminal verdict.
 ---
-<!-- testsprite-skill: testsprite-verify v0.7.0 sha256:2c292158ed96 -->
+<!-- testsprite-skill: testsprite-verify v0.16.0 sha256:9e5abbadd99e -->
 
 # TestSprite Verification Loop
 
@@ -22,21 +22,25 @@ project's TestSprite suite; before writing a new one, check `testsprite test lis
 for an existing test that already covers the behavior and extend it instead of
 duplicating.
 
-The CLI tests a **deployed** URL — it doesn't build or host your environment.
-Run the loop only once the change is live somewhere reachable (e.g. open the PR,
-let CI deploy the preview/staging environment) and pass that URL as
-`--target-url`. Running earlier verifies the previous build, not your change.
+The CLI tests either a **deployed** URL or a frontend test running on this
+machine — it doesn't build or host your environment either way. For a deployed
+change, wait until it's live somewhere reachable (e.g. open the PR, let CI
+deploy the preview/staging environment). Create a named environment for its
+public URL once, then select it with `--env <name>` on runs. Running earlier
+verifies the previous build, not your change.
 
-This CLI only tests a reachable deployed URL (it rejects localhost). If the
-change is only running locally and isn't deployed anywhere reachable yet:
+For a change that is only running locally, don't wait for a deployment: run
+`testsprite test run <test-id> --local <port>` instead. It tunnels this
+machine's own loopback address (`localhost` / `127.0.0.1` / `::1` — not a LAN
+or RFC1918 address, and not a general local-network escape hatch) to the test
+runner. It is for frontend tests only (a backend test's target is baked into
+its generated code, so run it normally). Existing API keys work for local runs; no replacement key is
+needed. `--local <port>` selects or creates the
+project's `local-<port>` environment. With `--env <name> --local <port>`, that
+named environment must also be local (`project env list <projectId>` shows names).
 
-- if the TestSprite MCP is available in this environment, hand off to it — it
-  tunnels your local server and tests the running app;
-- otherwise report the change as unverified-because-undeployed and stop — don't
-  run against a stale deployment to manufacture a verdict.
-
-If the user explicitly named a tool (the CLI or the MCP), honor that over this
-reachability heuristic.
+If the user explicitly named a tool (the CLI or the MCP), honor that choice
+regardless of which one the change's reachability would otherwise suggest.
 
 ## When to skip
 
@@ -45,8 +49,9 @@ The skip list is narrow:
 - Docs-only edits (`docs/**`, `*.md`, comments).
 - Pure build/config edits (`tsconfig*`, lint/prettier config, lockfile bumps with
   no behavior change).
-- This repo isn't actually wired to TestSprite (no project linked, no creds).
-  Don't pull the user into a setup flow they didn't ask for — say so and stop.
+- Credentials are unavailable. Explain the missing setup; do not claim a
+  verified result. If credentials exist but a local project is missing, use
+  the bootstrap below.
 
 Otherwise, run it.
 
@@ -64,6 +69,11 @@ counts:
 
 What does **not** count: unit tests / typecheck / lint; drafting a plan without
 `--run`; asking the user to run it for you.
+
+If the project has **no tests at all**, that's the `testsprite-onboard` skill's
+job, not this one — seed a suite first (it can generate the proposals for you
+with `testsprite test plan generate` / `test plan accept` for a deployed target;
+local projects require authored plans and `test create --plan-from`). Seeding is a deliberate setup pass, not part of the verify loop.
 
 If you can't satisfy this — no creds, no valid target URL, repo not linked —
 **say so explicitly**: "Feature shipped but I could not run any TestSprite test
@@ -92,6 +102,25 @@ In priority order:
 4. Still ambiguous → list the candidates and ask the user which to use (one short
    question; picking the wrong project wastes a run).
 
+If no project exists for an app running only locally, bootstrap a frontend project
+(V3 required), author a plan, and run the returned test id:
+
+```bash
+testsprite project create --type frontend --name "<repo name>" --local <port> --local-host <host>
+testsprite test create --plan-from plan.json --project <projectId>
+testsprite test run <id> <id> --local <port> --local-host <host> --output json
+```
+
+Keep the app listening and use the same `--local-host` for creation and follow-up
+runs. It selects both the probe and stored URL host: `localhost`, `127.0.0.1`
+(default), or `::1`; omit it in both commands to use the default.
+The port probe fails with exit 5 if nothing listens (`--skip-preflight`
+bypasses it). Local projects skip exploration: `test plan generate` is refused
+before charge (exit 6), so use `test create --plan-from` without `--run`, then
+`test run --local`. V2-only local-project creation is unsupported (exit 7).
+The Portal shows local environments without a Run action. Create a public
+environment for deployed apps and select it with `--env <name>`.
+
 ## 3. Decide what to test
 
 Look at the diff (`git diff --stat`, then the changed files) to understand what
@@ -104,6 +133,7 @@ existing test already covers.
 ```bash
 testsprite test list --project <projectId> --output json
 testsprite test list --project <projectId> --status failed --output json   # what's already red
+testsprite test run --all --project <projectId> --status failed,blocked --wait --timeout 600 --output json   # re-run what did not pass
 ```
 
 Heuristic: a change to `src/components/CheckoutForm.tsx` is more likely covered
@@ -261,7 +291,11 @@ confidently-wrong `passed` (bare visibility assertions) or a thrashing
 - **Describe outcomes, not selectors.** The testing agent locates targets
   semantically — describe the intent and the match stays robust across copy
   changes; a guessed literal label defeats that. E.g. write `"Submit the form"`,
-  not `"Click the blue 'Submit' button"`.
+  not `"Click the blue 'Submit' button"`. If the app tags elements with its own
+  attribute (`data-element`, `data-cy`, …), make sure the project knows —
+  `testsprite project get <projectId>` shows `testIdAttrs:`; set it once with
+  `project update <projectId> --test-id-attributes <attr>,data-testid` — and the
+  exported code will locate tagged elements by that attribute instead of text.
 - **`Navigate to` only on step 1** (or a login page). Use clicks for every later
   transition — direct URLs break SPA routing.
 - **FE plans narrate a user journey through their actions.** Each action is
@@ -341,58 +375,97 @@ Batch is **FE-only.** For 3 backend tests, run `test create --type backend
 
 ## 4. Run
 
-All variants use `--wait` for a synchronous verdict, `--target-url <env-url>` for
-the deployment under test, and `--timeout 600` as a sane default.
+For a deployed target, create its environment once, then use `--env <name>`
+after that deployment contains the change. Omit `--env` for Default; an unknown
+name fails with available names and never falls back. For a local change,
+use `testsprite test run <test-id> --local <port>` (frontend only); it implies
+waiting and defaults to 1200 seconds. Create a missing test from a plan first,
+without `--run`, then run its id with `--local`.
 
 ```bash
-# (a) existing test
-testsprite test run <test-id> --target-url <env-url> --wait --timeout 600 --output json
+# One-time setup for a deployed target
+testsprite project env create <projectId> --name staging --url https://staging.example.com
 
-# (a-rerun) cheap replay of an existing test. FE: replays the saved script (auto-heal on — more
-# lenient than a fresh run; for strict verification of a new change prefer `test run`).
-# BE: dispatches the WHOLE dependency closure — producers and teardowns run too, not just <test-id>,
-# so expect their side effects (fixtures re-created, teardown deletes) and extra runs in history.
-testsprite test rerun <test-id> --wait --timeout 600 --output json
-testsprite test rerun <test-id> --skip-dependencies --wait --timeout 600   # BE: named test only
+# (a) existing test
+testsprite test run <test-id> --env staging --wait --timeout 600 --output json
+
+# (a-several) several tests in one batch; --skip-dependencies (BE) runs only the named tests
+testsprite test run <test-id> <test-id> --env staging --wait --timeout 600 --output json
+testsprite test run <test-id> --skip-dependencies --wait --timeout 600
 
 # (b-FE) new FE test from plan
-testsprite test create --plan-from plan.json --run --wait --target-url <env-url> --timeout 600
+testsprite test create --plan-from plan.json --run --wait --env staging --timeout 600
 
 # (b-BE) new BE test from Python (backend create needs --project)
-testsprite test create --type backend --name "..." --project <projectId> --code-file foo.py --run --wait --target-url <env-url> --timeout 600
+testsprite test create --type backend --name "..." --project <projectId> --code-file foo.py --run --wait --timeout 600
 
 # (b-BE coverage set with dependencies) create each test without --run, then one wave-ordered batch
-testsprite test run --all --project <projectId> --wait --timeout 600 --output json
+testsprite test run --all --project <projectId> --env staging --wait --timeout 600 --output json
 testsprite test run --all --project <projectId> --filter <name-substr> --wait --timeout 600   # subset by name
+testsprite test run --all --project <projectId> --status failed,blocked --wait --timeout 600   # only what did not pass
 
 # (c) FE coverage set — single-call create + run (FE-only)
 testsprite test create-batch --plans plans.jsonl --run --wait \
-  --target-url <env-url> --max-concurrency 3 --timeout 600 --output json
+  --env staging --max-concurrency 3 --timeout 600 --output json
 # Two-step alternative (inspect before running):
 #   testsprite test create-batch --plans plans.jsonl --output json
-#   then trigger each id: testsprite test run <test-id> --wait --target-url <env-url> --timeout 600
+#   then trigger each id: testsprite test run <test-id> --env staging --wait --timeout 600
 
 # (d-FE) refine + re-run
 testsprite test plan put <test-id> --steps refined.json && \
-testsprite test run <test-id> --target-url <env-url> --wait --timeout 600
+testsprite test run <test-id> --env staging --wait --timeout 600
 
-# (d-BE) refine BE code + re-run. NOTE: if you reach for `test rerun` here instead, a BE rerun
-# dispatches the full producer/teardown closure — use --skip-dependencies while iterating on one
-# script (producers already verified this round), then finish with a closure run before reporting.
+# (d-BE) refine BE code + re-run. A BE run dispatches the producer/teardown closure by default —
+# use --skip-dependencies while iterating on one script (producers already verified this round),
+# then finish with a closure run before reporting.
 testsprite test code put <test-id> --code-file refined.py --expected-version <current-version> && \
-testsprite test run <test-id> --target-url <env-url> --wait --timeout 600
+testsprite test run <test-id> --env staging --wait --timeout 600
 ```
 
 Key behaviors:
 
-- `--target-url` must be an allowed project/environment URL. The CLI rejects
-  `localhost` / RFC1918 / link-local — local-only changes can't be run here. If
-  the feature is deployed only locally, say so and skip the run.
+- Environment `--url` takes a public http/https URL or a loopback http origin
+  with an explicit port (frontend only); private and link-local addresses are
+  refused. Running against a loopback environment opens a tunnel automatically
+  and waits, like `--local <port>`. `--env <name> --local <port>` sends that
+  environment's sign-in to your local app; the server applies it or refuses
+  before dispatch.
 - `--wait` long-polls until terminal and handles its own backoff — don't wrap it
   in a retry loop.
-- Exit codes: `0` = passed; `1` = failed / blocked / cancelled; `7` = timeout.
-  Treat `7` as inconclusive (resume with `testsprite test wait <run-id>`), not a
-  regression.
+- `--local` implies `--wait`, with a default timeout of 1200 seconds per run (ordinary
+  waits default to 600). Run several local frontend tests in ONE command (`test run <id> <id> … --local <port>`) instead of starting one process per test. `--all --project <id> --local <port>` runs frontend tests and reports backend tests as skipped. One tunnel serves the invocation; `--max-concurrency` defaults to 5 and caps at 10. There are
+  5 live tunnel bindings per user; `tunnel_binding_limit` is exit 11 and is not
+  auto-retried. Reuse a live tunnel with `--tunnel-client` or stop an unused one.
+  On a tunnel-limit error, run `testsprite tunnel list`, then `testsprite tunnel stop <id>`
+  or `testsprite tunnel stop --all --confirm` if every binding should be revoked.
+- Keep the early **stderr** run-id receipts (`Run <runId>` for one test, `[i/N] <testId> → run <runId>` for a batch); `Dashboard: <url>` follows when supplied. Preserve each id even if
+  the wait later stops; stdout remains the normal JSON result channel.
+- An **owned** local run requests cancellation by default when waiting stops (timeout,
+  Ctrl-C, or a polling failure), then its tunnel closes. Read the reported
+  cancellation outcome. For a V3 frontend run cancelled before a terminal verdict,
+  the backend attempts a refund. Inspect `refund.status`; cancellation does not
+  guarantee a refund.
+  `--no-cancel-on-interrupt` detaches instead, but the owned tunnel still closes.
+  An adopted run normally detaches without cancellation and never closes the
+  owner's tunnel. If the CLI confirms the owner has disappeared while the run is
+  active, it requests cancellation by default; `--no-cancel-on-interrupt` skips
+  that request.
+  A second `tunnel start` or process using the same credential takes over, and the first exits **10**.
+- Exit codes: `0` = passed; `1` = failed / blocked / cancelled; `7` = timeout
+  or unsupported. An owned local timeout is inconclusive: start a **new**
+  `testsprite test run <test-id> --local <port> --timeout 1800`, keeping the same
+  `--local-host <host>` if used; do not suggest `test wait` for that closed tunnel. Resume **ordinary or adopted-tunnel**
+  waits with `testsprite test wait <run-id>` only while the target is reachable
+  (and the adopted tunnel's owner remains alive).
+- Exit `13` (`FEATURE_GATED`) and exit `12` (`INSUFFICIENT_CREDITS`) are not retriable: show the user the server's message and the link from `nextAction` or JSON `links`, then stop.
+- A local environment has a loopback URL and needs `--local <port>` from that
+  machine. A bare CLI run selecting it, explicitly or as Default, is refused
+  before dispatch without charge (`tunnel-required`, exit 6). The Portal shows
+  local environments but offers no Run; backend Portal requests are refused
+  without charge. Schedules and test lists targeting them get a free BLOCKED
+  result. A deployed environment selected with `--env <name>` or made Default
+  runs normally even if the test ran through a tunnel before. V3 local runs use
+  the agent path, never saved-code replay, and preserve the test's saved code.
 - Batch: `create-batch --run --wait` creates the tests (FE-only) and fans
   out triggers in one call (bounded by `--max-concurrency`), emitting
   `{ results: [...] }` that mirrors the single-test `test run --wait`
@@ -413,13 +486,17 @@ Key behaviors:
   tests (producers → consumers → `teardown` last); FE tests in the project are
   skipped with an advisory, and everything not dispatched is enumerated
   (`conflicts` / `deferred` / `skippedFrontend`) so don't count `accepted[]`
-  alone. `test rerun <be-id>` expands the producer/teardown closure by default —
-  stderr summarizes `Reran N tests: 1 selected + P producer(s) + T teardown(s)`,
-  and failed members surface as `closureFailures[]` without flipping the exit
+  alone. A big batch is accepted whole and its runs show `queued` until they
+  start; `deferred` is rare (a project's lock stayed busy, or a test went in
+  flight during dispatch) and is never resent (exit 7). A BE run expands the
+  producer/teardown closure by default; failed
+  members surface as `closureFailures[]` without flipping the exit
   code. Pass `--skip-dependencies` only when this round already verified the
   producers and you're iterating fast on one script.
-- `test code put` needs `--expected-version <codeVersion>`; stale etag → exit 6,
-  re-fetch via `test get <id>` and retry. `--force` bypasses but is audit-logged.
+- `test code put`: `--expected-version <codeVersion>` is optional (the CLI
+  fetches the current version, which races with concurrent edits); stale etag → exit 6,
+  re-fetch via
+  `test get <id>` and retry. `--force` bypasses but is audit-logged.
 - Idempotency: the CLI auto-mints an `Idempotency-Key`; replays within 24h return
   the original test/run.
 
@@ -442,8 +519,11 @@ The product/environment is the problem (believe these) when:
   read-only", "page 404s");
 - the trace blames infra (deploy lag, auth gate, missing fixture).
 
-Scope step counts to the **current run** — `test steps` is cumulative across runs;
-filter on the run-id before counting.
+`test steps <test-id>` shows the **latest run's steps**. For the run you are
+verifying, use `testsprite test steps <test-id> --run-id <run-id> --output json`
+with the id from the early stderr receipt. An empty latest run is not evidence
+from an earlier run; use `test result <test-id> --history` to choose one explicitly.
+Older backends may return cumulative bare steps; pin `--run-id` before counting.
 
 **Read the testing agent's failure summary skeptically — it can conflate two
 failure phases.** When a flow produces an artifact that then runs against an external
@@ -454,7 +534,7 @@ and runtime output: if the runtime output references a literal you submitted
 earlier in the plan, the action succeeded and the error is runtime-phase.
 
 **BE closure runs: root-cause the earliest failed wave, not the selected test.**
-When a rerun or `run --all` expanded a dependency closure and a **producer**
+When a `run` or `run --all` expanded a dependency closure and a **producer**
 failed, every consumer downstream of it fails or blocks by starvation (missing
 token / missing fixture). The selected test's red verdict does not implicate
 your feature — report it as failed-downstream, pull the producer's artifact

@@ -267,14 +267,35 @@ const ChatWidget = () => {
         }
       }
 
-      // Enregistrement du lead dans Firestore
+      // Enregistrement du lead dans Supabase & Firestore
+      const historyText = messages
+        .map(m => `${m.role === 'user' ? 'Visiteur' : 'Agent'}: ${m.text}`)
+        .join('\n');
+
+      // 1. Supabase (Prioritaire)
+      try {
+        import('../utils/supabaseClient').then(({ supabase, isSupabaseConfigured }) => {
+          if (isSupabaseConfigured && supabase) {
+            supabase.from('leads').insert([{
+              name: leadData.name || 'Inconnu',
+              email: finalContact,
+              message: `Lead capturé via Chatbot. Type: ${leadData.type || 'Non spécifié'}`,
+              full_chat_history: historyText,
+              status: 'Nouveau',
+              source: 'chatbot'
+            }]).then(({ error }) => {
+              if (error) console.warn("Supabase Lead insert warning:", error.message);
+            }).catch(e => console.warn("Supabase Lead insert error:", e));
+          }
+        });
+      } catch (sbErr) {
+        console.warn("Erreur chargement Supabase client:", sbErr);
+      }
+
+      // 2. Firestore (Fallback / Compatibilité)
       try {
         if (db) {
           import('firebase/firestore').then(({ addDoc, collection }) => {
-            const historyText = messages
-              .map(m => `${m.role === 'user' ? 'Visiteur' : 'Agent'}: ${m.text}`)
-              .join('\n');
-              
             addDoc(collection(db, 'leads'), {
               name: leadData.name || 'Inconnu',
               email: finalContact,

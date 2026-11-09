@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -7,6 +7,7 @@ import CustomCursor from './components/CustomCursor';
 import ScrollSpy from './components/ScrollSpy';
 import CookieBanner from './components/CookieBanner';
 import PwaInstallPrompt from './components/PwaInstallPrompt';
+import { isPortalMode, setAppMode } from './utils/appMode';
 
 import { LanguageProvider } from './contexts/LanguageContext';
 import './index.css';
@@ -30,6 +31,14 @@ const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
+// Portal Routes (Espace Client / Missions B2B)
+const PortalLogin = lazy(() => import('./pages/Portal/PortalLogin'));
+const PortalLayout = lazy(() => import('./pages/Portal/PortalLayout'));
+const PortalDashboard = lazy(() => import('./pages/Portal/PortalDashboard'));
+const PortalReports = lazy(() => import('./pages/Portal/PortalReports'));
+const PortalProjects = lazy(() => import('./pages/Portal/PortalProjects'));
+const PortalTimesheet = lazy(() => import('./pages/Portal/PortalTimesheet'));
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -49,11 +58,20 @@ const PageSkeleton = () => (
 
 import ErrorBoundary from './components/ErrorBoundary';
 
-const AnimatedRoutes = () => {
+const AnimatedRoutes = ({ isPortalDomain }) => {
   const location = useLocation();
   
-  // Do not animate transitions for admin routes to avoid layout shifting
+  // Do not animate transitions for admin and portal routes to avoid layout shifting
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isPortalRoute = location.pathname.startsWith('/portal');
+
+  // Redirection automatique sur domaine M84 Ops (m84ops.vercel.app / ops.*)
+  if (isPortalDomain && location.pathname === '/') {
+    return <Navigate to="/portal" replace />;
+  }
+  if (isPortalDomain && location.pathname === '/login') {
+    return <Navigate to="/portal/login" replace />;
+  }
 
   return (
     <ErrorBoundary>
@@ -68,6 +86,20 @@ const AnimatedRoutes = () => {
               </ProtectedRoute>
             } />
             <Route path="/admin/*" element={<Error404 />} />
+          </Routes>
+        </Suspense>
+      ) : (isPortalRoute && (isPortalDomain || import.meta.env.DEV)) ? (
+        <Suspense fallback={<PageSkeleton />}>
+          <Routes location={location} key="portal">
+            <Route path="/portal/login" element={<PortalLogin />} />
+            <Route path="/portal" element={<PortalLayout />}>
+              <Route index element={<PortalDashboard />} />
+              <Route path="reports" element={<PortalReports />} />
+              <Route path="projects" element={<PortalProjects />} />
+              <Route path="timesheet" element={<PortalTimesheet />} />
+              <Route path="absences" element={<Navigate to="/portal/timesheet#absences" replace />} />
+            </Route>
+            <Route path="/portal/*" element={<Error404 />} />
           </Routes>
         </Suspense>
       ) : (
@@ -93,10 +125,19 @@ const AnimatedRoutes = () => {
 
 function AppContent() {
   const location = useLocation();
+  const isPortalDomain = useMemo(() => isPortalMode(), []);
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isPortalRoute = location.pathname.startsWith('/portal');
+  const isStandaloneApp = isAdminRoute || isPortalRoute || isPortalDomain;
 
   useEffect(() => {
-    if (!isAdminRoute && !sessionStorage.getItem('m84_visited')) {
+    if (isPortalDomain) {
+      document.title = "M84 Ops — Portail Collaborateur Client & CRA B2B";
+    }
+  }, [isPortalDomain]);
+
+  useEffect(() => {
+    if (!isStandaloneApp && !sessionStorage.getItem('m84_visited')) {
       const trackVisit = async () => {
         try {
           if (!db) return;
@@ -115,7 +156,7 @@ function AppContent() {
       };
       trackVisit();
     }
-  }, [isAdminRoute]);
+  }, [isStandaloneApp]);
 
   useEffect(() => {
     let manifestLink = document.querySelector('link[rel="manifest"]');
@@ -134,10 +175,10 @@ function AppContent() {
 
   return (
     <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {!isAdminRoute && <CustomCursor />}
+      {!isStandaloneApp && <CustomCursor />}
       
-      {/* Restore default cursor for Backoffice */}
-      {isAdminRoute && (
+      {/* Restore default cursor for Backoffice & Client Portal */}
+      {isStandaloneApp && (
         <style>{`
           body, a, button, input, textarea, select { cursor: auto !important; }
           a, button { cursor: pointer !important; }
@@ -145,22 +186,63 @@ function AppContent() {
         `}</style>
       )}
 
-      {!isAdminRoute && <Navbar />}
+      {!isStandaloneApp && <Navbar />}
       
       <main style={{ flex: 1 }}>
-        <AnimatedRoutes />
+        <AnimatedRoutes isPortalDomain={isPortalDomain} />
       </main>
 
-      {!isAdminRoute && <Footer />}
-      {!isAdminRoute && <ScrollSpy />}
+      {!isStandaloneApp && <Footer />}
+      {!isStandaloneApp && <ScrollSpy />}
       
-      {!isAdminRoute && (
+      {!isStandaloneApp && (
         <Suspense fallback={null}>
           <ChatWidget />
         </Suspense>
       )}
-      {!isAdminRoute && <CookieBanner />}
+      {!isStandaloneApp && <CookieBanner />}
       <PwaInstallPrompt isAdminRoute={isAdminRoute} />
+
+      {/* Sélecteur de test rapide en Dev Local (Exclu du bundle de prod) */}
+      {import.meta.env.DEV && (
+        <div style={{
+          position: 'fixed',
+          bottom: '12px',
+          left: '12px',
+          zIndex: 999999,
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '20px',
+          padding: '4px 10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+          fontSize: '0.75rem',
+          color: '#94a3b8'
+        }}>
+          <span style={{ fontWeight: 600, color: isPortalDomain ? '#10b981' : '#38bdf8' }}>
+            {isPortalDomain ? '⚡ Mode M84 Ops' : '🎨 Mode Portfolio'}
+          </span>
+          <button
+            onClick={() => setAppMode(isPortalDomain ? 'portfolio' : 'portal')}
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              borderRadius: '12px',
+              color: '#ffffff',
+              padding: '2px 8px',
+              cursor: 'pointer',
+              fontSize: '0.72rem',
+              fontWeight: 500
+            }}
+            title="Basculez entre le domaine Portfolio et le domaine Portail Client"
+          >
+            Basculer ⇄
+          </button>
+        </div>
+      )}
     </div>
   );
 }

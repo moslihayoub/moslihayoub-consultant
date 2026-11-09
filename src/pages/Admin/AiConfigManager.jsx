@@ -12,15 +12,33 @@ const AiConfigManager = () => {
 
   const fetchPrompt = async () => {
     setLoading(true);
+    // 1. Tenter Supabase
     try {
-      const docRef = doc(db, 'config', 'agent');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setPrompt(docSnap.data().systemPrompt || '');
-      } else {
-        // Default fallback if document doesn't exist
-        setPrompt("Tu es l'assistant IA de Ayoub MOSLIH, un UX/UI Designer. Tu dois répondre de manière professionnelle et créative.");
+      const { supabase, isSupabaseConfigured } = await import('../../utils/supabaseClient');
+      if (isSupabaseConfigured && supabase) {
+        const { data, error } = await supabase.from('config').select('system_prompt').eq('id', 'agent').maybeSingle();
+        if (!error && data?.system_prompt) {
+          setPrompt(data.system_prompt);
+          setLoading(false);
+          return;
+        }
       }
+    } catch (e) {
+      console.warn("Supabase fetch prompt warning:", e);
+    }
+
+    // 2. Fallback Firestore
+    try {
+      if (db) {
+        const docRef = doc(db, 'config', 'agent');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setPrompt(docSnap.data().systemPrompt || '');
+          setLoading(false);
+          return;
+        }
+      }
+      setPrompt("Tu es l'assistant IA de Ayoub MOSLIH, un UX/UI Designer. Tu dois répondre de manière professionnelle et créative.");
     } catch (error) {
       console.error("Erreur lecture prompt:", error);
       alert("Erreur lors de la récupération de la configuration.");
@@ -30,21 +48,34 @@ const AiConfigManager = () => {
   };
 
   useEffect(() => {
-    if (db) {
-      fetchPrompt();
-    } else {
-      setLoading(false);
-    }
+    fetchPrompt();
   }, []);
 
   const handleSave = async () => {
     setSaving(true);
+    // 1. Sauvegarder dans Supabase
     try {
-      const docRef = doc(db, 'config', 'agent');
-      await setDoc(docRef, { 
-        systemPrompt: prompt,
-        updatedAt: new Date()
-      }, { merge: true });
+      const { supabase, isSupabaseConfigured } = await import('../../utils/supabaseClient');
+      if (isSupabaseConfigured && supabase) {
+        await supabase.from('config').upsert({
+          id: 'agent',
+          system_prompt: prompt,
+          updated_at: new Date().toISOString()
+        });
+      }
+    } catch (e) {
+      console.warn("Supabase save prompt warning:", e);
+    }
+
+    // 2. Sauvegarder dans Firestore
+    try {
+      if (db) {
+        const docRef = doc(db, 'config', 'agent');
+        await setDoc(docRef, { 
+          systemPrompt: prompt,
+          updatedAt: new Date()
+        }, { merge: true });
+      }
       
       invalidateAgentPromptCache();
       setLastSaved(new Date());

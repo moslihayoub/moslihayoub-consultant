@@ -1,11 +1,53 @@
 # 📌 État du Projet - Ayoub MOSLIH Portfolio
 
 ## 🚀 Présentation & Stack Technique
-- **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI
-- **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS.
-- **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/`).
+- **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI / M84 Ops Client Portal
+- **Dernière mise à jour** : 09 Novembre 2026 (Refonte Portail B2B Bank-e CAM)
+- **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS, Recharts, jsPDF.
+- **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/` & `https://m84ops.vercel.app`).
 - **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
-- **Tests** : Playwright E2E (`tests/`) & Oxlint.
+- **Tests** : Playwright E2E (`tests/portal.spec.js`, `tests/admin.spec.js`, `tests/e2e/portfolio.spec.js`) & Oxlint.
+
+---
+
+## 🛠️ Dernières Fonctionnalités & Optimisations Réalisées
+
+### 1. 🏦 Refonte UX & Co-Branding Portail Client Bank-e (Crédit Agricole du Maroc)
+- **Isolation Stricte Multi-Domaines** :
+  - Sur le domaine public de production (`moslih84.vercel.app`), l'accès aux routes `/portal` est verrouillé (mode portfolio pur).
+  - L'Espace Client B2B est réservé exclusivement au domaine dédié Vercel (`m84ops.vercel.app` / variable `VITE_APP_MODE=portal`) et au mode test local (`localhost:5173/?mode=portal`).
+- **Logo Officiel Bank-e** : Logo Bank-e épuré (`/assets/clients/bank-e.png`) affiché de manière autonome sans carte conteneur ni texte superflu en topbar.
+- **Formulaire de Connexion Espace Client (`PortalLogin.jsx`)** :
+  - Remplacement de l'intitulé « Email » par **« Identifiant »** (acceptant `collab.cam` ou le nom d'utilisateur sans forcer le domaine email).
+  - Ajout du bouton d'affichage/masquage de mot de passe interactif avec icônes œil (`Eye` / `EyeOff`).
+  - Suppression définitive du lien `[← Retour au Portfolio d'Ayoub MOSLIH]`.
+- **Topbar & Navigation (`PortalLayout.jsx`)** :
+  - Suppression du texte « Avatar - Profile », affichage direct de l'identité du collaborateur connecté.
+  - **Sidebar rétractable avec bouton intégré** : Bascule Toolbar (76px) vs Sidebar (260px) intégrée directement en tête de la `<aside>`.
+  - Suppression de la carte « Consultant Référent » de la barre latérale pour libérer l'espace visuel.
+  - Fusion des entrées de menu : Timesheet et Absences unifiés dans un seul onglet `Timesheet & Activité`.
+  - **Agent AI Flottant & Toaster Proactif** : Style aligné avec l'avatar portfolio (`m84-avatar.webp`), pastille verte en ligne et bulle proactive d'accueil avec fermeture `X`.
+- **Dashboard Collaborateur (`PortalDashboard.jsx`)** :
+  - **Hero Card épurée** : Suppression des bandeaux génériques « Espace Collaborateur » et « Karim Tazi », mise en avant directe de **Ayoub MOSLIH** (Product Designer & Solutions IA), des cabinets (**Devoteam Consulting** / **Ad'Missions Portage**) et des actions directes WhatsApp, Téléphone (+212 6 63 03 19 84) et Email.
+  - **4 KPIs Métier B2B Pertinents** :
+    1. *Jours Imputés (Mois)* : Calcul au TJM régie freelance (21.5j / 22j ouvrés, WE et fériés exclus).
+    2. *Quota Consommé BDC* : 41.5j / 65j avec jauge de progression visuelle et jours restants.
+    3. *Statut Visa CRA* : Validation en attente ou approuvé avec contrôle de pièce jointe.
+    4. *Chantiers Actifs* : 3 chantiers majeurs Product Design, Design System & IA.
+  - **Graphique Rythme d'Imputation** : BarChart pleine largeur en ligne unique.
+  - **Tableau des Comptes Rendus Hebdomadaires** : 4 comptes rendus mensuels envoyés aux managers, avec date et statut d'envoi.
+- **Détail du Compte Rendu (`PortalReports.jsx`)** :
+  - Minimisation de la colonne des raccourcis à 250px et élargissement de la carte principale de détail.
+  - Suppression du badge de sous-titre redondant avec la colonne de gauche.
+  - Masquage des participants.
+  - Deux menus déroulants d'actions : **Partager** (WhatsApp, Email manager, Copie lien) et **Exporter** (PDF officiel, Word, Google Docs).
+  - Contenu adapté Product Design & IA.
+- **Matrice des Projets & Tâches (`PortalProjects.jsx`)** :
+  - 4 KPIs synthétiques et matrice détaillée par chantier avec priorité, livrable Figma et statut.
+  - Sécurisation contre les états `null` sur chargement direct / deep-link.
+- **Timesheet & Absences Unifiés (`PortalTimesheet.jsx`)** :
+  - Unité simplifiée par jour (1j) ou demi-journée (0.5j), suppression du détail horaire.
+  - Verrou de validation par Pièce Jointe obligatoire.
 
 ---
 
@@ -185,9 +227,100 @@
     - Alignement de la présentation du profil sur la répartition détaillée (Product Design & IA ~7 ans, Direction Artistique ~7 ans, Motion Design ~5 ans).
     - Remplacement des cibles de redirection obsolètes `/about#expertise` par `/about#services`.
 
+### 26. 🌐 Découplage Multi-Domaines Vercel & Routage Hybride M84 Ops (Nouveau)
+- **Architecture Single Repo / Dual Deployment** :
+  - **1 seul dépôt GitHub** partagé entre le Portfolio public et le Portail Client B2B.
+  - Gestion du double domaine gratuit Vercel (`moslih84.vercel.app` & `m84ops.vercel.app`) sans duplication de code.
+- **Aiguillage Conditionnel & Détection d'Hôte (`src/utils/appMode.js`)** :
+  - Détection automatique du contexte via variable d'environnement Vercel `VITE_APP_MODE=portal` et filtrage de nom de domaine (`window.location.hostname.includes('m84ops')`).
+  - Support de bascule instantanée sur `localhost` via paramètre URL (`?mode=portal` / `?mode=portfolio`) et persistance `localStorage`.
+- **Routage Adaptatif (`src/App.jsx`)** :
+  - Sur le domaine **M84 Ops** : la racine `/` redirige immédiatement vers `/portal` (et `/portal/login` si non authentifié). Le titre HTML s'ajuste dynamiquement en *"M84 Ops — Portail Collaborateur Client & CRA B2B"*.
+  - Les éléments vitrine (Navbar publique, Footer public, Curseur magnétique 3D, ScrollSpy, CookieBanner) sont masqués pour offrir une application B2B épurée et sans distraction.
+  - Sur le domaine **Portfolio** : maintien intégral de la vitrine, avec accès possible au portail et au backoffice.
+  - Bouton interactif discret de test Dev en bas à gauche (`[Mode Portfolio ⇄ Mode M84 Ops]`) pour basculer en un clic sur `localhost` (exclu du bundle de prod).
+- **Validation Build & Pyramide de Tests** :
+  - **Oxlint** : 0 erreur.
+  - **Build Vite de production** : validé en **7.01s** (49 chunks).
+  - **Playwright E2E** : **11/11 tests validés avec succès (100%)**.
+
+### 25. ⚡ Migration Hybride Supabase & Préparation M84 Ops (Nouveau)
+- **Détection & Réactivation Supabase** :
+  - Détection automatique du projet existant `moslihayoub's Project` (`ref: ehevcsqgkrbeokprzzcp`) via le token de management `SUPABASE_ACCESS_TOKEN`.
+  - Réactivation réussie (`POST /restore`) depuis le statut `INACTIVE` vers `ACTIVE` sur la région `eu-central-1`.
+- **Client & Fallback Zero-Downtime (`src/utils/supabaseClient.js`)** :
+  - Installation du SDK `@supabase/supabase-js`.
+  - Mise en place d'un client découplé avec détection de configuration (`isSupabaseConfigured`) garantissant un fallback 100% transparent vers Firebase et le stockage local en cas d'indisponibilité.
+- **Migration & Schéma SQL Relationnel (`scripts/setup_supabase.mjs`)** :
+  - Création des 7 tables avec Row Level Security (RLS) et politiques d'accès : `leads`, `config`, `missions`, `cras`, `absences`, `mission_reports`, `portal_users`.
+  - Script d'amorçage autonome avec insertion des données réalistes CAM (Crédit Agricole du Maroc).
+- **Câblage Multi-Briques de l'Application** :
+  - **Auth Admin (`AdminLogin.jsx` & `AdminDashboard.jsx`)** : Intégration de Supabase Auth (Google OAuth & Email/Password) en cascade prioritaire avant le fallback Firebase et les identifiants locaux.
+  - **CRM Leads (`CrmLeadsManager.jsx` & `ChatWidget.jsx`)** : Double injection automatique des prospects capturés dans Supabase `leads` et Firestore `leads`.
+  - **Configuration IA (`AiConfigManager.jsx`)** : Lecture et persistance du system prompt de l'Agent M84 synchronisées dans Supabase `config`.
+  - **Mini-SaaS M84 Ops (`clientPortalService.js`)** : Synchronisation en arrière-plan des missions B2B vers la table PostgreSQL Supabase `missions`.
+- **Audit Smoke Test DevTools Navigateur (Niveau 4 SDD) (Nouveau)** :
+  - **Exécution sous Google Chrome** : Scan automatisé des 4 vues clés (`/`, `/portal`, `/portal/login`, `/admin/login`) en double résolution Desktop (1440x900) et Mobile (375x812 iPhone X).
+  - **Santé Console & Réseau** : **0 erreur console**, **0 échec réseau**, latence moyenne < 1s (800ms - 1100ms).
+  - **Preuves Visuelles** : 8 captures d'écran générées et archivées dans `public/devtools-screenshots/`.
+- **Validation Cloud TestSprite (`testsprite test run`) (Nouveau)** :
+  - **Exécution Cloud Réussie** : Test exécuté via le CLI `@testsprite/testsprite-cli` sur l'environnement Vercel `https://moslih84.vercel.app/`.
+  - **Run ID** : `33925036-0422-469e-9c80-1504e6dd3cf5` (Workspace `ayoub-moslihs-workspace-66fa818a`).
+  - **Verdict** : **PASSED (4/4 étapes validées, 0 erreur)**.
+  - **Dashboard & Vidéo** : Accessible en direct sur le [Dashboard TestSprite](https://www.testsprite.com/dashboard-v3/o/66fa818a-01d8-5677-a01a-25f257841269/projects/d6258fed-716e-4b75-8b95-a546c869f1c8/test-cases/a69290de-f4bc-4214-8689-064645a00a19).
+  - **Linter Oxlint (`npm run lint`)** : 0 erreur de syntaxe ou d'import.
+  - **Build Vite de production (`npm run build`)** : Validé en **3.98s** (49 chunks PWA générés).
+  - **Suite E2E Playwright (`npx playwright test`)** : **11/11 tests validés avec succès (100%)** :
+    1. Authentification & 401 Unauthorized (`admin.spec.js`)
+    2. Protection email non autorisée (`admin.spec.js`)
+    3. Bouton Google Sign-In actif (`admin.spec.js`)
+    4. Connexion réussie credentials M84 (`admin.spec.js`)
+    5. Chargement Hero & animations (`portfolio.spec.js`)
+    6. Navigation & fluidité des liens (`portfolio.spec.js`)
+    7. Modale projet dynamique (`portfolio.spec.js`)
+    8. Chatbot Agent M84 (question/réponse) (`portfolio.spec.js`)
+    9. Validité HTTP 200 des certificats PDF (`portfolio.spec.js`)
+    10. Parcours galerie des travaux (`e2e.spec.js`)
+    11. Déchiffrement AES projet restreint *The Factory* (`portfolio.spec.js`)
+- **Architecture "Localhost First" & Découplage Supabase (`src/services/clientPortalService.js`)** :
+  - Centralisation de la donnée (missions, CRA mensuels, absences, comptes rendus, utilisateurs) dans un stockage réactif persistant local, préfigurant les tables relationnelles Supabase.
+  - Données d'amorçage réalistes pré-injectées pour validation immédiate : Mission CAM (Crédit Agricole du Maroc, Karim Tazi), intermédiaire Devoteam, portage Ad'Missions, 65 jours vendus en régie hybride.
+- **Backoffice Consultant Ayoub (`src/pages/Admin/ClientMissionsManager.jsx`)** :
+  - Nouvel onglet *"Missions Clients (CRA)"* dans [`AdminDashboard.jsx`](file:///C:/Users/Ayoub%20MOSLIH/ant-projects/ANT2.0/1_engineering_apps/Ayoub%20MOSLIH%20-%20Portfolio/src/pages/Admin/AdminDashboard.jsx).
+  - **Formulaire de création de mission** :
+    - *4 Champs Obligatoires stricts* : Nom de la société, Nom du responsable, Téléphone et Email (login client).
+    - *Sections Optionnelles pliables en accordéon* : Cabinet Conseil/ESN, Société de Portage, Dates & quota de jours vendus, Modalités de travail (Régie/Forfait, Hybride/Remote/Présentiel), Horaires types (Matin, Aprèm, Pause déj $\rightarrow$ calcul auto 8h/j) et mot de passe personnalisé.
+  - **Bannière d'accès direct** : Boutons 1-clic pour expédier les identifiants pré-formatés au client par WhatsApp ou Email.
+  - **Imputation CRA & Gestion des Absences** : Modal de saisie des CRA avec attachement de PJ et déclaration d'absences justifiées avec pièces jointes.
+  - **Simulateur 1-clic** : Bouton *"Simuler Espace Client"* pour ouvrir le portail collaborateur sans ressaisie d'identifiants.
+- **Portail Collaborateur Client (`/portal`) — Fidélité Stricte au Wireframe** :
+  - **Header Co-Brandé** : Logo Client (CAM) + Mention *"Mission Régie • Pilotage Ayoub MOSLIH"* + Avatar de profil avec menu déroulant (*"Mon profil"*, *"Se déconnecter"*).
+  - **Sidebar de Navigation** :
+    1. *Dashboard* : Jauge de consommation contractuelle (burndown chart Recharts), Jours imputés vs restants, Statut du CRA en cours, Absences déclarées et Fiche contact direct du consultant Ayoub (WhatsApp, Email).
+    2. *Compte rendu* : Liste des CR, visualiseur détaillé (synthèse, décisions actées, prochaines actions), barre d'exportation (PDF officiel via `jspdf`, Word `.doc`, Google Docs, CSV, WhatsApp, Email).
+    3. *Projets* : Suivi des chantiers (Octroi de crédit, Assistant IA, Dashboard Risques) avec jauges d'avancement (0-100%).
+    4. *Timesheet* : Relevé d'activité mensuel, décompte des jours et heures, contenu détaillé, pièce jointe de validation (bon de commande/CRA signé), bouton client *"Approuver le CRA"* et historique des visas.
+    5. *Absences* : Calendrier des indisponibilités justifiées du consultant avec motif textuel et téléchargement du justificatif (PJ).
+- **Intelligence Artificielle M84 Scénarisée & Embarquée** :
+  - **Rehaussement de Remarque ("Rehausser avec l'IA ✨")** : Sur les CRA et les Comptes Rendus, le collaborateur peut saisir une observation brute et cliquer sur l'IA pour la reformuler en une note de direction constructive, élégante et orientée action (via Gemini API ou fallback local).
+  - **Widget Assistant IA Mission (Wireframe bulle "AI" flottante en bas à droite)** : Chatbot M84 strictement restreint aux données de la mission active (jours consommés, dates d'absences, décisions de copil, calendrier).
+- **Page de Connexion Dédiée (`/portal/login`)** :
+  - Authentification dédiée aux collaborateurs et bouton *"Connexion 1-Clic Démo CAM"* pour tester et valider le parcours instantanément en localhost.
+- **Validation Build & Qualité** :
+  - Build Vite de production validé (`✓ built in 9.12s`, 48 chunks PWA générés).
+  - 0 erreur au linter Oxlint.
+
 ---
 
 ## 📋 Tâches / Prochaines Étapes
+- [x] Mini-SaaS Portail Client & CRA B2B (Service unifié, Seed data CAM, Backoffice Admin et Portail Collaborateur).
+- [x] Module Absences (Motif textuel + Pièce jointe justificative téléchargeable).
+- [x] Module Timesheet (Détail des jours/heures, Contenu, PJ de validation, Approbation 1-clic).
+- [x] Module Comptes Rendus & Exports (PDF, Word, GDoc, CSV, WhatsApp, Email).
+- [x] Rehaussement des remarques par IA Gemini ("Rehausser avec l'IA ✨").
+- [x] Widget Agent IA M84 contextuel à la mission (bulle flottante AI).
+- [x] Formulaire création client simplifié (4 obligatoires : Société, Responsable, Tel, Email + accordéons optionnels).
+- [x] Authentification Portail & Bouton Démo 1-clic CAM pour test localhost.
 - [x] Refonte & alignement de l'Agent M84 (Mode IA & Mode Local).
 - [x] Interrupteur Toggle Switch visuel pour les tests en dev.
 - [x] Intégration des images dans les cartes projets UI du chat.
