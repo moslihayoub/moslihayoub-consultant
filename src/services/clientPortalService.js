@@ -130,6 +130,24 @@ function getInitialData() {
           url: "#"
         },
         remarks: []
+      },
+      {
+        id: 'ts-2026-08',
+        missionId: camMissionId,
+        month: "2026-08",
+        monthLabel: "Août 2026",
+        daysImputed: 21,
+        totalWorkingDays: 21,
+        totalHours: 168,
+        status: "approved",
+        content: "Initialisation contractuelle et ateliers exploratoires préliminaires Bank-e.",
+        attachment: {
+          name: "CRA_Aout_2026_Valide.pdf",
+          size: "175 KB",
+          uploadedAt: "2026-08-31T17:00:00Z",
+          url: "#"
+        },
+        remarks: []
       }
     ],
     absences: [
@@ -153,6 +171,8 @@ function getInitialData() {
     reports: [
       {
         id: 'rep-4',
+        code: 'CR-04',
+        status: 'Livré',
         missionId: camMissionId,
         weekNumber: 4,
         weekLabel: "Semaine 4",
@@ -190,6 +210,8 @@ function getInitialData() {
       },
       {
         id: 'rep-3',
+        code: 'CR-03',
+        status: 'Validé',
         missionId: camMissionId,
         weekNumber: 3,
         weekLabel: "Semaine 3",
@@ -216,6 +238,8 @@ function getInitialData() {
       },
       {
         id: 'rep-2',
+        code: 'CR-02',
+        status: 'Validé',
         missionId: camMissionId,
         weekNumber: 2,
         weekLabel: "Semaine 2",
@@ -242,6 +266,8 @@ function getInitialData() {
       },
       {
         id: 'rep-1',
+        code: 'CR-01',
+        status: 'Terminé',
         missionId: camMissionId,
         weekNumber: 1,
         weekLabel: "Semaine 1",
@@ -271,6 +297,7 @@ function getInitialData() {
       {
         id: 'proj-1',
         missionId: camMissionId,
+        tag: "OCTROI",
         title: "Refonte Expérience Octroi de Crédit & Souscription",
         category: "Product Design & FinTech",
         status: "En cours",
@@ -287,31 +314,62 @@ function getInitialData() {
       {
         id: 'proj-2',
         missionId: camMissionId,
+        tag: "DESIGN",
         title: "Design System Global Bank-e v2.0 & Tokens",
         category: "Design System & UI Ops",
-        status: "En cours",
-        progress: 90,
+        status: "Livré",
+        progress: 100,
         desc: "Bibliothèque de composants UI cross-plateformes (Figma + Tokens Studio + Storybook) pour harmoniser les interfaces web & mobiles CAM.",
         tasks: [
           { id: 't-201', title: "Définition de la palette colorimétrique & typographies", status: "Terminé", priority: "Haute", deliverable: "Tokens fondamentaux JSON" },
           { id: 't-202', title: "Composants Atomiques (Buttons, Inputs, Cards, Modals)", status: "Terminé", priority: "Haute", deliverable: "Composants Figma 45 variants" },
           { id: 't-203', title: "Composants Molécules bancaires (Sélecteur compte, RIB)", status: "Terminé", priority: "Haute", deliverable: "Figma Library Auto-Layout" },
-          { id: 't-204', title: "Documentation Storybook & guidelines d'accessibilité", status: "En revue", priority: "Moyenne", deliverable: "Portail Storybook" }
+          { id: 't-204', title: "Documentation Storybook & guidelines d'accessibilité", status: "Terminé", priority: "Moyenne", deliverable: "Portail Storybook" }
         ]
       },
       {
         id: 'proj-3',
         missionId: camMissionId,
+        tag: "IA",
         title: "Assistant IA Conversationnel & Pré-qualification",
         category: "IA Générative & RAG",
-        status: "En test",
+        status: "En cours",
         progress: 70,
         desc: "Agent virtuel intelligent intégré à l'application mobile pour guider les sociétaires, pré-remplir les demandes et répondre aux questions bancaires.",
         tasks: [
           { id: 't-301', title: "Parcours UX conversationnel & micro-copies", status: "Terminé", priority: "Haute", deliverable: "User Journey & Dialogue Tree" },
           { id: 't-302', title: "UI Chatbot adaptative (BottomSheet & Streaming text)", status: "Terminé", priority: "Haute", deliverable: "Composant UI interactif" },
           { id: 't-303', title: "Validation des garde-fous conformité & erreurs d'IA", status: "En cours", priority: "Haute", deliverable: "Guide de gestion des erreurs IA" },
-          { id: 't-304', title: "Tests utilisateurs pilote (échantillon 50 sociétaires)", status: "En attente", priority: "Moyenne", deliverable: "Rapport de tests d'adoption" }
+          { id: 't-304', title: "Tests utilisateurs pilote (échantillon 50 sociétaires)", status: "À faire", priority: "Moyenne", deliverable: "Rapport de tests d'adoption" }
+        ]
+      },
+      {
+        id: 'proj-4',
+        missionId: camMissionId,
+        tag: "TRÉSORERIE",
+        title: "Module Gestion de Trésorerie Pro & Virements",
+        category: "Corporate Banking",
+        status: "Stand-by",
+        progress: 30,
+        desc: "Cadrage préliminaire des virements internationaux de gros montants et validation multi-signataires.",
+        tasks: [
+          { id: 't-401', title: "Benchmarking sécurité bancaire SWIFT / ISO 20022", status: "Terminé", priority: "Moyenne", deliverable: "Matrice de comparaison" },
+          { id: 't-402', title: "Wireframes circuit de signature multi-niveaux", status: "En cours", priority: "Haute", deliverable: "Workflow Figma" },
+          { id: 't-403', title: "Atelier de cadrage juridique conformité change", status: "À faire", priority: "Haute", deliverable: "Compte rendu légal" }
+        ]
+      },
+      {
+        id: 'proj-5',
+        missionId: camMissionId,
+        tag: "AUDIT",
+        title: "Audit Ergonomique & Benchmark Concurrentiel",
+        category: "UX Research",
+        status: "Terminé",
+        progress: 100,
+        desc: "Évaluation heuristique Nielsen et benchmark des applications bancaires leaders au Maroc et à l'international.",
+        tasks: [
+          { id: 't-501', title: "Audit heuristique 10 critères Nielsen sur Bank-e v1", status: "Terminé", priority: "Haute", deliverable: "Livre blanc audit UX (40p)" },
+          { id: 't-502', title: "Benchmark concurrentiel Revolut, CIH, Attijari", status: "Terminé", priority: "Moyenne", deliverable: "Figma Benchmark board" }
         ]
       }
     ]

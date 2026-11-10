@@ -42,7 +42,7 @@ test.describe('M84 Ops Client Portal - Bank-e CAM Refinements', () => {
     await expect(page).toHaveURL(/\/portal/, { timeout: 10000 });
   });
 
-  test('Portal Dashboard: Topbar, Sidebar collapse, Hero card with Consultant & Firm info, Table of Weekly Reports', async ({ page }) => {
+  test('Portal Dashboard: Topbar, Sidebar collapse, Hero card with Consultant & Firm info, Table of Weekly Reports with ID', async ({ page }) => {
     await page.goto('/portal', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('text=Ayoub MOSLIH', { timeout: 15000 });
 
@@ -51,7 +51,7 @@ test.describe('M84 Ops Client Portal - Bank-e CAM Refinements', () => {
     await expect(page.locator('header', { hasText: 'collab.cam' })).toBeVisible();
     await expect(page.locator('text=Avatar - Profile')).toHaveCount(0);
 
-    // 2. Sidebar Collapse Toggle (Inside sidebar aside)
+    // 2. Sidebar Collapse Toggle
     const collapseBtn = page.locator('aside button[title*="barre latérale"], aside button[title*="outils"]');
     await expect(collapseBtn).toBeVisible();
     const aside = page.locator('aside');
@@ -65,7 +65,7 @@ test.describe('M84 Ops Client Portal - Bank-e CAM Refinements', () => {
     const sidebarConsultant = aside.locator('text=Consultant Référent');
     await expect(sidebarConsultant).toHaveCount(0);
 
-    // 4. Hero Card: Consultant (Ayoub MOSLIH) & Consulting Firm (Devoteam) & Contact Pills (No old text)
+    // 4. Hero Card: Consultant (Ayoub MOSLIH) & Consulting Firm (Devoteam) & Contact Pills
     await expect(page.locator('text=Espace Collaborateur & Suivi Mission')).toHaveCount(0);
     await expect(page.locator('text=Karim Tazi • CAM (Crédit Agricole du Maroc)')).toHaveCount(0);
     await expect(page.locator('text=Ayoub MOSLIH').first()).toBeVisible();
@@ -73,18 +73,19 @@ test.describe('M84 Ops Client Portal - Bank-e CAM Refinements', () => {
     await expect(page.locator('a:has-text("WhatsApp")').first()).toBeVisible();
     await expect(page.locator('a:has-text("Email")').first()).toBeVisible();
 
-    // 5. Dashboard KPIs: Jours Imputés (Mois) & Chantiers Actifs
+    // 5. Dashboard KPIs: Jours Imputés (Mois) with progress bar & Projets de Mission
     await expect(page.locator('text=Jours Imputés (Mois)')).toBeVisible();
-    await expect(page.locator('text=Chantiers Actifs')).toBeVisible();
+    await expect(page.locator('text=Projets de Mission').first()).toBeVisible();
+    await expect(page.locator('text=Statut Visa CRA (Mois Précédents)')).toBeVisible();
 
-    // 6. Weekly Reports Table (4 par mois)
-    await expect(page.locator('text=Comptes Rendus Hebdomadaires de Mission')).toBeVisible();
+    // 6. Weekly Reports Table (Comptes Rendus Hebdo with ID)
+    await expect(page.locator('text=Comptes Rendus Hebdo')).toBeVisible();
     await expect(page.locator('table')).toBeVisible();
-    await expect(page.locator('text=Semaine 1')).toBeVisible();
-    await expect(page.locator('text=Semaine 4')).toBeVisible();
+    await expect(page.locator('text=CR-04').first()).toBeVisible();
+    await expect(page.locator('text=Semaine 4').first()).toBeVisible();
   });
 
-  test('Portal Reports: 250px compact shortcuts, hidden participants, Partager & Exporter dropdowns', async ({ page }) => {
+  test('Portal Reports: compact shortcuts, hidden participants, Partager & Exporter dropdowns, isolated Observations section', async ({ page }) => {
     await page.goto('/portal/reports', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('h1:has-text("Comptes Rendus")', { timeout: 15000 });
 
@@ -108,22 +109,31 @@ test.describe('M84 Ops Client Portal - Bank-e CAM Refinements', () => {
     await expect(page.locator('text=Télécharger en PDF Officiel')).toBeVisible();
     await expect(page.locator('text=Télécharger en Word (.doc)')).toBeVisible();
     await expect(page.locator('text=Ouvrir dans Google Docs')).toBeVisible();
+
+    // 3. Observations section isolated at the bottom
+    await expect(page.locator('text=Observations & Retours Métier sur la Séance')).toBeVisible();
+    await expect(page.locator('button[title*="Rehausser avec l\'IA"]')).toBeVisible();
   });
 
-  test('Portal Projects: 4 KPIs and Rich Projects & Tasks Table', async ({ page }) => {
+  test('Portal Projects: Dual View (Table & Kanban), 1-word tags [OCTROI], [DESIGN], [IA]', async ({ page }) => {
     await page.goto('/portal/projects', { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('h1:has-text("Chantiers & Projets")', { timeout: 15000 });
+    await page.waitForSelector('h1:has-text("Projets")', { timeout: 15000 });
 
-    // 1. 4 KPIs
-    await expect(page.locator('text=Chantiers Actifs')).toBeVisible();
-    await expect(page.locator('text=Avancement Global')).toBeVisible();
-    await expect(page.locator('text=Tâches Clôturées')).toBeVisible();
-    await expect(page.locator('text=Livrables Design & IA')).toBeVisible();
+    // 1. View Switcher
+    const tableViewBtn = page.locator('button:has-text("Vue Tableau")');
+    const kanbanViewBtn = page.locator('button:has-text("Vue Kanban (Jira)")');
+    await expect(tableViewBtn).toBeVisible();
+    await expect(kanbanViewBtn).toBeVisible();
 
-    // 2. Tasks table
-    await expect(page.locator('text=Détail des Chantiers & Matrice des Tâches')).toBeVisible();
-    await expect(page.locator('text=Refonte Expérience Octroi de Crédit').first()).toBeVisible();
-    await expect(page.locator('text=Design System Global Bank-e v2.0').first()).toBeVisible();
+    // 2. 1-word tags in table view
+    await expect(page.locator('text=[OCTROI]').first()).toBeVisible();
+    await expect(page.locator('text=[DESIGN]').first()).toBeVisible();
+
+    // 3. Switch to Kanban View
+    await kanbanViewBtn.click();
+    await expect(page.locator('text=À faire').first()).toBeVisible();
+    await expect(page.locator('text=En cours').first()).toBeVisible();
+    await expect(page.locator('text=Terminé / Livré').first()).toBeVisible();
   });
 
   test('Portal Timesheet: Unified page with Absences, daily units, Attachment upload gate', async ({ page }) => {

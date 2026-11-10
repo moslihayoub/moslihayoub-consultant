@@ -77,7 +77,7 @@ export default function PortalLayout() {
   const navItems = [
     { path: '/portal', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { path: '/portal/reports', label: 'Comptes Rendus', icon: <FileText size={20} /> },
-    { path: '/portal/projects', label: 'Projets & Chantiers', icon: <FolderKanban size={20} /> },
+    { path: '/portal/projects', label: 'Projets', icon: <FolderKanban size={20} /> },
     { path: '/portal/timesheet', label: 'Timesheet & Activité', icon: <Clock size={20} /> },
   ];
 

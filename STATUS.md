@@ -2,7 +2,7 @@
 
 ## 🚀 Présentation & Stack Technique
 - **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI / M84 Ops Client Portal
-- **Dernière mise à jour** : 09 Novembre 2026 (Refonte Portail B2B Bank-e CAM)
+- **Dernière mise à jour** : 10 Novembre 2026 (Refonte KPIs, Analytics & Vue Kanban Jira Portail B2B)
 - **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS, Recharts, jsPDF.
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/` & `https://m84ops.vercel.app`).
 - **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
@@ -12,7 +12,40 @@
 
 ## 🛠️ Dernières Fonctionnalités & Optimisations Réalisées
 
-### 1. 🏦 Refonte UX & Co-Branding Portail Client Bank-e (Crédit Agricole du Maroc)
+### 1. 📊 Refonte Analytics, KPIs, Comptes Rendus & Vue Kanban Jira (`src/pages/Portal/`)
+- **Dashboard Collaborateur (`PortalDashboard.jsx`)** :
+  - **KPI 1 (Jours Imputés Mois)** : Suppression du texte « Week-ends & jours fériés non facturés », ajout d'une **barre de progression** dynamique du mois en cours avec calcul automatique des jours restants avant écoulement du mois.
+  - **KPI 2 (Quota Consommé)** : Retiré définitivement selon la demande.
+  - **KPI 2 (Statut Visa CRA Mois Précédents)** : Restreint exclusivement aux mois antérieurs (hors mois courant), affichant le total des CRA validés et en attente (`2 Validés`) avec badges par mois (Août 2026, Septembre 2026).
+  - **KPI 3 (Projets de Mission)** : Intitulé passé de « Chantiers » à **« Projets de Mission »**, avec ventilation exhaustive des statuts via des pastilles concises : `Terminé`, `Livré`, `En cours`, `Stand-by`.
+  - **Multi-Graphiques Analytiques (Recharts)** :
+    1. *Bar Chart* : Rythme d'imputation mensuel (jours facturés TJM).
+    2. *Multi-Bar Chart* : Jours travaillés vs jours ouvrés du mois.
+    3. *Line Chart* : Vélocité hebdomadaire et jalons de livraison.
+    4. *Donut / Pie Chart* : Ventilation de la charge par projet (%).
+  - **Tableau des Comptes Rendus Hebdo** :
+    - Titre raccourci à « Comptes Rendus Hebdo ».
+    - Première colonne `ID` (`CR-04`, `CR-03`, `CR-02`, `CR-01`).
+    - Colonne `Sujet` élargie avec troncature élégante à 2 lignes maximum avec `...`.
+    - Wording court des statuts (`Livré`, `Validé`, `En cours`, `Terminé`, `Stand-by`).
+- **Détail du Compte Rendu (`PortalReports.jsx`)** :
+  - **Cartes listing gauche compactes** : Format 240px avec tags d'ID, date et titre court (pas de cartes larges).
+  - **Suppression du Livrable joint** : Carte de téléchargement retirée du corps principal.
+  - **Isolation des Observations Métier** : Section « Observations & Retours Métier » déportée en bas de page dans un bloc dédié, toujours incluse dans l'export PDF officiel.
+  - **Suppression de la mention AI** : Retrait du badge « Formulation enrichie par l'IA ».
+  - **Bouton Baguette Magique Rehausseur IA** : Intégration d'un bouton icône seule (`Wand2`) directement à l'intérieur du champ textarea (zéro texte superflu).
+- **Projets & Vue Kanban Jira (`PortalProjects.jsx` & `PortalLayout.jsx`)** :
+  - Intitulé du menu et titre de page unifiés sur **« Projets »**.
+  - **Double vue au choix** : Bascule fluide entre **« Vue Tableau »** et **« Vue Kanban (Jira) »**.
+  - **Tags projets 1 mot** : Préfixe court `[OCTROI]`, `[DESIGN]`, `[IA]`, `[TRÉSORERIE]`, `[AUDIT]`.
+  - **Alignement UI strict** : En-têtes de blocs parfaitement alignés (Tag, Titre, Barre de progression, Statut), détails des tâches masqués par défaut et visibles uniquement à l'ouverture.
+  - Colonnes Kanban Jira : `À faire`, `En cours`, `En revue / QA`, `Terminé / Livré`.
+
+### 2. 🏦 Refonte UX & Co-Branding Portail Client Bank-e (Crédit Agricole du Maroc)
+- **Résolution du Blocage Skeleton Localhost (`src/App.jsx`)** :
+  - Passage en **chargement synchrone/eager** des composants du portail pour éliminer définitivement l'attente asynchrone `<Suspense fallback={<PageSkeleton />}>`.
+  - Initialisation synchrone de la session et de la mission dès la déclaration du state dans `PortalLayout.jsx` (zéro délai de rendu).
+  - Nettoyage automatique des anciens Service Workers PWA résiduels sur `localhost` dans `index.html`.
 - **Isolation Stricte Multi-Domaines** :
   - Sur le domaine public de production (`moslih84.vercel.app`), l'accès aux routes `/portal` est verrouillé (mode portfolio pur).
   - L'Espace Client B2B est réservé exclusivement au domaine dédié Vercel (`m84ops.vercel.app` / variable `VITE_APP_MODE=portal`) et au mode test local (`localhost:5173/?mode=portal`).
