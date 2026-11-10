@@ -7,6 +7,7 @@
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/` & `https://m84ops.vercel.app`).
 - **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
 - **Tests** : Playwright E2E (16/16 tests validés à 100%), Oxlint, Vite Build.
+- **Branche active & Git** : `feat/supabase-ds-sync` poussée sur origin (Commit `6adb324`). Production `main` préservée à 100%.
 
 ---
 
