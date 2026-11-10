@@ -16,11 +16,11 @@ export default function PortalDashboard() {
   const navigate = useNavigate();
 
   const missionId = mission?.id || 'mission-cam-2026';
-  const timesheets = getTimesheetsByMission(missionId);
-  const reports = getReportsByMission(missionId);
-  const projects = getProjectsByMission(missionId);
+  const timesheets = getTimesheetsByMission(missionId) || [];
+  const reports = getReportsByMission(missionId) || [];
+  const projects = getProjectsByMission(missionId) || [];
 
-  const pendingTimesheet = timesheets.find(t => t.status === 'submitted') || timesheets[0];
+  const pendingTimesheet = timesheets.find(t => t.status === 'submitted') || timesheets[0] || {};
   const activeProjectsCount = projects.length || 3;
 
   // Freelance TJM working days for the latest month (weekends & holidays excluded)
@@ -34,7 +34,10 @@ export default function PortalDashboard() {
   const consumptionPercentage = Math.round((daysConsumed / totalDaysQuota) * 100);
 
   // Chart data (Full width row)
-  const chartData = timesheets.map(t => ({
+  const chartData = (timesheets.length > 0 ? timesheets : [
+    { month: 'Octobre 2026', daysImputed: 21.5, totalWorkingDays: 22 },
+    { month: 'Septembre 2026', daysImputed: 20, totalWorkingDays: 22 }
+  ]).map(t => ({
     month: t.monthLabel || t.month,
     imputed: t.daysImputed,
     working: t.totalWorkingDays

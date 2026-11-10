@@ -12,8 +12,13 @@ import {
 export default function PortalLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [session, setSession] = useState(null);
-  const [mission, setMission] = useState(null);
+  const [session, setSession] = useState(() => {
+    return getPortalSession() || devLoginAsCollaborator();
+  });
+  const [mission, setMission] = useState(() => {
+    const s = getPortalSession() || devLoginAsCollaborator();
+    return s?.missionId ? getMissionById(s.missionId) : getMissionById('mission-cam-2026');
+  });
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -33,10 +38,9 @@ export default function PortalLayout() {
   useEffect(() => {
     let currentSession = getPortalSession();
     if (!currentSession) {
-      // Auto-login default demo in dev/localhost if none
       currentSession = devLoginAsCollaborator();
+      setSession(currentSession);
     }
-    setSession(currentSession);
     if (currentSession?.missionId) {
       const m = getMissionById(currentSession.missionId);
       setMission(m);

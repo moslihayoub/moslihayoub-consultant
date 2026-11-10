@@ -31,13 +31,13 @@ const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
-// Portal Routes (Espace Client / Missions B2B)
-const PortalLogin = lazy(() => import('./pages/Portal/PortalLogin'));
-const PortalLayout = lazy(() => import('./pages/Portal/PortalLayout'));
-const PortalDashboard = lazy(() => import('./pages/Portal/PortalDashboard'));
-const PortalReports = lazy(() => import('./pages/Portal/PortalReports'));
-const PortalProjects = lazy(() => import('./pages/Portal/PortalProjects'));
-const PortalTimesheet = lazy(() => import('./pages/Portal/PortalTimesheet'));
+// Portal Routes (Espace Client / Missions B2B - Import direct pour zéro blocage Suspense)
+import PortalLogin from './pages/Portal/PortalLogin';
+import PortalLayout from './pages/Portal/PortalLayout';
+import PortalDashboard from './pages/Portal/PortalDashboard';
+import PortalReports from './pages/Portal/PortalReports';
+import PortalProjects from './pages/Portal/PortalProjects';
+import PortalTimesheet from './pages/Portal/PortalTimesheet';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -89,19 +89,17 @@ const AnimatedRoutes = ({ isPortalDomain }) => {
           </Routes>
         </Suspense>
       ) : (isPortalRoute && (isPortalDomain || import.meta.env.DEV)) ? (
-        <Suspense fallback={<PageSkeleton />}>
-          <Routes location={location} key="portal">
-            <Route path="/portal/login" element={<PortalLogin />} />
-            <Route path="/portal" element={<PortalLayout />}>
-              <Route index element={<PortalDashboard />} />
-              <Route path="reports" element={<PortalReports />} />
-              <Route path="projects" element={<PortalProjects />} />
-              <Route path="timesheet" element={<PortalTimesheet />} />
-              <Route path="absences" element={<Navigate to="/portal/timesheet#absences" replace />} />
-            </Route>
-            <Route path="/portal/*" element={<Error404 />} />
-          </Routes>
-        </Suspense>
+        <Routes location={location} key="portal">
+          <Route path="/portal/login" element={<PortalLogin />} />
+          <Route path="/portal" element={<PortalLayout />}>
+            <Route index element={<PortalDashboard />} />
+            <Route path="reports" element={<PortalReports />} />
+            <Route path="projects" element={<PortalProjects />} />
+            <Route path="timesheet" element={<PortalTimesheet />} />
+            <Route path="absences" element={<Navigate to="/portal/timesheet#absences" replace />} />
+          </Route>
+          <Route path="/portal/*" element={<Error404 />} />
+        </Routes>
       ) : (
         <AnimatePresence mode="wait">
           <Suspense fallback={<PageSkeleton />}>
