@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, LayoutDashboard, Database, Users, Settings, X, ChevronLeft, ChevronRight, Briefcase, Eye, Menu } from 'lucide-react';
+import { LogOut, LayoutDashboard, Database, Users, Settings, X, ChevronLeft, ChevronRight, Briefcase, Eye, Menu, Palette } from 'lucide-react';
 import ProjectsManager from './ProjectsManager';
 import CrmLeadsManager from './CrmLeadsManager';
 import AiConfigManager from './AiConfigManager';
 import ClientMissionsManager from './ClientMissionsManager';
+import DesignSystemM84 from './DesignSystemM84';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
@@ -317,6 +318,7 @@ const AdminDashboard = () => {
         </div>
         <nav style={{ flex: 1, padding: '20px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {navButton('overview', <LayoutDashboard size={20} />, "Vue d'ensemble")}
+          {navButton('design-system', <Palette size={20} />, "Design System M84")}
           {navButton('missions', <Briefcase size={20} />, "Missions Clients (CRA)")}
           {navButton('projects', <Database size={20} />, "Projets (CRUD)")}
           {navButton('leads', <Users size={20} />, "CRM Leads")}
@@ -471,6 +473,7 @@ const AdminDashboard = () => {
             </>
           )}
 
+          {activeTab === 'design-system' && <DesignSystemM84 />}
           {activeTab === 'missions' && <ClientMissionsManager />}
           {activeTab === 'projects' && <ProjectsManager />}
           {activeTab === 'leads' && <CrmLeadsManager />}

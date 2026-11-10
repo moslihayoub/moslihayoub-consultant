@@ -7,6 +7,7 @@ export const Button = forwardRef(({
   variant = 'primary', // primary | secondary | outline | ghost | danger | ai
   size = 'md',         // sm | md | lg | icon
   isLoading = false,
+  loading = false,
   disabled = false,
   icon = null,
   iconPosition = 'left',
@@ -16,7 +17,8 @@ export const Button = forwardRef(({
   type = 'button',
   ...props
 }, ref) => {
-  const isActionDisabled = disabled || isLoading;
+  const isActionDisabled = disabled || isLoading || loading;
+  const isSpinnerActive = isLoading || loading;
 
   // Base styling
   const baseStyle = {
@@ -100,7 +102,7 @@ export const Button = forwardRef(({
       className={`m84-btn m84-btn-${variant} ${className}`}
       {...props}
     >
-      {isLoading ? (
+      {isSpinnerActive ? (
         <>
           <Loader2 size={16} className="m84-spin" style={{ animation: 'spin 1s linear infinite' }} />
           <span>Chargement...</span>

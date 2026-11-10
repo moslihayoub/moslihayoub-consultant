@@ -6,8 +6,8 @@
 - **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS, Recharts, jsPDF, Supabase JS, Firebase.
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/` & `https://m84ops.vercel.app`).
 - **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
-- **Tests** : Playwright E2E (16/16 tests validés à 100%), Oxlint, Vite Build.
-- **Branche active & Git** : `feat/supabase-ds-sync` poussée sur origin (Commit `6adb324`). Production `main` préservée à 100%.
+- **Tests** : Playwright E2E (17/17 tests validés à 100%), Oxlint, Vite Build.
+- **Branche active & Git** : `feat/supabase-ds-sync` poussée sur origin. Production `main` préservée à 100%.
 
 ---
 
@@ -25,8 +25,12 @@
   - `Table.jsx` : Tableaux modernes de données avec en-têtes stylisés, états vides et survol réactif.
   - `Tabs.jsx` : Onglets animés avec layoutId Framer Motion pour un slide fluide.
   - `Toast.jsx` : Toaster de notification statutaire auto-dismissible.
-  - `Animations.js` : Presets d'animation Framer Motion réutilisables (`fadeIn`, `slideUp`, `scaleIn`, `drawerSlideUp`, `buttonTapMotion`, `cardHoverMotion`).
+  - `Animations.js` : Presets d'animation Framer Motion réutilisables (`fadeIn`, `slideUp`, `scaleIn`, `drawerSlideUp`, `buttonTapMotion`, `cardHoverMotion`, `pulseGlowMotion`).
   - `index.js` : Export centralisé baril permettant les imports simples `import { Button, StatCard, Badge } from '../../design-system'`.
+- **Showroom Interactif Backoffice ([`src/pages/Admin/DesignSystemM84.jsx`](file:///C:/Users/mosli/ant-projects/ANT2.0/1_engineering_apps/Ayoub%20MOSLIH%20-%20Portfolio/src/pages/Admin/DesignSystemM84.jsx))** :
+  - Documentation vivante intégrée au Backoffice (`/admin/dashboard` onglet *Design System M84*).
+  - 4 sous-onglets : Composants UI, Tokens & Couleurs, Animations & Effets (rejeu en direct), Gouvernance & Specs.
+  - Couverture E2E dédiée dans [`tests/design-system.spec.js`](file:///C:/Users/mosli/ant-projects/ANT2.0/1_engineering_apps/Ayoub%20MOSLIH%20-%20Portfolio/tests/design-system.spec.js) validée.
 
 ### 2. 🗄️ Migration Supabase Réelle & Schéma SQL Relationnel (`scripts/setup_supabase.sql`)
 - **Création et exécution effective des 8 tables M84 sur le projet Supabase Cloud (`ehevcsqgkrbeokprzzcp`)** :
