@@ -20,16 +20,14 @@ export function isPortalMode() {
   const urlParams = new URLSearchParams(window.location.search);
   const param = urlParams.get('mode') || urlParams.get('app');
   if (param === 'portal' || param === 'ops' || param === 'm84ops') {
-    localStorage.setItem('m84_app_mode', 'portal');
     return true;
   }
   if (param === 'portfolio') {
-    localStorage.removeItem('m84_app_mode');
     return false;
   }
 
-  // 4. Persistence locale (sur localhost)
-  return localStorage.getItem('m84_app_mode') === 'portal';
+  // Sur localhost / 127.0.0.1, le mode par défaut est le portfolio public vitrine
+  return false;
 }
 
 export function setAppMode(mode) {

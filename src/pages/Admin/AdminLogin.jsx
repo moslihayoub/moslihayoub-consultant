@@ -150,20 +150,20 @@ const AdminLogin = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a', padding: '24px' }}>
-      <div style={{ background: '#1e293b', padding: '40px', borderRadius: '16px', width: '100%', maxWidth: '420px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--m84-bg)', padding: '24px', fontFamily: 'var(--m84-font-family)' }}>
+      <div style={{ background: '#ffffff', padding: '40px', borderRadius: 'var(--m84-radius-xl)', width: '100%', maxWidth: '420px', border: '1.5px solid var(--m84-border-subtle)', boxShadow: 'var(--m84-shadow-lg)' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', marginBottom: '16px' }}>
-            <Lock size={32} />
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '60px', height: '60px', borderRadius: 'var(--m84-radius-lg)', background: 'var(--m84-primary-light)', color: 'var(--m84-primary)', marginBottom: '16px' }}>
+            <Lock size={28} />
           </div>
-          <h1 style={{ color: '#f8fafc', fontSize: '24px', margin: 0, fontWeight: '600' }}>Accès Sécurisé</h1>
-          <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '8px' }}>Espace d'administration M84</p>
+          <h1 style={{ color: 'var(--m84-text-primary)', fontSize: '24px', margin: 0, fontWeight: '700' }}>Accès Sécurisé</h1>
+          <p style={{ color: 'var(--m84-text-secondary)', fontSize: '14px', marginTop: '6px' }}>Espace d'administration M84</p>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', padding: '12px 16px', marginBottom: '24px', borderRadius: '4px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
-            <span style={{ color: '#ef4444', fontSize: '14px' }}>{error}</span>
+          <div style={{ background: 'var(--m84-danger-bg)', borderLeft: '4px solid var(--m84-danger)', padding: '12px 16px', marginBottom: '24px', borderRadius: 'var(--m84-radius-sm)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            <AlertCircle size={20} color="var(--m84-danger)" style={{ flexShrink: 0 }} />
+            <span style={{ color: 'var(--m84-danger)', fontSize: '13px', fontWeight: '500' }}>{error}</span>
           </div>
         )}
 
@@ -176,22 +176,23 @@ const AdminLogin = () => {
             width: '100%',
             padding: '12px 16px',
             background: '#ffffff',
-            color: '#1e293b',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '15px',
+            color: 'var(--m84-text-primary)',
+            border: '1.5px solid var(--m84-border-subtle)',
+            borderRadius: 'var(--m84-radius-md)',
+            fontSize: '14px',
             fontWeight: '600',
             cursor: loading ? 'not-allowed' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '12px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            boxShadow: 'var(--m84-shadow-sm)',
             marginBottom: '20px',
             transition: 'all 0.2s ease',
-            opacity: loading ? 0.7 : 1
+            opacity: loading ? 0.7 : 1,
+            fontFamily: 'var(--m84-font-family)'
           }}
-          onMouseOver={(e) => e.currentTarget.style.background = '#f8fafc'}
+          onMouseOver={(e) => e.currentTarget.style.background = 'var(--m84-surface-subtle)'}
           onMouseOut={(e) => e.currentTarget.style.background = '#ffffff'}
         >
           <svg width="20" height="20" viewBox="0 0 24 24">
@@ -204,37 +205,37 @@ const AdminLogin = () => {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', gap: '12px' }}>
-          <div style={{ flex: 1, height: '1px', background: '#334155' }}></div>
-          <span style={{ color: '#64748b', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ou mot de passe</span>
-          <div style={{ flex: 1, height: '1px', background: '#334155' }}></div>
+          <div style={{ flex: 1, height: '1px', background: 'var(--m84-border-subtle)' }}></div>
+          <span style={{ color: 'var(--m84-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>ou mot de passe</span>
+          <div style={{ flex: 1, height: '1px', background: 'var(--m84-border-subtle)' }}></div>
         </div>
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Email ou Identifiant</label>
+            <label style={{ display: 'block', color: 'var(--m84-text-primary)', fontSize: '13px', marginBottom: '6px', fontWeight: '600' }}>Email ou Identifiant</label>
             <input 
               type="text" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="moslihayoub@gmail.com"
               required
-              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }}
-              onFocus={(e) => e.target.style.borderColor = '#38bdf8'}
-              onBlur={(e) => e.target.style.borderColor = '#334155'}
+              style={{ width: '100%', padding: '11px 14px', background: 'var(--m84-surface)', border: '1.5px solid var(--m84-border-subtle)', borderRadius: 'var(--m84-radius-md)', color: 'var(--m84-text-primary)', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box', fontFamily: 'var(--m84-font-family)', fontSize: '14px' }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--m84-primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(0, 98, 83, 0.1)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--m84-border-subtle)'; e.target.style.boxShadow = 'none'; }}
             />
           </div>
           
           <div>
-            <label style={{ display: 'block', color: '#cbd5e1', fontSize: '14px', marginBottom: '8px', fontWeight: '500' }}>Mot de passe</label>
+            <label style={{ display: 'block', color: 'var(--m84-text-primary)', fontSize: '13px', marginBottom: '6px', fontWeight: '600' }}>Mot de passe</label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              style={{ width: '100%', padding: '12px 16px', background: '#0f172a', border: '1px solid #334155', borderRadius: '8px', color: '#f8fafc', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }}
-              onFocus={(e) => e.target.style.borderColor = '#38bdf8'}
-              onBlur={(e) => e.target.style.borderColor = '#334155'}
+              style={{ width: '100%', padding: '11px 14px', background: 'var(--m84-surface)', border: '1.5px solid var(--m84-border-subtle)', borderRadius: 'var(--m84-radius-md)', color: 'var(--m84-text-primary)', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box', fontFamily: 'var(--m84-font-family)', fontSize: '14px' }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--m84-primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(0, 98, 83, 0.1)'; }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--m84-border-subtle)'; e.target.style.boxShadow = 'none'; }}
             />
           </div>
 
@@ -242,11 +243,14 @@ const AdminLogin = () => {
             type="submit" 
             disabled={loading}
             style={{ 
-              marginTop: '8px', width: '100%', padding: '14px', background: '#38bdf8', color: '#0f172a', 
-              border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', 
+              marginTop: '8px', width: '100%', padding: '12px', background: 'var(--m84-primary)', color: '#ffffff', 
+              border: 'none', borderRadius: 'var(--m84-radius-md)', fontSize: '15px', fontWeight: '600', 
               cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
-              opacity: loading ? 0.7 : 1, transition: 'background 0.2s' 
+              opacity: loading ? 0.7 : 1, transition: 'background 0.2s', fontFamily: 'var(--m84-font-family)',
+              boxShadow: 'var(--m84-shadow-sm)'
             }}
+            onMouseOver={(e) => e.currentTarget.style.background = 'var(--m84-primary-hover)'}
+            onMouseOut={(e) => e.currentTarget.style.background = 'var(--m84-primary)'}
           >
             {loading ? 'Vérification...' : <><LogIn size={20} /> Se connecter</>}
           </button>

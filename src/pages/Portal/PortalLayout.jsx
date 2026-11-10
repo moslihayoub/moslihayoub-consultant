@@ -84,7 +84,7 @@ export default function PortalLayout() {
   const currentPath = location.pathname;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#f8fafc', color: '#0f172a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--m84-bg)', color: 'var(--m84-text-primary)', fontFamily: 'var(--m84-font-family)' }}>
       
       {/* 1. TOP HEADER (Logo Bank-e autonome sans carte ni fond) */}
       <header style={{

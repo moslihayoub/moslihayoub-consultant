@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebaseConfig';
 import { invalidateAgentPromptCache } from '../../utils/firebaseAi';
-import { Save, RefreshCcw } from 'lucide-react';
+import { Save, RefreshCcw, Sparkles } from 'lucide-react';
+import { Button, Badge } from '../../design-system';
 
 const AiConfigManager = () => {
   const [prompt, setPrompt] = useState('');
@@ -103,23 +104,27 @@ const AiConfigManager = () => {
       <div className="ai-header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div className="ai-title-group" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', color: '#006253' }}>Configuration Agent IA</h2>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Ces instructions seront injectées dans le contexte du Chatbot à chaque interaction. Décrivez précisément le ton, le rôle et les connaissances de l'assistant.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <h2 style={{ margin: 0, fontSize: '20px', color: 'var(--m84-primary)', fontWeight: 700 }}>Configuration Agent IA</h2>
+              <Badge variant="ai" icon={<Sparkles size={12} />}>Supabase Sync</Badge>
+            </div>
+            <p style={{ margin: 0, color: 'var(--m84-text-secondary)', fontSize: '14px' }}>Ces instructions sont injectées dans le contexte du Chatbot M84 (Supabase `config`). Décrivez le rôle, le ton et les priorités de conversion.</p>
           </div>
         </div>
-        <button 
-          className="ai-reload-btn"
+        <Button 
+          variant="outline"
+          size="sm"
           onClick={fetchPrompt}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'transparent', color: '#64748b', border: '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', fontWeight: '500', flexShrink: 0 }}
+          icon={<RefreshCcw size={15} />}
         >
-          <RefreshCcw size={16} /> <span>Recharger</span>
-        </button>
+          Recharger
+        </Button>
       </div>
 
       <div style={{ marginBottom: '24px' }}>
         {loading ? (
-          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-            <span style={{ color: '#94a3b8' }}>Chargement du prompt...</span>
+          <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--m84-surface-subtle)', border: '1px solid var(--m84-border-subtle)', borderRadius: 'var(--m84-radius-md)' }}>
+            <span style={{ color: 'var(--m84-text-muted)' }}>Chargement du prompt depuis Supabase...</span>
           </div>
         ) : (
           <textarea 
@@ -130,46 +135,39 @@ const AiConfigManager = () => {
               width: '100%', 
               height: '300px', 
               padding: '16px', 
-              border: '1px solid #cbd5e1', 
-              borderRadius: '12px', 
+              border: '1.5px solid var(--m84-border-subtle)', 
+              borderRadius: 'var(--m84-radius-md)', 
               fontSize: '14px', 
               lineHeight: '1.6',
-              fontFamily: 'monospace',
-              background: '#f8fafc',
-              color: '#334155',
+              fontFamily: 'var(--m84-font-mono, monospace)',
+              background: 'var(--m84-surface)',
+              color: 'var(--m84-text-primary)',
               boxSizing: 'border-box',
               resize: 'vertical',
               outline: 'none',
               transition: 'border-color 0.2s'
             }}
-            onFocus={(e) => e.target.style.borderColor = '#8b5cf6'}
-            onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+            onFocus={(e) => { e.target.style.borderColor = 'var(--m84-primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(0, 98, 83, 0.1)'; }}
+            onBlur={(e) => { e.target.style.borderColor = 'var(--m84-border-subtle)'; e.target.style.boxShadow = 'none'; }}
           />
         )}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px' }}>
         {lastSaved && (
-          <span style={{ color: '#10b981', fontSize: '14px', fontWeight: '500', animation: 'fadeIn 0.3s' }}>
-            ✓ Configuration sauvegardée avec succès !
-          </span>
+          <Badge variant="success">
+            ✓ Sauvegardé dans Supabase & Firestore
+          </Badge>
         )}
-        <button 
+        <Button 
+          variant="primary"
           onClick={handleSave}
           disabled={loading || saving}
-          style={{ 
-            display: 'flex', alignItems: 'center', gap: '8px', 
-            padding: '12px 24px', 
-            background: '#10b981', color: 'white', 
-            border: 'none', borderRadius: '8px', 
-            cursor: (loading || saving) ? 'not-allowed' : 'pointer', 
-            fontWeight: '600',
-            opacity: (loading || saving) ? 0.7 : 1,
-            transition: 'opacity 0.2s'
-          }}
+          isLoading={saving}
+          icon={<Save size={18} />}
         >
-          <Save size={18} /> {saving ? 'Enregistrement...' : 'Enregistrer la configuration'}
-        </button>
+          Enregistrer la configuration
+        </Button>
       </div>
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     </div>

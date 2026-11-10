@@ -17,7 +17,14 @@ const OfflineDetector = ({ children }) => {
     };
   }, []);
 
-  if (isOffline) {
+  // Ne pas bloquer l'environnement local de développement ou de test
+  const isLocalEnv = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' ||
+    import.meta.env.DEV
+  );
+
+  if (isOffline && !isLocalEnv) {
     return (
       <ErrorPage 
         code="OFFLINE"

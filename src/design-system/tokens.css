@@ -1,0 +1,112 @@
+/* ============================================================
+   M84 DESIGN SYSTEM - CORE DESIGN TOKENS
+   Ayoub MOSLIH - Portfolio, M84 Ops Portal & Admin Backoffice
+   ============================================================ */
+
+:root {
+  /* Typography */
+  --m84-font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --m84-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Brand Palette */
+  --m84-primary: #006253;             /* Signature M84 Deep Teal */
+  --m84-primary-hover: #004d41;
+  --m84-primary-light: #e6efee;
+  --m84-primary-alpha10: rgba(0, 98, 83, 0.10);
+  --m84-primary-alpha20: rgba(0, 98, 83, 0.20);
+  
+  --m84-accent: #10b981;              /* Bright Emerald Highlight */
+  --m84-accent-hover: #059669;
+  --m84-accent-light: #ecfdf5;
+
+  /* Neutral & Surfaces */
+  --m84-bg: #FAFAFA;
+  --m84-bg-alt: #f1f5f9;
+  --m84-surface: #FFFFFF;
+  --m84-surface-subtle: #f8fafc;
+  --m84-surface-hover: #f1f5f9;
+
+  /* Text Colors */
+  --m84-text-primary: #0f172a;        /* Deep slate for crisp readability */
+  --m84-text-secondary: #475569;
+  --m84-text-muted: #94a3b8;
+  --m84-text-inverted: #FFFFFF;
+
+  /* Borders & Dividers */
+  --m84-border: #EAEAEA;
+  --m84-border-subtle: #e2e8f0;
+  --m84-border-focus: #006253;
+
+  /* Functional Status Colors */
+  --m84-success: #059669;
+  --m84-success-bg: #ecfdf5;
+  --m84-success-border: #a7f3d0;
+  
+  --m84-warning: #d97706;
+  --m84-warning-bg: #fffbeb;
+  --m84-warning-border: #fde68a;
+
+  --m84-danger: #dc2626;
+  --m84-danger-bg: #fef2f2;
+  --m84-danger-border: #fecaca;
+
+  --m84-info: #0284c7;
+  --m84-info-bg: #f0f9ff;
+  --m84-info-border: #bae6fd;
+
+  --m84-ai-gradient: linear-gradient(135deg, #006253 0%, #10b981 50%, #06b6d4 100%);
+
+  /* Border Radii */
+  --m84-radius-xs: 4px;
+  --m84-radius-sm: 8px;
+  --m84-radius-md: 12px;
+  --m84-radius-lg: 16px;
+  --m84-radius-xl: 24px;
+  --m84-radius-full: 9999px;
+
+  /* Elevation & Shadows */
+  --m84-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --m84-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --m84-shadow-lg: 0 10px 25px -5px rgba(0, 98, 83, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  --m84-shadow-xl: 0 20px 35px -10px rgba(0, 98, 83, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+  --m84-shadow-glow: 0 0 24px rgba(0, 98, 83, 0.25);
+
+  /* Glassmorphism */
+  --m84-glass-bg: rgba(255, 255, 255, 0.88);
+  --m84-glass-border: rgba(255, 255, 255, 0.65);
+  --m84-glass-blur: blur(12px);
+
+  /* Transitions */
+  --m84-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --m84-transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  --m84-transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base resets & typography enforcement for M84 surfaces */
+.m84-scope {
+  font-family: var(--m84-font-family);
+  color: var(--m84-text-primary);
+  background: var(--m84-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.m84-scope * {
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar */
+.m84-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.m84-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.m84-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: var(--m84-radius-full);
+}
+.m84-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

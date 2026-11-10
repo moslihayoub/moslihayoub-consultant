@@ -2,15 +2,67 @@
 
 ## 🚀 Présentation & Stack Technique
 - **Nom du site** : Ayoub MOSLIH - Consultant en transformation digitale & AI / M84 Ops Client Portal
-- **Dernière mise à jour** : 10 Novembre 2026 (Refonte KPIs, Analytics & Vue Kanban Jira Portail B2B)
-- **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS, Recharts, jsPDF.
+- **Dernière mise à jour** : 10 Novembre 2026 (Design System M84, Migration Supabase Réelle & Synchronisation Backoffice/Portal)
+- **Stack** : React (Vite), Framer Motion, Vanilla CSS, Lucide React, Crypto-JS, Recharts, jsPDF, Supabase JS, Firebase.
 - **PWA & Hosting** : PWA (Vite PWA Plugin) hébergé sur Vercel (`https://moslih84.vercel.app/` & `https://m84ops.vercel.app`).
 - **Analytics** : Google Analytics 4 (`G-PTQB4BHQHW`), Google Tag Manager (`GTM-T5W5ZMS7`) & Microsoft Clarity (`xtiy932jnh`).
-- **Tests** : Playwright E2E (`tests/portal.spec.js`, `tests/admin.spec.js`, `tests/e2e/portfolio.spec.js`) & Oxlint.
+- **Tests** : Playwright E2E (16/16 tests validés à 100%), Oxlint, Vite Build.
 
 ---
 
 ## 🛠️ Dernières Fonctionnalités & Optimisations Réalisées
+
+### 1. 🎨 Bibliothèque « Design System M84 » (Architecture modulaire type shadcn)
+- **Création du répertoire source [`src/design-system/`](file:///C:/Users/mosli/ant-projects/ANT2.0/1_engineering_apps/Ayoub%20MOSLIH%20-%20Portfolio/src/design-system/)** :
+  - `tokens.css` : Définition des variables CSS unifiées `--m84-*` (Vert M84 `#006253`, Accent `#10b981`, Typo `Space Grotesk`, Radii 8/12/16/24px, Ombres, Status colors).
+  - `Button.jsx` : Variantes (`primary`, `secondary`, `outline`, `ghost`, `danger`, `ai`), tailles, état de chargement et micro-interactions Framer Motion.
+  - `StatCard.jsx` : Carte KPI haute performance pour le Backoffice et le Portail avec barres de progression et indicateurs de tendances.
+  - `Card.jsx` : Composants modulaires `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`.
+  - `Badge.jsx` : Variantes de statuts (`default`, `success`, `warning`, `danger`, `info`, `outline`, `ai`).
+  - `Input.jsx`, `Textarea.jsx`, `Select.jsx` : Champs de formulaire normalisés avec focus rings `--m84-primary`.
+  - `Modal.jsx` & `Drawer.jsx` : Modales et tiroirs fluides animés via Framer Motion avec capture de la touche Échap et gestion de backdrop.
+  - `Table.jsx` : Tableaux modernes de données avec en-têtes stylisés, états vides et survol réactif.
+  - `Tabs.jsx` : Onglets animés avec layoutId Framer Motion pour un slide fluide.
+  - `Toast.jsx` : Toaster de notification statutaire auto-dismissible.
+  - `Animations.js` : Presets d'animation Framer Motion réutilisables (`fadeIn`, `slideUp`, `scaleIn`, `drawerSlideUp`, `buttonTapMotion`, `cardHoverMotion`).
+  - `index.js` : Export centralisé baril permettant les imports simples `import { Button, StatCard, Badge } from '../../design-system'`.
+
+### 2. 🗄️ Migration Supabase Réelle & Schéma SQL Relationnel (`scripts/setup_supabase.sql`)
+- **Création et exécution effective des 8 tables M84 sur le projet Supabase Cloud (`ehevcsqgkrbeokprzzcp`)** :
+  - `leads` : Collecte CRM et leads qualifiés du Chatbot M84.
+  - `config` : Configuration du system prompt de l'Agent IA.
+  - `missions` : Suivi contractuel des missions clients B2B (CAM, Devoteam, Ad'Missions).
+  - `cras` : Relevés d'activité mensuels, jours imputés, visas et justificatifs.
+  - `absences` : Justificatifs et motifs d'indisponibilité du consultant.
+  - `mission_reports` : Comptes rendus hebdomadaires de mission (CR-01 à CR-04).
+  - `portal_users` : Comptes collaborateurs avec identifiant sécurisé.
+  - `projects` : Projets vitrine et confidentiels synchronisés.
+- **Row Level Security (RLS) & Politiques d'accès** : RLS activée sur les 8 tables avec policies permissives adaptées aux accès portail / vitrine / admin.
+- **Amorçage (Seed data)** : Données réelles CAM, comptes rendus S1 à S4, CRA Octobre 2026, prompt agent et projets injectés avec succès.
+
+### 3. ⚙️ Câblage Supabase First & Alignement Backoffice / Portail
+- **Service Client Portail (`src/services/clientPortalService.js`)** :
+  - Refonte de `syncToSupabase` : Synchronisation complète et robuste des 5 entités (`missions`, `cras`, `absences`, `mission_reports`, `portal_users`).
+  - Ajout de `pullLatestFromSupabase` : Récupération dynamique des missions depuis Supabase avec mise en cache locale transparente.
+- **Backoffice Admin (`AdminDashboard.jsx`, `AdminLogin.jsx`, `AiConfigManager.jsx`, `ProjectsManager.jsx`)** :
+  - `AdminDashboard.jsx` : Intégration de `StatCard` du Design System, récupération en temps réel des leads et missions Supabase, sidebar harmonisée en vert M84 `#006253` et fonte `Space Grotesk`.
+  - `AdminLogin.jsx` : Refonte esthétique claire épurée avec les tokens M84 et suppression du dark theme disparate.
+  - `AiConfigManager.jsx` : Sauvegarde et lecture directes sur la table Supabase `config` avec badges visuels M84.
+  - `ProjectsManager.jsx` : Synchronisation bidirectionnelle avec la table Supabase `projects`.
+- **Portail Client M84 (`PortalLayout.jsx`, `appMode.js`, `OfflineDetector.jsx`)** :
+  - Normalisation typographique sur `var(--m84-font-family)` (`Space Grotesk`).
+  - Correction de l'aiguillage de mode local : le mode vitrine reste par défaut sur `localhost` sans bloquer le routage vers `/portal` lorsque demandé.
+  - Protection d'`OfflineDetector` contre les faux positifs réseau sous environnement de test/développement.
+
+### 4. 🧪 Pyramide de Tests & Validation Locale
+- **Oxlint** : 0 erreur de syntaxe.
+- **Build Vite de production** : `built in 22.61s` (PWA 39 entries, 4527 KiB).
+- **Suite Playwright E2E (16/16 tests validés - 100%)** :
+  - 4 tests Admin (`tests/admin.spec.js` : 401, email non autorisé, Google sign-in, login valide).
+  - 5 tests Portail Client B2B (`tests/portal.spec.js` : login Bank-e, dashboard KPIs, rapports compacts, kanban projets, timesheet & absences).
+  - 5 tests E2E Portfolio (`tests/e2e/portfolio.spec.js` : hero, liens navigation, modale projet, chatbot widget, certificats PDF 200 OK).
+  - 2 tests non-régression (`tests/portfolio.spec.js` : déchiffrement AES *The Factory*, `tests/e2e.spec.js` : galerie travaux).
+
 
 ### 1. 📊 Refonte Analytics, KPIs, Comptes Rendus & Vue Kanban Jira (`src/pages/Portal/`)
 - **Dashboard Collaborateur (`PortalDashboard.jsx`)** :

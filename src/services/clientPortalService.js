@@ -418,37 +418,152 @@ export function loadPortalData() {
 export function savePortalData(data) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  // Synchronisation en tâche de fond vers Supabase
-  syncToSupabase(data).catch(() => {});
+  // Synchronisation asynchrone bidirectionnelle vers Supabase
+  syncToSupabase(data).catch((err) => console.warn("Supabase background sync notice:", err?.message || err));
 }
 
 export async function syncToSupabase(data) {
   if (!isSupabaseConfigured || !supabase || !data) return;
   try {
+    // 1. Missions
     if (data.missions?.length) {
       for (const m of data.missions) {
         await supabase.from('missions').upsert({
           id: m.id,
-          title: m.companyName ? `Mission Régie ${m.companyName}` : 'Mission Régie',
-          client_company: m.companyName || '',
-          client_contact_name: m.managerName || '',
-          client_email: m.email || '',
-          client_phone: m.phone || '',
-          client_logo: m.logoUrl || '',
-          esn_company: m.cabinetConseil?.name || '',
-          portage_company: m.cabinetPortage?.name || '',
-          modality: m.workMode || 'Régie',
-          work_mode: m.remoteMode || 'Hybride',
-          sold_days: m.totalDaysQuota || 65,
-          start_date: m.dateStart || null,
-          end_date: m.dateEnd || null,
-          status: m.status || 'En cours'
+          company_name: m.companyName || '',
+          manager_name: m.managerName || '',
+          phone: m.phone || '',
+          email: m.email || '',
+          cabinet_conseil: m.cabinetConseil || {},
+          cabinet_portage: m.cabinetPortage || {},
+          date_start: m.dateStart || null,
+          date_end: m.dateEnd || null,
+          total_days_quota: m.totalDaysQuota || 65,
+          work_mode: m.workMode || 'Régie',
+          remote_mode: m.remoteMode || 'Hybride',
+          schedule: m.schedule || {},
+          logo_url: m.logoUrl || '',
+          status: m.status || 'active'
+        }).catch(() => {});
+      }
+    }
+
+    // 2. CRAs / Timesheets
+    if (data.timesheets?.length) {
+      for (const ts of data.timesheets) {
+        await supabase.from('cras').upsert({
+          id: ts.id,
+          mission_id: ts.missionId,
+          month: ts.month,
+          month_label: ts.monthLabel || '',
+          days_imputed: ts.daysImputed || 0,
+          total_working_days: ts.totalWorkingDays || 22,
+          total_hours: ts.totalHours || 172,
+          status: ts.status || 'submitted',
+          content: ts.content || '',
+          attachment: ts.attachment || {},
+          remarks: ts.remarks || []
+        }).catch(() => {});
+      }
+    }
+
+    // 3. Absences
+    if (data.absences?.length) {
+      for (const abs of data.absences) {
+        await supabase.from('absences').upsert({
+          id: abs.id,
+          mission_id: abs.missionId,
+          type: abs.type || 'Congé',
+          date_start: abs.dateStart,
+          date_end: abs.dateEnd,
+          duration_days: abs.durationDays || 1,
+          status: abs.status || 'justifiée',
+          content: abs.content || '',
+          attachment: abs.attachment || {}
+        }).catch(() => {});
+      }
+    }
+
+    // 4. Mission Reports
+    if (data.reports?.length) {
+      for (const rep of data.reports) {
+        await supabase.from('mission_reports').upsert({
+          id: rep.id,
+          code: rep.code || 'CR',
+          status: rep.status || 'Livré',
+          mission_id: rep.missionId,
+          week_number: rep.weekNumber || 1,
+          week_label: rep.weekLabel || '',
+          title: rep.title || '',
+          date: rep.date || null,
+          project: rep.project || '',
+          attendees: rep.attendees || [],
+          summary: rep.summary || '',
+          decisions: rep.decisions || [],
+          next_steps: rep.nextSteps || [],
+          attachment: rep.attachment || {},
+          remarks: rep.remarks || []
+        }).catch(() => {});
+      }
+    }
+
+    // 5. Portal Users
+    if (data.users?.length) {
+      for (const u of data.users) {
+        await supabase.from('portal_users').upsert({
+          id: u.id,
+          username: u.username || u.email,
+          email: u.email,
+          password: u.password || 'CAM@2026',
+          company_name: u.companyName || '',
+          manager_name: u.managerName || '',
+          role: u.role || 'collaborator',
+          mission_id: u.missionId || null
         }).catch(() => {});
       }
     }
   } catch (e) {
-    // Silently fallback to localStorage
+    console.warn("Erreur globale sync Supabase :", e);
   }
+}
+
+/**
+ * Charge les données depuis Supabase si connecté, avec mise en cache locale transparente
+ */
+export async function pullLatestFromSupabase() {
+  if (!isSupabaseConfigured || !supabase) return null;
+  try {
+    const { data: missions } = await supabase.from('missions').select('*');
+    if (missions && missions.length > 0) {
+      const current = loadPortalData();
+      const updated = {
+        ...current,
+        missions: missions.map(m => ({
+          id: m.id,
+          companyName: m.company_name,
+          managerName: m.manager_name,
+          phone: m.phone,
+          email: m.email,
+          cabinetConseil: m.cabinet_conseil,
+          cabinetPortage: m.cabinet_portage,
+          dateStart: m.date_start,
+          dateEnd: m.date_end,
+          totalDaysQuota: Number(m.total_days_quota),
+          workMode: m.work_mode,
+          remoteMode: m.remote_mode,
+          schedule: m.schedule,
+          logoUrl: m.logo_url,
+          status: m.status,
+          createdAt: m.created_at
+        }))
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    }
+  } catch (err) {
+    console.warn("Pull Supabase skipped:", err);
+  }
+  return null;
 }
 
 // -------------------------------------------------------------

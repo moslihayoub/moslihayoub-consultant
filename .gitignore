@@ -25,3 +25,6 @@ dist-ssr
 scratch/
 .vercel
 .env*
+playwright-report/
+test-results/
+public/devtools-screenshots/

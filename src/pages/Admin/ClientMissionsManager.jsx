@@ -93,7 +93,13 @@ export default function ClientMissionsManager() {
     attachmentName: ''
   });
 
-  const refreshData = useCallback(() => {
+  const refreshData = useCallback(async () => {
+    try {
+      const { pullLatestFromSupabase } = await import('../../services/clientPortalService');
+      await pullLatestFromSupabase();
+    } catch {
+      // Fallback local
+    }
     const list = getAllMissions();
     setMissions(list);
     if (list.length > 0 && !selectedMissionId) {

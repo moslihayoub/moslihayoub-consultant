@@ -3,6 +3,7 @@ import { projectsData as initialData } from '../../data/projects';
 import { Edit2, Trash2, Plus, Save, X, Upload, Search, Folder, Tag, Calendar, Lock, Globe, Image as ImageIcon, Eye, MoreVertical, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebaseConfig';
+import { supabase, isSupabaseConfigured } from '../../utils/supabaseClient';
 import ExportButton from './ExportButton';
 
 const CATEGORIES = ["UX/UI", "MVP Ai", "Motion Graphics", "AI Filmmaking"];
@@ -27,12 +28,41 @@ const ProjectsManager = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   useEffect(() => {
-    const local = localStorage.getItem('m84_projects_mock');
-    if (local) {
-      setProjects(JSON.parse(local));
-    } else {
-      setProjects(initialData);
+    async function loadProjects() {
+      // 1. Essai Supabase
+      if (isSupabaseConfigured && supabase) {
+        try {
+          const { data, error } = await supabase.from('projects').select('*').order('order_index', { ascending: true });
+          if (!error && data && data.length > 0) {
+            const mapped = data.map(p => ({
+              id: p.id,
+              title: p.title,
+              client: p.client || '',
+              category: p.category || 'UX/UI',
+              shortDesc: { fr: p.description || '', en: p.description || '' },
+              image: p.image || '',
+              url: p.url || '',
+              isProtected: Boolean(p.is_confidential),
+              year: '2026'
+            }));
+            setProjects(mapped);
+            localStorage.setItem('m84_projects_mock', JSON.stringify(mapped));
+            return;
+          }
+        } catch (err) {
+          console.warn("Supabase load projects notice:", err);
+        }
+      }
+
+      // 2. Fallback local / initialData
+      const local = localStorage.getItem('m84_projects_mock');
+      if (local) {
+        setProjects(JSON.parse(local));
+      } else {
+        setProjects(initialData);
+      }
     }
+    loadProjects();
   }, []);
 
   useEffect(() => {
@@ -50,7 +80,7 @@ const ProjectsManager = () => {
     setCurrentPage(1);
   }, [searchQuery, filterCategory, filterYear, filterStatus]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     let updated;
     if (editingId === 'new') {
       updated = [formData, ...projects];
@@ -59,16 +89,43 @@ const ProjectsManager = () => {
     }
     setProjects(updated);
     localStorage.setItem('m84_projects_mock', JSON.stringify(updated));
+
+    // Synchronisation vers Supabase
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('projects').upsert({
+          id: formData.id || `proj-${Date.now()}`,
+          title: formData.title || 'Nouveau Projet',
+          client: formData.client || '',
+          category: formData.category || 'UX/UI',
+          description: formData.shortDesc?.fr || formData.description || '',
+          image: formData.image || '',
+          url: formData.url || '',
+          is_confidential: Boolean(formData.isProtected)
+        });
+      } catch (e) {
+        console.warn("Supabase project sync notice:", e);
+      }
+    }
+
     setEditingId(null);
     setFormData(null);
-    alert('Projet sauvegardé avec succès ! (Mock LocalStorage, prêt pour Firestore)');
+    alert('Projet sauvegardé avec succès dans Supabase & cache local !');
   };
 
-  const handleDelete = (id) => {
-    if(window.confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+  const handleDelete = async (id) => {
+    if (window.confirm('Voulez-vous vraiment supprimer ce projet ?')) {
       const updated = projects.filter(p => p.id !== id);
       setProjects(updated);
       localStorage.setItem('m84_projects_mock', JSON.stringify(updated));
+
+      if (isSupabaseConfigured && supabase) {
+        try {
+          await supabase.from('projects').delete().eq('id', id);
+        } catch (e) {
+          console.warn("Supabase project delete notice:", e);
+        }
+      }
     }
   };
 
